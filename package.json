@@ -1,0 +1,28 @@
+{
+  "name": "cs2-commands-zh",
+  "private": true,
+  "version": "1.0.0",
+  "type": "module",
+  "description": "CS2 控制台命令与变量查询前端（筛选 + 一键复制）",
+  "scripts": {
+    "dev": "vite",
+    "build": "tsc --noEmit -p tsconfig.json && vite build",
+    "preview": "vite preview",
+    "typecheck": "tsc --noEmit -p tsconfig.json",
+    "smoke": "node app/scripts/smoke-test.mjs",
+    "smoke:dev": "node app/scripts/smoke-test.mjs --dev",
+    "smoke:no-browser": "node app/scripts/smoke-test.mjs --no-browser",
+    "gen:tokens": "node app/scripts/inline-parameter-tokens.mjs"
+  },
+  "dependencies": {
+    "react": "^18.3.1",
+    "react-dom": "^18.3.1"
+  },
+  "devDependencies": {
+    "@types/react": "^18.3.12",
+    "@types/react-dom": "^18.3.1",
+    "@vitejs/plugin-react": "^4.3.4",
+    "typescript": "^5.6.3",
+    "vite": "^5.4.11"
+  }
+}

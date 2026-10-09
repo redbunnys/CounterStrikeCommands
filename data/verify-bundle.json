@@ -1,0 +1,2329 @@
+{
+  "generatedAt": "2026-10-08T15:54:30.754Z",
+  "seed": 20261008,
+  "node": "v24.21.0",
+  "inputs": {
+    "commandsJson": {
+      "bytes": 821439,
+      "sha256": "c6ce50e8b41567911926e22cff25a4f060befa058debffd4a6ebb4c0160673a1"
+    },
+    "wikiHtml": {
+      "bytes": 379154,
+      "sha256": "b6c2013d18cc58450a629d64ca0da5f7f325469b2e0403cbbe0a7d440b731ee2"
+    },
+    "appPublicCopySha256": "c6ce50e8b41567911926e22cff25a4f060befa058debffd4a6ebb4c0160673a1",
+    "distCopySha256": "c6ce50e8b41567911926e22cff25a4f060befa058debffd4a6ebb4c0160673a1"
+  },
+  "totals": {
+    "checks": 120,
+    "passed": 120,
+    "failed": 0,
+    "unverified": 0
+  },
+  "bySection": {
+    "S0 输入与环境": {
+      "pass": 3,
+      "fail": 0
+    },
+    "S1 数据集副本一致性（app/public 与 dist 分发副本）": {
+      "pass": 6,
+      "fail": 0
+    },
+    "S2 结构不变量：条数 / 唯一性 / id / 排序 / 字段 / 占位行": {
+      "pass": 11,
+      "fail": 0
+    },
+    "S3 defaultValue 完整性（无 \"|\" 误拆痕迹）与 4 个修复行精确取值": {
+      "pass": 7,
+      "fail": 0
+    },
+    "S4 flags 白名单与来源保真": {
+      "pass": 5,
+      "fail": 0
+    },
+    "S5 翻译覆盖：复算 meta 两个数字 + 覆盖率": {
+      "pass": 10,
+      "fail": 0
+    },
+    "S6 与源站 HTML 全量比对（2530 行 + 随机 40 条样本）": {
+      "pass": 6,
+      "fail": 0
+    },
+    "S7 翻译质量抽样（随机 40 条 英→中 对照，供人工判读）": {
+      "pass": 3,
+      "fail": 0
+    },
+    "S8 前端：真实 pnpm build + 真实服务 + 真实浏览器 DOM 交互": {
+      "pass": 33,
+      "fail": 0
+    },
+    "S9 坏行专项：HTML 独立枚举 vs meta.repairedRows": {
+      "pass": 10,
+      "fail": 0
+    },
+    "S10 邻行污染：4 个坏行 × 前后邻行（8 个邻居）逐字段比对": {
+      "pass": 2,
+      "fail": 0
+    },
+    "S11 静默失效防护：防御断言 + 隔离负向测试": {
+      "pass": 9,
+      "fail": 0
+    },
+    "S12 占位符/标识符保真（中英文逐字一致）": {
+      "pass": 11,
+      "fail": 0
+    },
+    "S13 meta.sourceDefects 独立复核（源站原文残缺，不是翻译缺陷）": {
+      "pass": 4,
+      "fail": 0
+    }
+  },
+  "failures": [],
+  "unverified": [],
+  "samples": {
+    "htmlRows": [
+      {
+        "command": "sv_extract_ammo_from_dropped_weapons",
+        "section": "S",
+        "html": {
+          "defaultValue": "false",
+          "flags": [
+            "sv",
+            "cl",
+            "rep",
+            "release"
+          ],
+          "descriptionEn": "",
+          "marker": false
+        },
+        "data": {
+          "defaultValue": "false",
+          "flags": [
+            "sv",
+            "cl",
+            "rep",
+            "release"
+          ],
+          "descriptionEn": "",
+          "section": "S"
+        },
+        "ok": true
+      },
+      {
+        "command": "cl_hud_radar_scale",
+        "section": "C",
+        "html": {
+          "defaultValue": "1",
+          "flags": [
+            "cl",
+            "a",
+            "release"
+          ],
+          "descriptionEn": "",
+          "marker": false
+        },
+        "data": {
+          "defaultValue": "1",
+          "flags": [
+            "cl",
+            "a",
+            "release"
+          ],
+          "descriptionEn": "",
+          "section": "C"
+        },
+        "ok": true
+      },
+      {
+        "command": "cl_weapon_clip_thinwalls",
+        "section": "C",
+        "html": {
+          "defaultValue": "true",
+          "flags": [
+            "cl",
+            "rep",
+            "cheat"
+          ],
+          "descriptionEn": "",
+          "marker": false
+        },
+        "data": {
+          "defaultValue": "true",
+          "flags": [
+            "cl",
+            "rep",
+            "cheat"
+          ],
+          "descriptionEn": "",
+          "section": "C"
+        },
+        "ok": true
+      },
+      {
+        "command": "mp_give_player_c4",
+        "section": "M",
+        "html": {
+          "defaultValue": "true",
+          "flags": [
+            "sv",
+            "cl",
+            "rep",
+            "release"
+          ],
+          "descriptionEn": "Whether this map should spawn a c4 bomb for a player or not.",
+          "marker": false
+        },
+        "data": {
+          "defaultValue": "true",
+          "flags": [
+            "sv",
+            "cl",
+            "rep",
+            "release"
+          ],
+          "descriptionEn": "Whether this map should spawn a c4 bomb for a player or not.",
+          "section": "M"
+        },
+        "ok": true
+      },
+      {
+        "command": "vmix_output",
+        "section": "V",
+        "html": {
+          "defaultValue": "cmd",
+          "flags": [
+            "cheat"
+          ],
+          "descriptionEn": "Dump main graph control output values",
+          "marker": false
+        },
+        "data": {
+          "defaultValue": "cmd",
+          "flags": [
+            "cheat"
+          ],
+          "descriptionEn": "Dump main graph control output values",
+          "section": "V"
+        },
+        "ok": true
+      },
+      {
+        "command": "ent_clear_debug_overlays",
+        "section": "E",
+        "html": {
+          "defaultValue": "cmd",
+          "flags": [
+            "sv",
+            "cheat"
+          ],
+          "descriptionEn": "Clears all debug overlays",
+          "marker": false
+        },
+        "data": {
+          "defaultValue": "cmd",
+          "flags": [
+            "sv",
+            "cheat"
+          ],
+          "descriptionEn": "Clears all debug overlays",
+          "section": "E"
+        },
+        "ok": true
+      },
+      {
+        "command": "player_competitive_maplist_2v2_10_0_C8D88986",
+        "section": "P",
+        "html": {
+          "defaultValue": "mg_de_overpass,mg_de_vertigo,mg_de_inferno,mg_de_nuke",
+          "flags": [
+            "cl",
+            "a"
+          ],
+          "descriptionEn": "",
+          "marker": false
+        },
+        "data": {
+          "defaultValue": "mg_de_overpass,mg_de_vertigo,mg_de_inferno,mg_de_nuke",
+          "flags": [
+            "cl",
+            "a"
+          ],
+          "descriptionEn": "",
+          "section": "P"
+        },
+        "ok": true
+      },
+      {
+        "command": "gameinstructor_dump_run_lesson_counts",
+        "section": "G",
+        "html": {
+          "defaultValue": "cmd",
+          "flags": [
+            "cl",
+            "cheat"
+          ],
+          "descriptionEn": "Gives a list of lessons that been completed or shown",
+          "marker": false
+        },
+        "data": {
+          "defaultValue": "cmd",
+          "flags": [
+            "cl",
+            "cheat"
+          ],
+          "descriptionEn": "Gives a list of lessons that been completed or shown",
+          "section": "G"
+        },
+        "ok": true
+      },
+      {
+        "command": "mp_death_drop_healthshot",
+        "section": "M",
+        "html": {
+          "defaultValue": "true",
+          "flags": [
+            "sv",
+            "cl",
+            "rep",
+            "release"
+          ],
+          "descriptionEn": "Drop healthshot on player death",
+          "marker": false
+        },
+        "data": {
+          "defaultValue": "true",
+          "flags": [
+            "sv",
+            "cl",
+            "rep",
+            "release"
+          ],
+          "descriptionEn": "Drop healthshot on player death",
+          "section": "M"
+        },
+        "ok": true
+      },
+      {
+        "command": "r_csgo_mboit_bias",
+        "section": "R",
+        "html": {
+          "defaultValue": "0.000005",
+          "flags": [
+            "cl",
+            "cheat"
+          ],
+          "descriptionEn": "",
+          "marker": false
+        },
+        "data": {
+          "defaultValue": "0.000005",
+          "flags": [
+            "cl",
+            "cheat"
+          ],
+          "descriptionEn": "",
+          "section": "R"
+        },
+        "ok": true
+      },
+      {
+        "command": "sv_showbullethits",
+        "section": "S",
+        "html": {
+          "defaultValue": "0",
+          "flags": [
+            "sv",
+            "cl",
+            "rep",
+            "release"
+          ],
+          "descriptionEn": "1=show hits and near misses, 2=show hits only",
+          "marker": false
+        },
+        "data": {
+          "defaultValue": "0",
+          "flags": [
+            "sv",
+            "cl",
+            "rep",
+            "release"
+          ],
+          "descriptionEn": "1=show hits and near misses, 2=show hits only",
+          "section": "S"
+        },
+        "ok": true
+      },
+      {
+        "command": "cl_script_add_watch_pattern",
+        "section": "C",
+        "html": {
+          "defaultValue": "cmd",
+          "flags": [
+            "cl",
+            "cheat"
+          ],
+          "descriptionEn": "Add a watch to the game debug overlay",
+          "marker": false
+        },
+        "data": {
+          "defaultValue": "cmd",
+          "flags": [
+            "cl",
+            "cheat"
+          ],
+          "descriptionEn": "Add a watch to the game debug overlay",
+          "section": "C"
+        },
+        "ok": true
+      },
+      {
+        "command": "sv_shield_explosive_damage_crouch_bonus",
+        "section": "S",
+        "html": {
+          "defaultValue": "10",
+          "flags": [
+            "sv",
+            "cl",
+            "rep",
+            "release"
+          ],
+          "descriptionEn": "",
+          "marker": false
+        },
+        "data": {
+          "defaultValue": "10",
+          "flags": [
+            "sv",
+            "cl",
+            "rep",
+            "release"
+          ],
+          "descriptionEn": "",
+          "section": "S"
+        },
+        "ok": true
+      },
+      {
+        "command": "setpos_player",
+        "section": "S",
+        "html": {
+          "defaultValue": "cmd",
+          "flags": [
+            "sv",
+            "cheat"
+          ],
+          "descriptionEn": "Move specified player to specified origin (must have sv_cheats).",
+          "marker": false
+        },
+        "data": {
+          "defaultValue": "cmd",
+          "flags": [
+            "sv",
+            "cheat"
+          ],
+          "descriptionEn": "Move specified player to specified origin (must have sv_cheats).",
+          "section": "S"
+        },
+        "ok": true
+      },
+      {
+        "command": "ui_playsettings_flags_listen_competitive",
+        "section": "U",
+        "html": {
+          "defaultValue": "16",
+          "flags": [
+            "cl",
+            "a",
+            "release"
+          ],
+          "descriptionEn": "",
+          "marker": false
+        },
+        "data": {
+          "defaultValue": "16",
+          "flags": [
+            "cl",
+            "a",
+            "release"
+          ],
+          "descriptionEn": "",
+          "section": "U"
+        },
+        "ok": true
+      },
+      {
+        "command": "mat_wireframe",
+        "section": "M",
+        "html": {
+          "defaultValue": "0",
+          "flags": [
+            "cheat"
+          ],
+          "descriptionEn": "0=Off, 1=Surface Wireframe, 2=Transparent Wireframe",
+          "marker": false
+        },
+        "data": {
+          "defaultValue": "0",
+          "flags": [
+            "cheat"
+          ],
+          "descriptionEn": "0=Off, 1=Surface Wireframe, 2=Transparent Wireframe",
+          "section": "M"
+        },
+        "ok": true
+      },
+      {
+        "command": "nav_obstacle_validate",
+        "section": "N",
+        "html": {
+          "defaultValue": "false",
+          "flags": [
+            "sv",
+            "cheat"
+          ],
+          "descriptionEn": "",
+          "marker": false
+        },
+        "data": {
+          "defaultValue": "false",
+          "flags": [
+            "sv",
+            "cheat"
+          ],
+          "descriptionEn": "",
+          "section": "N"
+        },
+        "ok": true
+      },
+      {
+        "command": "debugoverlay_cycle_state",
+        "section": "D",
+        "html": {
+          "defaultValue": "cmd",
+          "flags": [
+            "sv",
+            "cheat"
+          ],
+          "descriptionEn": "Toggles visibility of the debug overlay system.",
+          "marker": false
+        },
+        "data": {
+          "defaultValue": "cmd",
+          "flags": [
+            "sv",
+            "cheat"
+          ],
+          "descriptionEn": "Toggles visibility of the debug overlay system.",
+          "section": "D"
+        },
+        "ok": true
+      },
+      {
+        "command": "nav_toggle_deselecting",
+        "section": "N",
+        "html": {
+          "defaultValue": "cmd",
+          "flags": [
+            "sv",
+            "cheat"
+          ],
+          "descriptionEn": "Start or stop continuously removing from the selected set.",
+          "marker": false
+        },
+        "data": {
+          "defaultValue": "cmd",
+          "flags": [
+            "sv",
+            "cheat"
+          ],
+          "descriptionEn": "Start or stop continuously removing from the selected set.",
+          "section": "N"
+        },
+        "ok": true
+      },
+      {
+        "command": "nav_draw_area_split_by_nav_link_mgr",
+        "section": "N",
+        "html": {
+          "defaultValue": "false",
+          "flags": [
+            "sv",
+            "cheat"
+          ],
+          "descriptionEn": "",
+          "marker": false
+        },
+        "data": {
+          "defaultValue": "false",
+          "flags": [
+            "sv",
+            "cheat"
+          ],
+          "descriptionEn": "",
+          "section": "N"
+        },
+        "ok": true
+      },
+      {
+        "command": "cash_team_rescued_hostage",
+        "section": "C",
+        "html": {
+          "defaultValue": "600",
+          "flags": [
+            "sv",
+            "cl",
+            "nf",
+            "rep",
+            "release"
+          ],
+          "descriptionEn": "",
+          "marker": false
+        },
+        "data": {
+          "defaultValue": "600",
+          "flags": [
+            "sv",
+            "cl",
+            "nf",
+            "rep",
+            "release"
+          ],
+          "descriptionEn": "",
+          "section": "C"
+        },
+        "ok": true
+      },
+      {
+        "command": "r_flashlightshadowatten",
+        "section": "R",
+        "html": {
+          "defaultValue": "0.35",
+          "flags": [
+            "cl",
+            "cheat"
+          ],
+          "descriptionEn": "",
+          "marker": false
+        },
+        "data": {
+          "defaultValue": "0.35",
+          "flags": [
+            "cl",
+            "cheat"
+          ],
+          "descriptionEn": "",
+          "section": "R"
+        },
+        "ok": true
+      },
+      {
+        "command": "cl_script_reload_code",
+        "section": "C",
+        "html": {
+          "defaultValue": "cmd",
+          "flags": [
+            "cl",
+            "cheat"
+          ],
+          "descriptionEn": "Execute a vscript file, replacing existing functions with the functions in the run script",
+          "marker": false
+        },
+        "data": {
+          "defaultValue": "cmd",
+          "flags": [
+            "cl",
+            "cheat"
+          ],
+          "descriptionEn": "Execute a vscript file, replacing existing functions with the functions in the run script",
+          "section": "C"
+        },
+        "ok": true
+      },
+      {
+        "command": "shatterglass_cleanup",
+        "section": "S",
+        "html": {
+          "defaultValue": "true",
+          "flags": [
+            "sv",
+            "cl",
+            "rep",
+            "cheat"
+          ],
+          "descriptionEn": "",
+          "marker": false
+        },
+        "data": {
+          "defaultValue": "true",
+          "flags": [
+            "sv",
+            "cl",
+            "rep",
+            "cheat"
+          ],
+          "descriptionEn": "",
+          "section": "S"
+        },
+        "ok": true
+      },
+      {
+        "command": "ammo_556mm_small_max",
+        "section": "A",
+        "html": {
+          "defaultValue": "40",
+          "flags": [
+            "sv",
+            "cl",
+            "rep",
+            "release"
+          ],
+          "descriptionEn": "",
+          "marker": false
+        },
+        "data": {
+          "defaultValue": "40",
+          "flags": [
+            "sv",
+            "cl",
+            "rep",
+            "release"
+          ],
+          "descriptionEn": "",
+          "section": "A"
+        },
+        "ok": true
+      },
+      {
+        "command": "snd_sos_stop_soundevent_guid",
+        "section": "S",
+        "html": {
+          "defaultValue": "cmd",
+          "flags": [
+            "cheat"
+          ],
+          "descriptionEn": "Stops a specified soundevent",
+          "marker": false
+        },
+        "data": {
+          "defaultValue": "cmd",
+          "flags": [
+            "cheat"
+          ],
+          "descriptionEn": "Stops a specified soundevent",
+          "section": "S"
+        },
+        "ok": true
+      },
+      {
+        "command": "hideconsole",
+        "section": "H",
+        "html": {
+          "defaultValue": "cmd",
+          "flags": [
+            "norecord",
+            "release"
+          ],
+          "descriptionEn": "Hide the console.",
+          "marker": false
+        },
+        "data": {
+          "defaultValue": "cmd",
+          "flags": [
+            "norecord",
+            "release"
+          ],
+          "descriptionEn": "Hide the console.",
+          "section": "H"
+        },
+        "ok": true
+      },
+      {
+        "command": "c_minpitch",
+        "section": "C",
+        "html": {
+          "defaultValue": "0",
+          "flags": [
+            "cl",
+            "a"
+          ],
+          "descriptionEn": "",
+          "marker": false
+        },
+        "data": {
+          "defaultValue": "0",
+          "flags": [
+            "cl",
+            "a"
+          ],
+          "descriptionEn": "",
+          "section": "C"
+        },
+        "ok": true
+      },
+      {
+        "command": "cl_showmem",
+        "section": "C",
+        "html": {
+          "defaultValue": "0",
+          "flags": [
+            "cl",
+            "release"
+          ],
+          "descriptionEn": "Draw approximate memory use at top of screen",
+          "marker": false
+        },
+        "data": {
+          "defaultValue": "0",
+          "flags": [
+            "cl",
+            "release"
+          ],
+          "descriptionEn": "Draw approximate memory use at top of screen",
+          "section": "C"
+        },
+        "ok": true
+      },
+      {
+        "command": "cl_ent_text_no_name_really_i_mean_it",
+        "section": "C",
+        "html": {
+          "defaultValue": "false",
+          "flags": [
+            "cl",
+            "cheat"
+          ],
+          "descriptionEn": "",
+          "marker": false
+        },
+        "data": {
+          "defaultValue": "false",
+          "flags": [
+            "cl",
+            "cheat"
+          ],
+          "descriptionEn": "",
+          "section": "C"
+        },
+        "ok": true
+      },
+      {
+        "command": "nav_path_fixup_gap_segments",
+        "section": "N",
+        "html": {
+          "defaultValue": "false",
+          "flags": [
+            "sv",
+            "cheat"
+          ],
+          "descriptionEn": "",
+          "marker": false
+        },
+        "data": {
+          "defaultValue": "false",
+          "flags": [
+            "sv",
+            "cheat"
+          ],
+          "descriptionEn": "",
+          "section": "N"
+        },
+        "ok": true
+      },
+      {
+        "command": "cash_player_killed_teammate",
+        "section": "C",
+        "html": {
+          "defaultValue": "-300",
+          "flags": [
+            "sv",
+            "cl",
+            "nf",
+            "rep",
+            "release"
+          ],
+          "descriptionEn": "",
+          "marker": false
+        },
+        "data": {
+          "defaultValue": "-300",
+          "flags": [
+            "sv",
+            "cl",
+            "nf",
+            "rep",
+            "release"
+          ],
+          "descriptionEn": "",
+          "section": "C"
+        },
+        "ok": true
+      },
+      {
+        "command": "sv_teamid_overhead",
+        "section": "S",
+        "html": {
+          "defaultValue": "true",
+          "flags": [
+            "sv",
+            "cl",
+            "nf",
+            "rep",
+            "release"
+          ],
+          "descriptionEn": "Shows teamID over player's heads. 0 = off, 1 = on",
+          "marker": false
+        },
+        "data": {
+          "defaultValue": "true",
+          "flags": [
+            "sv",
+            "cl",
+            "nf",
+            "rep",
+            "release"
+          ],
+          "descriptionEn": "Shows teamID over player's heads. 0 = off, 1 = on",
+          "section": "S"
+        },
+        "ok": true
+      },
+      {
+        "command": "ent_setpos",
+        "section": "E",
+        "html": {
+          "defaultValue": "cmd",
+          "flags": [
+            "sv",
+            "cheat"
+          ],
+          "descriptionEn": "Move entity to position",
+          "marker": false
+        },
+        "data": {
+          "defaultValue": "cmd",
+          "flags": [
+            "sv",
+            "cheat"
+          ],
+          "descriptionEn": "Move entity to position",
+          "section": "E"
+        },
+        "ok": true
+      },
+      {
+        "command": "nav_smooth_draw_calc",
+        "section": "N",
+        "html": {
+          "defaultValue": "false",
+          "flags": [
+            "sv",
+            "cheat"
+          ],
+          "descriptionEn": "",
+          "marker": false
+        },
+        "data": {
+          "defaultValue": "false",
+          "flags": [
+            "sv",
+            "cheat"
+          ],
+          "descriptionEn": "",
+          "section": "N"
+        },
+        "ok": true
+      },
+      {
+        "command": "nav_gen_connect_angle_ignore_z",
+        "section": "N",
+        "html": {
+          "defaultValue": "true",
+          "flags": [
+            "cheat"
+          ],
+          "descriptionEn": "",
+          "marker": false
+        },
+        "data": {
+          "defaultValue": "true",
+          "flags": [
+            "cheat"
+          ],
+          "descriptionEn": "",
+          "section": "N"
+        },
+        "ok": true
+      },
+      {
+        "command": "cl_disable_round_end_report",
+        "section": "C",
+        "html": {
+          "defaultValue": "false",
+          "flags": [
+            "cl",
+            "a",
+            "release"
+          ],
+          "descriptionEn": "",
+          "marker": false
+        },
+        "data": {
+          "defaultValue": "false",
+          "flags": [
+            "cl",
+            "a",
+            "release"
+          ],
+          "descriptionEn": "",
+          "section": "C"
+        },
+        "ok": true
+      },
+      {
+        "command": "bot_mimic_yaw_offset",
+        "section": "B",
+        "html": {
+          "defaultValue": "180",
+          "flags": [
+            "sv",
+            "cheat"
+          ],
+          "descriptionEn": "",
+          "marker": false
+        },
+        "data": {
+          "defaultValue": "180",
+          "flags": [
+            "sv",
+            "cheat"
+          ],
+          "descriptionEn": "",
+          "section": "B"
+        },
+        "ok": true
+      },
+      {
+        "command": "sv_maxunlag",
+        "section": "S",
+        "html": {
+          "defaultValue": "0.2",
+          "flags": [
+            "sv",
+            "release"
+          ],
+          "descriptionEn": "Maximum lag compensation in seconds",
+          "marker": false
+        },
+        "data": {
+          "defaultValue": "0.2",
+          "flags": [
+            "sv",
+            "release"
+          ],
+          "descriptionEn": "Maximum lag compensation in seconds",
+          "section": "S"
+        },
+        "ok": true
+      },
+      {
+        "command": "tv_relayvoice",
+        "section": "T",
+        "html": {
+          "defaultValue": "true",
+          "flags": [
+            "release"
+          ],
+          "descriptionEn": "Relay voice data: 0=off, 1=on",
+          "marker": false
+        },
+        "data": {
+          "defaultValue": "true",
+          "flags": [
+            "release"
+          ],
+          "descriptionEn": "Relay voice data: 0=off, 1=on",
+          "section": "T"
+        },
+        "ok": true
+      }
+    ],
+    "translations": [
+      {
+        "command": "inferno_max_flames",
+        "descriptionEn": "Maximum number of flames that can be created",
+        "descriptionZh": "可以创建的火焰数量上限"
+      },
+      {
+        "command": "mp_teamscore_1",
+        "descriptionEn": "A non-empty string for best-of-N maps won by the first team.",
+        "descriptionZh": "非空字符串，用于表示队伍 1 在 N 局制系列赛中赢下的地图数。"
+      },
+      {
+        "command": "ent_show_contexts",
+        "descriptionEn": "Show entity contexts in ent_text display",
+        "descriptionZh": "在 ent_text 显示中展示实体上下文"
+      },
+      {
+        "command": "cl_ent_text_sticky_clear",
+        "descriptionEn": "Clears the list of names to display text debugging information about the given entity(ies) on top of the entity (See Overlay Text) Arguments: {entity_name} / {class_name} / {entity_index} / {no argument = pick what player is looking at}",
+        "descriptionZh": "清空要显示文本调试信息的实体名称名单（显示在实体上方，见“叠加文本”）。参数：{entity_name} / {class_name} / {entity_index} / {no argument = pick what player is looking at}"
+      },
+      {
+        "command": "cl_clockdrift_max_ticks",
+        "descriptionEn": "Maximum number of ticks the clock is allowed to drift before the client snaps its clock to the server's.",
+        "descriptionZh": "客户端时钟直接对齐服务器时钟前允许漂移的最大 tick 数"
+      },
+      {
+        "command": "rcon_password",
+        "descriptionEn": "remote console password.",
+        "descriptionZh": "远程控制台密码。"
+      },
+      {
+        "command": "snd_steamaudio_export_scene",
+        "descriptionEn": "Exports scene currently used by Steam Audio as a phononscene file.",
+        "descriptionZh": "把 Steam Audio 当前使用的场景导出为 phononscene 文件。"
+      },
+      {
+        "command": "host_timescale_inc",
+        "descriptionEn": "Increment the timescale by one step",
+        "descriptionZh": "把时间缩放提高一档"
+      },
+      {
+        "command": "cam_showangles",
+        "descriptionEn": "When in thirdperson, print viewangles/idealangles/cameraoffsets to the console.",
+        "descriptionZh": "第三人称下把 viewangles/idealangles/cameraoffsets 打印到控制台"
+      },
+      {
+        "command": "cl_script_add_watch",
+        "descriptionEn": "Add a watch to the game debug overlay",
+        "descriptionZh": "向游戏调试叠加层添加监视项"
+      },
+      {
+        "command": "sv_steamgroup",
+        "descriptionEn": "The ID of the steam group that this server belongs to. You can find your group's ID on the admin profile page in the steam community.",
+        "descriptionZh": "该服务器所属 Steam 组的 ID。你可以在 Steam 社区的管理员资料页找到你的组 ID。"
+      },
+      {
+        "command": "cl_script_remove_watch_pattern",
+        "descriptionEn": "Remove a watch from the game debug overlay",
+        "descriptionZh": "从游戏调试叠加层移除监视项"
+      },
+      {
+        "command": "sv_hibernate_postgame_delay",
+        "descriptionEn": "# of seconds to wait after final client leaves before hibernating.",
+        "descriptionZh": "最后一名客户端离开后、进入休眠前等待的秒数。"
+      },
+      {
+        "command": "playsoundscape",
+        "descriptionEn": "Forces a soundscape to play",
+        "descriptionZh": "强制播放一个环境音"
+      },
+      {
+        "command": "install_dlc_workshoptools_cvar",
+        "descriptionEn": "DLC Install Status",
+        "descriptionZh": "DLC 安装状态"
+      },
+      {
+        "command": "bot_randombuy",
+        "descriptionEn": "should bots ignore their prefered weapons and just buy weapons at random?",
+        "descriptionZh": "机器人是否应忽略其偏好武器，改为随机购买武器？"
+      },
+      {
+        "command": "cl_deathcam_audio_mix_phase2_fade_time",
+        "descriptionEn": "Sets the amount of time we fade out over.",
+        "descriptionZh": "设置淡出所用的时间"
+      },
+      {
+        "command": "particle_test_attach_mode",
+        "descriptionEn": "Possible Values: 'start_at_attachment', 'follow_attachment', 'start_at_origin', 'follow_origin'",
+        "descriptionZh": "可选值：'start_at_attachment'、'follow_attachment'、'start_at_origin'、'follow_origin'"
+      },
+      {
+        "command": "cl_ent_hierarchy",
+        "descriptionEn": "Prints the entity hierarchy tree rooted at the specified ent(s)",
+        "descriptionZh": "打印以指定实体为根的实体层级树"
+      },
+      {
+        "command": "cl_teamid_overhead_mode",
+        "descriptionEn": "Always show team id over teammates. 1 = pips; 2 = pips, name, and equipment",
+        "descriptionZh": "始终在队友头顶显示队伍标识。1 = 光点；2 = 光点、名字和装备"
+      },
+      {
+        "command": "sv_server_graphic1",
+        "descriptionEn": "A 360x60 (<16kb) image file in /csgo/ that will be displayed to spectators.",
+        "descriptionZh": "/csgo/ 中一个 360x60（<16kb）的图片文件，会显示给观战者。"
+      },
+      {
+        "command": "weapon_accuracy_nospread",
+        "descriptionEn": "Disable weapon inaccuracy spread",
+        "descriptionZh": "禁用武器不精准散布"
+      },
+      {
+        "command": "script_help",
+        "descriptionEn": "Output help for script functions",
+        "descriptionZh": "输出脚本函数的帮助"
+      },
+      {
+        "command": "mp_dm_teammode_kill_score",
+        "descriptionEn": "Team deathmatch victory points to award for enemy kill",
+        "descriptionZh": "团队死斗中击杀敌人奖励的胜利点数"
+      },
+      {
+        "command": "mp_ct_default_primary",
+        "descriptionEn": "The default primary (rifle) weapon that the CTs will spawn with",
+        "descriptionZh": "反恐精英默认携带的主武器（步枪）"
+      },
+      {
+        "command": "demolist",
+        "descriptionEn": "Print demo sequence list.",
+        "descriptionZh": "打印录像序列列表"
+      },
+      {
+        "command": "subclass_create",
+        "descriptionEn": "Creates an entity of the given subclass where the player is looking.",
+        "descriptionZh": "在玩家所看的位置创建一个指定子类的实体。"
+      },
+      {
+        "command": "r_drawworld",
+        "descriptionEn": "Render the world.",
+        "descriptionZh": "渲染世界。"
+      },
+      {
+        "command": "mp_backup_round_auto",
+        "descriptionEn": "If enabled will keep in-memory backups to handle reconnecting players even if the backup files aren't written to disk",
+        "descriptionZh": "启用后即使备份文件未写入磁盘，也会保留内存中的备份以处理重连的玩家"
+      },
+      {
+        "command": "escape",
+        "descriptionEn": "Escape key pressed.",
+        "descriptionZh": "按下了 Esc 键"
+      },
+      {
+        "command": "contributionscore_assist",
+        "descriptionEn": "amount of contribution score added for an assist",
+        "descriptionZh": "每次助攻增加的贡献分"
+      },
+      {
+        "command": "script_trace_enable",
+        "descriptionEn": "Turn on a particular trace output by file or function name",
+        "descriptionZh": "按文件或函数名开启特定的跟踪输出"
+      },
+      {
+        "command": "mp_dm_teammode_bonus_score",
+        "descriptionEn": "Team deathmatch victory points to award for kill with bonus weapon",
+        "descriptionZh": "团队死斗中用奖励武器击杀奖励的胜利点数"
+      },
+      {
+        "command": "viewmodel_fov",
+        "descriptionEn": "Viewmodel FOV",
+        "descriptionZh": "持枪视角 FOV"
+      },
+      {
+        "command": "bot_kill",
+        "descriptionEn": "bot_kill <all> <t\\|ct> <type> <difficulty> <name> - Kills a specific bot, or all bots, matching the given criteria.",
+        "descriptionZh": "bot_kill <all> <t\\|ct> <type> <difficulty> <name> - 杀死符合给定条件的某个机器人或所有机器人"
+      },
+      {
+        "command": "setpos_player",
+        "descriptionEn": "Move specified player to specified origin (must have sv_cheats).",
+        "descriptionZh": "把指定玩家移动到指定原点（需要 sv_cheats）。"
+      },
+      {
+        "command": "debug_purchase_defidx",
+        "descriptionEn": "Purchase an item by defindex",
+        "descriptionZh": "按 defindex 购买物品"
+      },
+      {
+        "command": "cl_player_ping_mute",
+        "descriptionEn": "If 1, player pinging will make a sound, if 0, pings will be silent",
+        "descriptionZh": "为 1 时玩家标记会发出声音，为 0 时标记静音"
+      },
+      {
+        "command": "cl_ent_ungrab",
+        "descriptionEn": "un-grabs all objects",
+        "descriptionZh": "松开所有已抓取的物体"
+      },
+      {
+        "command": "bot_max_visible_smoke_length",
+        "descriptionEn": "Bots will see players through smoke clouds up to this length.",
+        "descriptionZh": "机器人在该距离内可以透过烟雾看到玩家"
+      }
+    ]
+  },
+  "details": {
+    "dist": {
+      "path": "dist/data/commands.json",
+      "sha256": "c6ce50e8b41567911926e22cff25a4f060befa058debffd4a6ebb4c0160673a1",
+      "bytes": 821439
+    },
+    "bracketDefaults": [
+      {
+        "command": "sv_mapvetopickvote_phase_duration",
+        "defaultValue": "[1 | 5][2 | 15][3:20][4:10][5:10][6:5]"
+      }
+    ],
+    "flagFrequency": {
+      "cl": 1092,
+      "release": 1037,
+      "sv": 1168,
+      "cheat": 1248,
+      "norecord": 37,
+      "a": 360,
+      "rep": 519,
+      "clientcmd_can_execute": 18,
+      "nf": 100,
+      "server_can_execute": 25,
+      "user": 26,
+      "per_user": 73,
+      "vconsole_fuzzy": 10,
+      "disconnected": 1,
+      "demo": 3,
+      "execute_per_tick": 2,
+      "nolog": 4,
+      "vconsole_set_focus": 5,
+      "server_cant_query": 4,
+      "sp": 1,
+      "prot": 4
+    },
+    "translationCoverage": {
+      "withEnglish": 1587,
+      "uniqueEnglish": 1465,
+      "emptyTranslations": 0,
+      "cjkRatio": 1,
+      "noCjk": [],
+      "identicalToEnglish": []
+    },
+    "fieldMismatches": [],
+    "translationRiskScan": {
+      "minRatio": 0.16666666666666666,
+      "maxRatio": 5,
+      "shortest": [
+        {
+          "command": "closecaption",
+          "ratio": 0.16666666666666666,
+          "descriptionEn": "Enable close captioning.",
+          "descriptionZh": "启用字幕"
+        },
+        {
+          "command": "contributionscore_bomb_planted",
+          "ratio": 0.16666666666666666,
+          "descriptionEn": "amount of contribution score for planting a bomb",
+          "descriptionZh": "下包获得的贡献分"
+        },
+        {
+          "command": "mp_friendlyfire",
+          "ratio": 0.17543859649122806,
+          "descriptionEn": "Allows team members to injure other members of their team",
+          "descriptionZh": "允许队友伤害其他队友"
+        },
+        {
+          "command": "cc_delay_time",
+          "ratio": 0.18604651162790697,
+          "descriptionEn": "Close caption delay before showing caption.",
+          "descriptionZh": "显示字幕前的延迟"
+        },
+        {
+          "command": "mp_shorthanded_cash_bonus_ignore_kicked",
+          "ratio": 0.18823529411764706,
+          "descriptionEn": "Determines whether kicked players are included in the assessment for short-handedness",
+          "descriptionZh": "决定被踢出的玩家是否计入缺人判定"
+        },
+        {
+          "command": "tv_listen_voice_indices_h",
+          "ratio": 0.1896551724137931,
+          "descriptionEn": "High 32 bits of bitfield of playerslots to listen to voice messages from when connected to SourceTV, default is none",
+          "descriptionZh": "上述玩家槽位位掩码的高 32 位，默认不接收"
+        },
+        {
+          "command": "r_particle_max_draw_distance",
+          "ratio": 0.19148936170212766,
+          "descriptionEn": "The maximum distance that particles will render",
+          "descriptionZh": "粒子渲染的最大距离"
+        },
+        {
+          "command": "animgraph_record_all",
+          "ratio": 0.1926605504587156,
+          "descriptionEn": "Automatically start recording AnimGraphs when they get created, and save them to disk when they are destroyed",
+          "descriptionZh": "动画图创建时自动开始录制，销毁时保存到磁盘"
+        },
+        {
+          "command": "contributionscore_cash_bundle",
+          "ratio": 0.19298245614035087,
+          "descriptionEn": "amount of contribution score for picking up a cash bundle",
+          "descriptionZh": "拾取现金包获得的贡献分"
+        },
+        {
+          "command": "mp_playerid_hold",
+          "ratio": 0.19402985074626866,
+          "descriptionEn": "Number of seconds to keep showing old information in the status bar",
+          "descriptionZh": "状态栏继续显示旧信息的秒数"
+        }
+      ],
+      "longest": [
+        {
+          "command": "cl_radar_rotate",
+          "ratio": 5,
+          "descriptionEn": "1",
+          "descriptionZh": "1（开启）"
+        },
+        {
+          "command": "bot_stop",
+          "ratio": 1.96875,
+          "descriptionEn": "all> | <not_bomber> | <t> | <ct>",
+          "descriptionZh": "all> | <not_bomber> | <t> | <ct>（可选值：全部 / 非炸弹携带者 / 恐怖分子 / 反恐精英）"
+        },
+        {
+          "command": "viewmodel_offset_z",
+          "ratio": 1.6666666666666667,
+          "descriptionEn": "viewmodel_offset_z",
+          "descriptionZh": "viewmodel_offset_z（持枪视角 Z 轴偏移）"
+        },
+        {
+          "command": "viewmodel_offset_y",
+          "ratio": 1.6666666666666667,
+          "descriptionEn": "viewmodel_offset_y",
+          "descriptionZh": "viewmodel_offset_y（持枪视角 Y 轴偏移）"
+        },
+        {
+          "command": "viewmodel_offset_x",
+          "ratio": 1.6666666666666667,
+          "descriptionEn": "viewmodel_offset_x",
+          "descriptionZh": "viewmodel_offset_x（持枪视角 X 轴偏移）"
+        },
+        {
+          "command": "menuselect",
+          "ratio": 1.6,
+          "descriptionEn": "menuselect",
+          "descriptionZh": "menuselect（菜单选择）"
+        },
+        {
+          "command": "test_list_entities",
+          "ratio": 1.5555555555555556,
+          "descriptionEn": "test-list entities",
+          "descriptionZh": "test-list entities：列出实体（测试用）"
+        },
+        {
+          "command": "cl_test_list_entities",
+          "ratio": 1.5555555555555556,
+          "descriptionEn": "test-list entities",
+          "descriptionZh": "test-list entities：列出实体（测试用）"
+        },
+        {
+          "command": "log",
+          "ratio": 1.5,
+          "descriptionEn": "off >.",
+          "descriptionZh": "off >（关闭）"
+        },
+        {
+          "command": "viewmodel_presetpos",
+          "ratio": 1.2857142857142858,
+          "descriptionEn": "1:'Desktop', 2:'Couch', 3:'Classic'",
+          "descriptionZh": "1：'Desktop'（桌面），2：'Couch'（沙发），3：'Classic'（经典）"
+        }
+      ],
+      "identical": [],
+      "enEndsWithPeriodZhWithout": 198,
+      "additive": [
+        {
+          "command": "log",
+          "ratio": 1.5,
+          "descriptionEn": "off >.",
+          "descriptionZh": "off >（关闭）"
+        },
+        {
+          "command": "cl_test_list_entities",
+          "ratio": 1.56,
+          "descriptionEn": "test-list entities",
+          "descriptionZh": "test-list entities：列出实体（测试用）"
+        },
+        {
+          "command": "test_list_entities",
+          "ratio": 1.56,
+          "descriptionEn": "test-list entities",
+          "descriptionZh": "test-list entities：列出实体（测试用）"
+        },
+        {
+          "command": "menuselect",
+          "ratio": 1.6,
+          "descriptionEn": "menuselect",
+          "descriptionZh": "menuselect（菜单选择）"
+        },
+        {
+          "command": "viewmodel_offset_x",
+          "ratio": 1.67,
+          "descriptionEn": "viewmodel_offset_x",
+          "descriptionZh": "viewmodel_offset_x（持枪视角 X 轴偏移）"
+        },
+        {
+          "command": "viewmodel_offset_y",
+          "ratio": 1.67,
+          "descriptionEn": "viewmodel_offset_y",
+          "descriptionZh": "viewmodel_offset_y（持枪视角 Y 轴偏移）"
+        },
+        {
+          "command": "viewmodel_offset_z",
+          "ratio": 1.67,
+          "descriptionEn": "viewmodel_offset_z",
+          "descriptionZh": "viewmodel_offset_z（持枪视角 Z 轴偏移）"
+        },
+        {
+          "command": "bot_stop",
+          "ratio": 1.97,
+          "descriptionEn": "all> | <not_bomber> | <t> | <ct>",
+          "descriptionZh": "all> | <not_bomber> | <t> | <ct>（可选值：全部 / 非炸弹携带者 / 恐怖分子 / 反恐精英）"
+        },
+        {
+          "command": "cl_radar_rotate",
+          "ratio": 5,
+          "descriptionEn": "1",
+          "descriptionZh": "1（开启）"
+        }
+      ]
+    },
+    "build": {
+      "exitCode": 0,
+      "output": "vite v5.4.11 building for production...\ntransforming...\n✓ 43 modules transformed.\nrendering chunks...\ncomputing gzip size...\ndist/index.html                   0.58 kB │ gzip:  0.48 kB\ndist/assets/index-fcKai-3j.css   11.72 kB │ gzip:  3.03 kB\ndist/assets/index-BYtbf0tz.js   173.68 kB │ gzip: 58.13 kB\n✓ built in 8.75s\n[plugin cs2-frozen-dataset] [cs2-dataset] 已复制数据集 C:\\Users\\Administrator\\Desktop\\cs2 指令\\data\\commands.json -> C:\\Users\\Administrator\\Desktop\\cs2 指令\\dist\\data\\commands.json (802.2 KB, 821439 字节)\n\n$ tsc --noEmit -p tsconfig.json && vite build"
+    },
+    "bundle": {
+      "jsPath": "/assets/index-BYtbf0tz.js",
+      "bytes": 178036,
+      "sha256": "2741463afa281d69a6362aa6aec30a16110a6b6f85e8b43476466966b66e7fab"
+    },
+    "harness": {
+      "initial_count": "全部 2528 条",
+      "initial_rows": "80",
+      "q_sv_cheats_count": "筛选结果 6 / 2528 条",
+      "q_sv_cheats_rows": "setang|setang_exact|setpos|setpos_exact|setpos_player|sv_cheats",
+      "q_SV_CHEATS_count": "筛选结果 6 / 2528 条",
+      "q_SV_CHEATS_rows": "setang|setang_exact|setpos|setpos_exact|setpos_player|sv_cheats",
+      "q_zh_count": "筛选结果 1 / 2528 条",
+      "q_zh_rows": "CS_WarnFriendlyDamageInterval",
+      "q_mp_roundt_count": "筛选结果 3 / 2528 条",
+      "q_mp_roundt_rows": "mp_roundtime|mp_roundtime_defuse|mp_roundtime_hostage",
+      "chip_cheat_found": "true",
+      "flag_cheat_count": "筛选结果 1248 / 2528 条",
+      "flag_cheat_active": "true",
+      "chip_section_M_found": "true",
+      "flag_cheat_plus_M_count": "筛选结果 44 / 2528 条",
+      "default_none_count": "筛选结果 2 / 2528 条",
+      "default_none_rows": "hostname|name",
+      "clipboard_stub": "ok",
+      "row_found": "true",
+      "copy_line": "\"sv_cheats false\"",
+      "copy_name": "\"sv_cheats\"",
+      "select_all_found": "true",
+      "batch_bar": "true",
+      "batch_values": "\"setang\\nsetang_exact\\nsetpos\\nsetpos_exact\\nsetpos_player\\nsv_cheats false\"",
+      "batch_names": "\"setang\\nsetang_exact\\nsetpos\\nsetpos_exact\\nsetpos_player\\nsv_cheats\"",
+      "copy_edited": "\"sv_cheats 0\"",
+      "DONE": "1"
+    },
+    "copyStrings": {
+      "line": "sv_cheats false",
+      "name": "sv_cheats",
+      "edited": "sv_cheats 0",
+      "batchValues": "setang\nsetang_exact\nsetpos\nsetpos_exact\nsetpos_player\nsv_cheats false",
+      "batchNames": "setang\nsetang_exact\nsetpos\nsetpos_exact\nsetpos_player\nsv_cheats"
+    },
+    "repairedRows": [
+      {
+        "command": "cl_promoted_settings_acknowledged",
+        "sectionMatches": true,
+        "wikiCellsMatch": true,
+        "derivedFlags": "cl,a",
+        "derivedDesc": "",
+        "flagsMatch": true,
+        "descMatch": true,
+        "restoredValueMatchesDataset": true,
+        "structurallyConsistent": true,
+        "cellExactly": true,
+        "structure": {
+          "skeleton": "11696196680965cl,a",
+          "restoredSkeleton": "1696196680965"
+        }
+      },
+      {
+        "command": "sv_mapvetopickvote_phase_duration",
+        "sectionMatches": true,
+        "wikiCellsMatch": true,
+        "derivedFlags": "sv,release",
+        "derivedDesc": "How many seconds each phase lasts",
+        "flagsMatch": true,
+        "descMatch": true,
+        "restoredValueMatchesDataset": true,
+        "structurallyConsistent": true,
+        "cellExactly": false,
+        "structure": {
+          "skeleton": "[15][215][320][410][510][65]",
+          "restoredSkeleton": "[15][215][320][410][510][65]"
+        }
+      },
+      {
+        "command": "tv_broadcast_url",
+        "sectionMatches": true,
+        "wikiCellsMatch": true,
+        "derivedFlags": "release",
+        "derivedDesc": "URL of the broadcast relay",
+        "flagsMatch": true,
+        "descMatch": true,
+        "restoredValueMatchesDataset": true,
+        "structurallyConsistent": true,
+        "cellExactly": false,
+        "structure": {
+          "skeleton": "http//localhost8080",
+          "restoredSkeleton": "http//localhost8080"
+        }
+      },
+      {
+        "command": "tv_broadcast_url1",
+        "sectionMatches": true,
+        "wikiCellsMatch": true,
+        "derivedFlags": "release",
+        "derivedDesc": "URL of the broadcast relay1",
+        "flagsMatch": true,
+        "descMatch": true,
+        "restoredValueMatchesDataset": true,
+        "structurallyConsistent": true,
+        "cellExactly": false,
+        "structure": {
+          "skeleton": "http//localhost8080",
+          "restoredSkeleton": "http//localhost8080"
+        }
+      }
+    ],
+    "neighbours": [
+      {
+        "subject": "cl_promoted_settings_acknowledged",
+        "side": "prev",
+        "neighbour": "cl_predictweapons",
+        "corrupt": false,
+        "status": "OK",
+        "problems": []
+      },
+      {
+        "subject": "cl_promoted_settings_acknowledged",
+        "side": "next",
+        "neighbour": "cl_prop_debug",
+        "corrupt": false,
+        "status": "OK",
+        "problems": []
+      },
+      {
+        "subject": "sv_mapvetopickvote_phase_duration",
+        "side": "prev",
+        "neighbour": "sv_mapvetopickvote_maps",
+        "corrupt": false,
+        "status": "OK",
+        "problems": []
+      },
+      {
+        "subject": "sv_mapvetopickvote_phase_duration",
+        "side": "next",
+        "neighbour": "sv_mapvetopickvote_rnd",
+        "corrupt": false,
+        "status": "OK",
+        "problems": []
+      },
+      {
+        "subject": "tv_broadcast_url",
+        "side": "prev",
+        "neighbour": "tv_broadcast_status",
+        "corrupt": false,
+        "status": "OK",
+        "problems": []
+      },
+      {
+        "subject": "tv_broadcast_url",
+        "side": "next",
+        "neighbour": "tv_broadcast_url1",
+        "corrupt": true,
+        "status": "OK(repaired neighbour)",
+        "problems": []
+      },
+      {
+        "subject": "tv_broadcast_url1",
+        "side": "prev",
+        "neighbour": "tv_broadcast_url",
+        "corrupt": true,
+        "status": "OK(repaired neighbour)",
+        "problems": []
+      },
+      {
+        "subject": "tv_broadcast_url1",
+        "side": "next",
+        "neighbour": "tv_chatgroupsize",
+        "corrupt": false,
+        "status": "OK",
+        "problems": []
+      }
+    ],
+    "guards": {
+      "prepare": [
+        "535: const unhandledRunOnRows = [];",
+        "536: const misalignedRows = [];",
+        "569: misalignment.push(`defaultValue ${JSON.stringify(rawDefault)} is a bare engine-flag token`);",
+        "575: misalignedRows.push({",
+        "598: const isRunOnRow = runOn.seps.length > 0 && (badFlags.length > 0 || runOnFlags.length > 0);",
+        "599: if (isRunOnRow) {",
+        "601: check(!!repair, `run-on row ${command} is enumerated in WIKI_ROW_REPAIRS`);",
+        "633: unhandledRunOnRows.push({ command, wikiCells: { defaultValue, flags: flags.join(', '), description: descriptionEn } });",
+        "678: 'number of repaired rows === number of enumerated repairs'",
+        "685: unhandledRunOnRows.length === 0,",
+        "686: `every corrupt run-on row has an enumerated repair${unhandledRunOnRows.length ? `: ${unhandledRunOnRows.map((u) => u.command).join(', ')}` : ''}`",
+        "689: misalignedRows.length === 0,",
+        "690: `no misaligned row (bare engine-flag token as Default Value / value duplicated into the Flags cell)${",
+        "691: misalignedRows.length",
+        "692: ? `: ${misalignedRows.map((r) => `${r.command}(defaultValue=${JSON.stringify(r.defaultValue)} flags=[${r.flags.join(', ')}] ${r.reason})`).join('; ')}`",
+        "1098: unhandledRunOnRows,",
+        "1165: lines.push(`misalignment guard (criterion C): ${misalignedRows.length} row(s) with a bare engine-flag Default Value or a value duplicated into the Flags cell`);",
+        "1166: for (const r of misalignedRows) lines.push(`  ${r.command}: ${r.reason}`);"
+      ],
+      "verify": [
+        "371: const WIKI_NBSP_COLON = /(?:&#160;|&nbsp;)\\s*:|&#x[aA]0;|&#160/; // marker as served in the HTML",
+        "432: const criterionA = htmlDataRows.filter((r) => r.cells.some((c) => WIKI_NBSP_COLON.test(c.raw)));",
+        "435: const criterionB = htmlDataRows.filter(",
+        "445: const corruptNames = namesOf(criterionA);",
+        "468: 'the two independent corruption criteria agree',",
+        "469: JSON.stringify(namesOf(criterionA)) === JSON.stringify(namesOf(criterionB)),",
+        "470: `A=[${namesOf(criterionA)}] B=[${namesOf(criterionB)}]`",
+        "473: 'html corrupt-row set === meta.repairedRows set (no unfixed/new corrupt row)',",
+        "474: JSON.stringify(corruptNames) === JSON.stringify((meta.repairedRows ?? []).map((r) => r.command).sort()),",
+        "475: `html=[${corruptNames}] meta=[${(meta.repairedRows ?? []).map((r) => r.command).sort()}]`",
+        "502: 'no residue: no dataset field carries the nbsp marker',",
+        "505: !WIKI_NBSP_COLON.test(c.descriptionEn) &&",
+        "506: !WIKI_NBSP_COLON.test(c.defaultValue ?? '') &&",
+        "511: (c) => WIKI_NBSP_COLON.test(c.descriptionEn) || NBSP_CHARS.test(c.descriptionEn) || WIKI_NBSP_COLON.test(c.defaultValue ?? '')",
+        "551: if (WIKI_NBSP_COLON.test(descriptionCell ?? '') || NBSP_CHARS.test(descriptionCell ?? ''))",
+        "788: console.log(`  criterion B (bad flag)   : ${criterionB.length} -> ${namesOf(criterionB).join(', ')}`);"
+      ]
+    },
+    "negativeTests": [
+      {
+        "id": "N1",
+        "desc": "撤销一处修复（tv_broadcast_url → http://localhost:9999）",
+        "scope": "prepare-data.mjs",
+        "exitCode": 1,
+        "failedAsExpected": true,
+        "evidence": "  FAILED: repaired default value of tv_broadcast_url (expected \"http://localhost:8080\", got \"http://localhost:9999\") | BUILD FAILED: 1 check(s) failed: |   - repaired default value of tv_broadcast_url (expected \"http://localhost:8080\", got \"http://localhost:9999\")"
+      },
+      {
+        "id": "N2",
+        "desc": "注入未登记的新坏行（&#160;: run-on 形态）",
+        "scope": "prepare-data.mjs",
+        "exitCode": 1,
+        "failedAsExpected": true,
+        "evidence": "  FAILED: run-on row zzz_verify_injected_runon is enumerated in WIKI_ROW_REPAIRS |   FAILED: no unknown flag tokens left behind: zzz_verify_injected_runon[//injected] |   FAILED: every corrupt run-on row has an enumerated repair: zzz_verify_injected_runon |   FAILED: commands.length (expected 2528, got 2529) |   FAILED: commands.json on disk has 2528 commands | BUILD FAILED: 5 check(s) failed:"
+      },
+      {
+        "id": "N3",
+        "kind": "reverse-regression",
+        "desc": "t7 构造的盲区反例（无 nbsp 标记 + flags 列全为白名单）：现在必须被拒绝，且失败信息点名该行",
+        "scope": "prepare-data.mjs 新增的正交「错位防护」判据",
+        "exitCode": 1,
+        "rejected": true,
+        "rejectsByGuard": false,
+        "namesRow": true,
+        "byMisalignment": true,
+        "failLine": "FAILED: no misaligned row (bare engine-flag token as Default Value / value duplicated into the Flags cell): zzz_verify_gap_probe(defaultValue=\"cl\" flags=[sv] defaultValue \"cl\" is a bare engine-flag token)",
+        "failedAsExpected": true,
+        "legacyPrepareDetects": false,
+        "htmlCriterionA": false,
+        "htmlCriterionB": false,
+        "blindSpotClosed": true,
+        "outputDatasetRow": {
+          "id": 2529,
+          "command": "zzz_verify_gap_probe",
+          "defaultValue": "cl",
+          "flags": [
+            "sv"
+          ],
+          "descriptionEn": "x] : Some description.",
+          "descriptionZh": "",
+          "section": "Z"
+        },
+        "evidence": "  FAILED: no misaligned row (bare engine-flag token as Default Value / value duplicated into the Flags cell): zzz_verify_gap_probe(defaultValue=\"cl\" flags=[sv] defaultValue \"cl\" is a bare engine-flag token) | BUILD FAILED: 1 check(s) failed:"
+      }
+    ],
+    "bracketDeviations": [
+      {
+        "command": "cl_crosshair_dynamic_maxdist_splitratio",
+        "tokens": [
+          "[inner = cl_crosshairsize*(1-cl_crosshair_dynamic_maxdist_splitratio), outer = cl_crosshairsize*cl_crosshair_dynamic_maxdist_splitratio]"
+        ],
+        "en": "If using cl_crosshairstyle 2, this is the ratio used to determine how long the inner and outer xhair pips will be. [inner = cl_crosshairsize*(1-cl_crosshair_dynamic_maxdist_splitratio), outer = cl_crosshairsize*cl_crosshair_dynamic_maxdist_splitratio] [0 - 1]",
+        "zh": "使用 cl_crosshairstyle 2 时，该比例决定内外准星线的长度。[inner = cl_crosshairsize*(1-cl_crosshair_dynamic_maxdist_splitratio)，outer = cl_crosshairsize*cl_crosshair_dynamic_maxdist_splitratio] [0 - 1]"
+      },
+      {
+        "command": "cl_ent_text256",
+        "tokens": [
+          "[within 256 units of the player]"
+        ],
+        "en": "Displays text debugging information about the given entity(ies) [within 256 units of the player] on top of the entity (See Overlay Text) Arguments: {entity_name} / {class_name} / {entity_index} / {no argument = pick what player is looking at}",
+        "zh": "在实体上方显示指定实体的文本调试信息 [玩家 256 单位范围内]（见“叠加文本”）。参数：{entity_name} / {class_name} / {entity_index} / {no argument = pick what player is looking at}"
+      },
+      {
+        "command": "cl_ent_text_radius",
+        "tokens": [
+          "[near the player]"
+        ],
+        "en": "Displays text debugging information about the given entity(ies) [near the player] on top of the entity (See Overlay Text) 2 Arguments: <Radius> <{entity_name} / {class_name} / {entity_index} / {no argument = pick what player is looking at}>",
+        "zh": "在实体上方显示指定实体的文本调试信息 [玩家附近]（见“叠加文本”）2 参数：<Radius> <{entity_name} / {class_name} / {entity_index} / {no argument = pick what player is looking at}>"
+      },
+      {
+        "command": "ent_text256",
+        "tokens": [
+          "[within 256 units of the player]"
+        ],
+        "en": "Displays text debugging information about the given entity(ies) [within 256 units of the player] on top of the entity (See Overlay Text) Arguments: {entity_name} / {class_name} / {entity_index} / {no argument = pick what player is looking at}",
+        "zh": "在实体上方显示指定实体的文本调试信息 [玩家 256 单位范围内]（见“叠加文本”）。参数：{entity_name} / {class_name} / {entity_index} / {no argument = pick what player is looking at}"
+      },
+      {
+        "command": "ent_text_radius",
+        "tokens": [
+          "[near the player]"
+        ],
+        "en": "Displays text debugging information about the given entity(ies) [near the player] on top of the entity (See Overlay Text) 2 Arguments: <Radius> <{entity_name} / {class_name} / {entity_index} / {no argument = pick what player is looking at}>",
+        "zh": "在实体上方显示指定实体的文本调试信息 [玩家附近]（见“叠加文本”）2 参数：<Radius> <{entity_name} / {class_name} / {entity_index} / {no argument = pick what player is looking at}>"
+      },
+      {
+        "command": "sv_disable_immunity_alpha",
+        "tokens": [
+          "[mod authors use this]"
+        ],
+        "en": "If set, clients won't slam the player model render settings each frame for immunity [mod authors use this]",
+        "zh": "设置后，客户端不会为了免疫而每帧反复覆盖玩家模型渲染设置［mod 作者使用］"
+      }
+    ],
+    "placeholderCounts": {
+      "legendRuleKinds": 82,
+      "legendRuleTotal": 255,
+      "declaredKinds": 82,
+      "declaredTotal": 255,
+      "naiveUniqueBasisTotal": 271,
+      "naivePerCommandTotal": 405,
+      "mismatches": []
+    },
+    "placeholders": {
+      "strict": {
+        "descriptions": 122,
+        "kinds": 70,
+        "total": 386
+      },
+      "bracket": {
+        "descriptions": 14,
+        "kinds": 12
+      },
+      "unions": {
+        "measuredUnion": 82,
+        "declaredKinds": 82,
+        "declaredTotal": 255,
+        "uniqueKinds": 82,
+        "uniqueTotal": 271
+      },
+      "strictProblems": [],
+      "strictAdded": [],
+      "bracketProblems": [
+        {
+          "command": "cl_crosshair_dynamic_maxdist_splitratio",
+          "tokens": [
+            "[inner = cl_crosshairsize*(1-cl_crosshair_dynamic_maxdist_splitratio), outer = cl_crosshairsize*cl_crosshair_dynamic_maxdist_splitratio]"
+          ],
+          "en": "If using cl_crosshairstyle 2, this is the ratio used to determine how long the inner and outer xhair pips will be. [inner = cl_crosshairsize*(1-cl_crosshair_dynamic_maxdist_splitratio), outer = cl_crosshairsize*cl_crosshair_dynamic_maxdist_splitratio] [0 - 1]",
+          "zh": "使用 cl_crosshairstyle 2 时，该比例决定内外准星线的长度。[inner = cl_crosshairsize*(1-cl_crosshair_dynamic_maxdist_splitratio)，outer = cl_crosshairsize*cl_crosshair_dynamic_maxdist_splitratio] [0 - 1]"
+        },
+        {
+          "command": "cl_ent_text256",
+          "tokens": [
+            "[within 256 units of the player]"
+          ],
+          "en": "Displays text debugging information about the given entity(ies) [within 256 units of the player] on top of the entity (See Overlay Text) Arguments: {entity_name} / {class_name} / {entity_index} / {no argument = pick what player is looking at}",
+          "zh": "在实体上方显示指定实体的文本调试信息 [玩家 256 单位范围内]（见“叠加文本”）。参数：{entity_name} / {class_name} / {entity_index} / {no argument = pick what player is looking at}"
+        },
+        {
+          "command": "cl_ent_text_radius",
+          "tokens": [
+            "[near the player]"
+          ],
+          "en": "Displays text debugging information about the given entity(ies) [near the player] on top of the entity (See Overlay Text) 2 Arguments: <Radius> <{entity_name} / {class_name} / {entity_index} / {no argument = pick what player is looking at}>",
+          "zh": "在实体上方显示指定实体的文本调试信息 [玩家附近]（见“叠加文本”）2 参数：<Radius> <{entity_name} / {class_name} / {entity_index} / {no argument = pick what player is looking at}>"
+        },
+        {
+          "command": "ent_text256",
+          "tokens": [
+            "[within 256 units of the player]"
+          ],
+          "en": "Displays text debugging information about the given entity(ies) [within 256 units of the player] on top of the entity (See Overlay Text) Arguments: {entity_name} / {class_name} / {entity_index} / {no argument = pick what player is looking at}",
+          "zh": "在实体上方显示指定实体的文本调试信息 [玩家 256 单位范围内]（见“叠加文本”）。参数：{entity_name} / {class_name} / {entity_index} / {no argument = pick what player is looking at}"
+        },
+        {
+          "command": "ent_text_radius",
+          "tokens": [
+            "[near the player]"
+          ],
+          "en": "Displays text debugging information about the given entity(ies) [near the player] on top of the entity (See Overlay Text) 2 Arguments: <Radius> <{entity_name} / {class_name} / {entity_index} / {no argument = pick what player is looking at}>",
+          "zh": "在实体上方显示指定实体的文本调试信息 [玩家附近]（见“叠加文本”）2 参数：<Radius> <{entity_name} / {class_name} / {entity_index} / {no argument = pick what player is looking at}>"
+        },
+        {
+          "command": "sv_disable_immunity_alpha",
+          "tokens": [
+            "[mod authors use this]"
+          ],
+          "en": "If set, clients won't slam the player model render settings each frame for immunity [mod authors use this]",
+          "zh": "设置后，客户端不会为了免疫而每帧反复覆盖玩家模型渲染设置［mod 作者使用］"
+        }
+      ],
+      "undeclaredTokens": [],
+      "declaredMissing": [],
+      "kinds": [
+        {
+          "token": "{entity_name}",
+          "count": 68
+        },
+        {
+          "token": "{class_name}",
+          "count": 68
+        },
+        {
+          "token": "{entity_index}",
+          "count": 66
+        },
+        {
+          "token": "{no argument = pick what player is looking at}",
+          "count": 66
+        },
+        {
+          "token": "<{entity_name} / {class_name} / {entity_index} / {no argument = pick what player is looking at}>",
+          "count": 7
+        },
+        {
+          "token": "<difficulty>",
+          "count": 6
+        },
+        {
+          "token": "<type>",
+          "count": 5
+        },
+        {
+          "token": "<name>",
+          "count": 5
+        },
+        {
+          "token": "<lifetime = 10.0>",
+          "count": 4
+        },
+        {
+          "token": "<r g b a>",
+          "count": 4
+        },
+        {
+          "token": "<target>",
+          "count": 3
+        },
+        {
+          "token": "<all>",
+          "count": 2
+        },
+        {
+          "token": "<t\\|ct>",
+          "count": 2
+        },
+        {
+          "token": "<mapname>",
+          "count": 2
+        },
+        {
+          "token": "<funcname>",
+          "count": 2
+        },
+        {
+          "token": "<option:entname>",
+          "count": 2
+        },
+        {
+          "token": "<substring>",
+          "count": 2
+        },
+        {
+          "token": "<index>",
+          "count": 2
+        },
+        {
+          "token": "<scale factor>",
+          "count": 2
+        },
+        {
+          "token": "<new entity name>",
+          "count": 2
+        },
+        {
+          "token": "<Radius>",
+          "count": 2
+        },
+        {
+          "token": "<ent index or -1 for all>",
+          "count": 2
+        },
+        {
+          "token": "<value>",
+          "count": 2
+        },
+        {
+          "token": "<entity name>",
+          "count": 2
+        },
+        {
+          "token": "<player>",
+          "count": 2
+        },
+        {
+          "token": "<x value>",
+          "count": 2
+        },
+        {
+          "token": "<y value>",
+          "count": 2
+        },
+        {
+          "token": "<z value>",
+          "count": 2
+        },
+        {
+          "token": "{time r g b}",
+          "count": 2
+        },
+        {
+          "token": "<markup_group name>",
+          "count": 2
+        },
+        {
+          "token": "{.vmdl name}",
+          "count": 2
+        },
+        {
+          "token": "<world_index>",
+          "count": 2
+        },
+        {
+          "token": "<eventname>",
+          "count": 2
+        },
+        {
+          "token": "<retrigger time>",
+          "count": 2
+        },
+        {
+          "token": "<max distance>",
+          "count": 2
+        },
+        {
+          "token": "<roll:optional>",
+          "count": 2
+        },
+        {
+          "token": "<exit code>",
+          "count": 1
+        },
+        {
+          "token": "<weaponclass>",
+          "count": 1
+        },
+        {
+          "token": "<skill>",
+          "count": 1
+        },
+        {
+          "token": "<not_bomber>",
+          "count": 1
+        },
+        {
+          "token": "<t>",
+          "count": 1
+        },
+        {
+          "token": "<ct>",
+          "count": 1
+        },
+        {
+          "token": "<varname>",
+          "count": 1
+        },
+        {
+          "token": "<class name>",
+          "count": 1
+        },
+        {
+          "token": "<optional: allangles>",
+          "count": 1
+        },
+        {
+          "token": "<threshold bytes>",
+          "count": 1
+        },
+        {
+          "token": "<item_name>",
+          "count": 1
+        },
+        {
+          "token": "<globalname>",
+          "count": 1
+        },
+        {
+          "token": "<state>",
+          "count": 1
+        },
+        {
+          "token": "<health to lose>",
+          "count": 1
+        },
+        {
+          "token": "{any, CT, T}",
+          "count": 1
+        },
+        {
+          "token": "<N>",
+          "count": 1
+        },
+        {
+          "token": "{0=no, 1=yes}",
+          "count": 1
+        },
+        {
+          "token": "<weapon subclass name>",
+          "count": 1
+        },
+        {
+          "token": "<delay>",
+          "count": 1
+        },
+        {
+          "token": "<player name or index>",
+          "count": 1
+        },
+        {
+          "token": "<concept>",
+          "count": 1
+        },
+        {
+          "token": "<classname>",
+          "count": 1
+        },
+        {
+          "token": "<heuristic #>",
+          "count": 1
+        },
+        {
+          "token": "<commit>",
+          "count": 1
+        },
+        {
+          "token": "<new_subclass>",
+          "count": 1
+        },
+        {
+          "token": "<effect name>",
+          "count": 1
+        },
+        {
+          "token": "<distance away>",
+          "count": 1
+        },
+        {
+          "token": "<flags>",
+          "count": 1
+        },
+        {
+          "token": "<magnitude>",
+          "count": 1
+        },
+        {
+          "token": "<scale>",
+          "count": 1
+        },
+        {
+          "token": "<distance 1024>",
+          "count": 1
+        },
+        {
+          "token": "<flags 0>",
+          "count": 1
+        },
+        {
+          "token": "<magnitude 0>",
+          "count": 1
+        },
+        {
+          "token": "<scale 0>",
+          "count": 1
+        }
+      ]
+    },
+    "backslash": {
+      "commands": [
+        "bot_kick",
+        "bot_kill"
+      ],
+      "inEn": 2,
+      "inZh": 2
+    },
+    "sourceDefects": [
+      {
+        "index": 70,
+        "declared": "duplicate-word",
+        "recomputed": "duplicate-word",
+        "en": "Draw a bbox Arguments: minx miny miny maxx maxy maxz <lifetime = 10.0> <r g b a>"
+      },
+      {
+        "index": 223,
+        "declared": "duplicate-punctuation",
+        "recomputed": "duplicate-punctuation",
+        "en": "Control the crosshair shown when observing a bot. 0: Show player crosshair. 1: Show player…(+111)"
+      },
+      {
+        "index": 281,
+        "declared": "spacing-inside-parens",
+        "recomputed": "spacing-inside-parens",
+        "en": "Draw fps meter at top of screen (1 = fps, 2 = smooth fps, 3 = server MS, 4 = Show FPS and …(+13)"
+      },
+      {
+        "index": 292,
+        "declared": "duplicate-word",
+        "recomputed": "duplicate-word",
+        "en": "Toggle set the player names and team names to the opposite side in which they are are on t…(+19)"
+      },
+      {
+        "index": 455,
+        "declared": "duplicate-punctuation",
+        "recomputed": "duplicate-punctuation",
+        "en": "Give a supply of ammo for current weapon.."
+      },
+      {
+        "index": 661,
+        "declared": "unbalanced-bracket",
+        "recomputed": "unbalanced-bracket",
+        "en": "Logs attacks. Values are: 0=off, 1=enemy, 2=teammate, 3=both)"
+      },
+      {
+        "index": 805,
+        "declared": "unbalanced-bracket",
+        "recomputed": "unbalanced-bracket",
+        "en": "Vertical offset for drawing the mesh (useful for flat planes where the mesh is often a fix…(+34)"
+      },
+      {
+        "index": 864,
+        "declared": "spacing-inside-parens",
+        "recomputed": "spacing-inside-parens",
+        "en": "For servers behind NAT/DHCP meant to be exposed to the public internet, this is the public…(+39)"
+      },
+      {
+        "index": 898,
+        "declared": "spacing-inside-parens",
+        "recomputed": "spacing-inside-parens",
+        "en": "Play a recorded demo file (.dem )."
+      },
+      {
+        "index": 908,
+        "declared": "unbalanced-bracket",
+        "recomputed": "unbalanced-bracket",
+        "en": "Flow through spawn groups for vis (0 == default, 1 == always visible, 2 == never visible."
+      },
+      {
+        "index": 1008,
+        "declared": "possessive-s",
+        "recomputed": "possessive-s",
+        "en": "Changes's player's model"
+      },
+      {
+        "index": 1143,
+        "declared": "missing-space-after-sentence",
+        "recomputed": "missing-space-after-sentence",
+        "en": "Base time scale of Killer Replay.Experimental."
+      },
+      {
+        "index": 1232,
+        "declared": "spacing-inside-parens",
+        "recomputed": "spacing-inside-parens",
+        "en": "Server is a lan server ( no heartbeat, no authentication, no non-class C addresses )"
+      }
+    ],
+    "sourceDefectsHtml": [
+      {
+        "index": 70,
+        "command": "box",
+        "htmlHasSameText": true,
+        "rawCell": "Draw a bbox  Arguments:  minx miny miny maxx maxy maxz &lt;lifetime = 10.0&gt; &lt;r g b a&gt;\n"
+      },
+      {
+        "index": 223,
+        "command": "cl_observed_bot_crosshair",
+        "htmlHasSameText": true,
+        "rawCell": "Control the crosshair shown when observing a bot. 0: Show player crosshair. 1: Show player crosshair only when bot can be taken over, otherwise show default.. 2…(+42)"
+      },
+      {
+        "index": 281,
+        "command": "cl_showfps",
+        "htmlHasSameText": true,
+        "rawCell": "Draw fps meter at top of screen (1 = fps, 2 = smooth fps, 3 = server MS, 4 = Show FPS and Log to file )\n"
+      },
+      {
+        "index": 292,
+        "command": "cl_spec_swapplayersides",
+        "htmlHasSameText": true,
+        "rawCell": "Toggle set the player names and team names to the opposite side in which they are are on the spectator panel.\n"
+      },
+      {
+        "index": 455,
+        "command": "givecurrentammo",
+        "htmlHasSameText": true,
+        "rawCell": "Give a supply of ammo for current weapon..\n"
+      },
+      {
+        "index": 661,
+        "command": "mp_logdetail",
+        "htmlHasSameText": true,
+        "rawCell": "Logs attacks.  Values are: 0=off, 1=enemy, 2=teammate, 3=both)\n"
+      },
+      {
+        "index": 805,
+        "command": "nav_draw_mesh_offset",
+        "htmlHasSameText": true,
+        "rawCell": "Vertical offset for drawing the mesh (useful for flat planes where the mesh is often a fixed offset from the physical ground\n"
+      },
+      {
+        "index": 864,
+        "command": "net_public_adr",
+        "htmlHasSameText": true,
+        "rawCell": "For servers behind NAT/DHCP meant to be exposed to the public internet, this is the public facing ip address string: ('x.x.x.x' )\n"
+      },
+      {
+        "index": 898,
+        "command": "playdemo",
+        "htmlHasSameText": true,
+        "rawCell": "Play a recorded demo file (.dem ).\n"
+      },
+      {
+        "index": 908,
+        "command": "pvs_flowtype",
+        "htmlHasSameText": true,
+        "rawCell": "Flow through spawn groups for vis (0 == default, 1 == always visible, 2 == never visible.\n"
+      },
+      {
+        "index": 1008,
+        "command": "setmodel",
+        "htmlHasSameText": true,
+        "rawCell": "Changes's player's model\n"
+      },
+      {
+        "index": 1143,
+        "command": "spec_replay_rate_base",
+        "htmlHasSameText": true,
+        "rawCell": "Base time scale of Killer Replay.Experimental.\n"
+      },
+      {
+        "index": 1232,
+        "command": "sv_lan",
+        "htmlHasSameText": true,
+        "rawCell": "Server is a lan server ( no heartbeat, no authentication, no non-class C addresses )\n"
+      }
+    ]
+  }
+}

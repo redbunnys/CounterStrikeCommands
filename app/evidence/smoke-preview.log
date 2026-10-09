@@ -1,0 +1,59 @@
+$ node app/scripts/smoke-test.mjs
+CS2 命令查询前端 —— 自测脚本
+项目根目录：C:\Users\Administrator\Desktop\cs2 指令
+服务器地址：http://127.0.0.1:4173（本次启动 vite preview）
+
+== 1. 服务器与静态资源 ==
+  [PASS] GET / 返回 HTML 页面 — 200, 576 字节
+  [PASS] 页面标题为中文标题 — CS2 控制台命令与变量查询（中文）
+  [PASS] 页面引用的脚本/样式资源可直接访问 — /assets/index-BYtbf0tz.js 173.9 KB · /assets/index-fcKai-3j.css 11.4 KB
+  [PASS] 前端代码包含复制反馈与中文回退文案 — 构建产物 /assets/index-BYtbf0tz.js，包含 7 条关键文案
+
+== 2. 数据文件 /data/commands.json ==
+  [PASS] GET /data/commands.json 返回 JSON — 200, application/json, 802.2 KB
+  [PASS] 服务端返回的数据与本地 data/commands.json 字节一致（sha256） — C:\Users\Administrator\Desktop\cs2 指令\data\commands.json = c6ce50e8b4156791… (821439 字节)，HTTP 响应字节完全相同
+  [PASS] 条数为 2528 — 2528 条（meta.commands=2528）
+  [PASS] 每条记录字段符合冻结契约 — 字段齐全，键集合 = command, defaultValue, descriptionEn, descriptionZh, flags, id, section
+  [PASS] id 为 1..2528 连续且 command 唯一、升序 — id 1..2528 连续，命令名唯一且升序
+  [PASS] flags 全部落在 21 条白名单内 — 2528 条全部合规
+
+== 3. 搜索 / 筛选（复用前端 app/src/lib/filter.ts 的真实实现） ==
+  [PASS] 搜索 sv_cheats 能命中该命令 — 命中 6 条，含 sv_cheats（默认值 "false"）
+  [PASS] 搜索大小写不敏感（SV_CHEATS === sv_cheats） — 两种写法都是 6 条
+  [PASS] 搜索 mp_roundt 命中多轮时间相关命令 — 3 条：mp_roundtime, mp_roundtime_defuse, mp_roundtime_hostage
+  [PASS] 搜索可匹配中文描述（合成 descriptionZh 验证回退路径） — 中文关键词命中 +lookatweapon，无关关键词命中 0 条
+  [PASS] 搜索可匹配真实中文译文（merge 后的 descriptionZh） — 用「定义服务」命中 1 条，含 CS_WarnFriendlyDamageInterval（定义服务器通知客户端“玩家伤害了友军”的频率…）
+  [PASS] 同一维度内多选 = OR（flags: cheat|sv） — cheat=1248, sv=1168, cheat|sv=1841
+  [PASS] 不同维度之间 = AND（关键词 + 标记 + 首字母） — mp_roundt + sv + 段落M = 3 条（仅关键词 3 条），再叠加「有默认值」= 3 条
+  [PASS] 按首字母段落筛选 A-Z/_ 与总数守恒 — 25 个段落：L=31 Q=7 R=199 S=577 C=466 T=82 _=1 A=43 B=69 D=47 E=78 F=41 G=25 H=24 I=38 J=37 K=7 M=299 N=300 O=2 P=52 U=52 V=37 W=13 Z=1
+  [PASS] 有默认值 / 无默认值筛选互补 — 有默认值 2526 条，无默认值 2 条
+  [PASS] 空筛选返回全部，hasActiveFilters 反映状态 — 全部 2528 条 / 空结果 0 条
+
+== 4. 复制字符串拼装（复用前端 app/src/lib/copy.ts 的真实实现） ==
+  [PASS] sv_cheats 单条「命令+值」拼装 — sv_cheats 1 / sv_cheats false（默认值）/ sv_cheats（空值）
+  [PASS] mp_roundtime 系列批量复制（每行一条） — 3 行（含值）：mp_roundtime 3 / mp_roundtime_defuse 2.25 / mp_roundtime_hostage 2
+  [PASS] defaultValue=cmd 的命令不把 cmd 当成值（+lookatweapon） — +lookatweapon（默认值 cmd 被忽略）+ valueForCommand(null)===''
+  [PASS] 批量复制含值的行都能作为 .cfg 单行执行 — 3 行全部符合「命令 [值]」格式
+
+== 5. 前端降级策略（descriptionZh 为空 / 部分翻译） ==
+  [PASS] 当前数据集的中文描述状态与回退预期一致 — descriptionZh 已填 1587/1587 条有英文描述的命令（总 2528 条，941 条源站无描述）；仍缺中文 0 条 -> 未翻译条目回退英文并标注「英文原文」，两者皆空显示「（数据源未提供描述）」
+
+== 6. 参数占位符：中文注解 + 复制保持原样 ==
+  [PASS] 内联的占位符释义表覆盖数据里全部占位符写法 — 85 条（glossary 79 / derived 3 / 译文变体 3），覆盖 85 种真实写法 / 753 处 / 130 条命令；界面注解 82 种，译文变体原样显示：[inner = cl_crosshairsize*(1-cl_crosshair_dynamic_maxdist_splitratio)，outer = cl_crosshairsize*cl_crosshair_dynamic_maxdist_splitratio] [玩家 256 单位范围内] [玩家附近]
+  [PASS] 占位符渲染逐字保真（切片拼接 === 原文） — 校验了 3174 段描述，逐字一致（含所有反斜杠与空格）
+  [PASS] `<t\|ct>` 的反斜杠是数据、不是脏字符，且被原样保留 — 4 处含反斜杠字段（bot_kick.descriptionEn, bot_kick.descriptionZh, bot_kill.descriptionEn, bot_kill.descriptionZh），逐字保留且未被转义/清洗
+  [PASS] 复制路径不改写取值中的占位符与反斜杠 — bot_kick <all> <t\|ct> <type> <difficulty> <name>（复制后逐字一致，反斜杠保留）
+  [PASS] 占位符释义表与生成脚本一致（可重复生成） — 生成脚本 --check 退出码 0（app/src/lib/placeholders.ts 与 data/translation/parameter-tokens.md 同步）
+
+== 7. 无头浏览器渲染检查（防白屏） ==
+  [PASS] 真实渲染后的 DOM 含命令列表、计数与占位符注解 — 80 行命令已渲染（首行 +lookatweapon），计数/降级标注/占位符注解均存在 · 浏览器 chrome.exe
+  [PASS] 真实交互：搜索 / 复制（toast + 剪贴板）/ Esc / 预设筛选 / 批量复制 — 搜索 sv_cheats -> 筛选结果 6 / 2528 条，命中行含 sv_cheats 与描述命中项 · 点击复制 -> toast「已复制：sv_cheats false」，剪贴板 = "sv_cheats false" · 行内「值」改为 1 后复制 -> 剪贴板 = "sv_cheats 1" · Esc 清空搜索 -> 全部 2528 条 · 预设「仅显示作弊」 -> 筛选结果 1248 / 2528 条（首行 CS_WarnFriendlyDamageInterval） · 勾选 1 条 -> 已选 1 条 -> 批量复制 = "CS_WarnFriendlyDamageInterval 3"
+
+== 8. 构建产物体积 ==
+  [PASS] dist 产物存在且体积已知 — index.html 0.7 KB · data/commands.json 802.2 KB
+  [PASS] dist 里的数据与源数据字节一致（防止交付旧的英文副本） — dist/data/commands.json sha256=c6ce50e8b4156791… 与 data/commands.json 相同（821439 字节，含中文描述 1587 条）
+
+===== 自测汇总：34/34 通过 =====
+服务器：http://127.0.0.1:4173
+
+退出码：0

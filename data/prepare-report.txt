@@ -1,0 +1,121 @@
+CS2 dataset build report (tools/prepare-data.mjs)
+generatedAt        : 2026-10-08T14:50:00.000Z
+source             : https://developer.valvesoftware.com/wiki/List_of_Counter-Strike_2_console_commands_and_variables
+sourceRetrieved    : October 2, 2023
+sourceBuild        : 9832 (revision 8384867)
+sourceSha256       : b6c2013d18cc58450a629d64ca0da5f7f325469b2e0403cbbe0a7d440b731ee2
+commands           : 2528
+withEnglishDescription : 1587
+uniqueEnglishDescriptions : 1465
+emptyEnglishDescriptions  : 941
+chunks             : 10 (size 150)
+sections           : A B C D E F G H I J K L M N O P Q R S T U V W Z _
+defaultValue=cmd   : 609
+defaultValue=null  : 2
+
+chunks:
+  chunk-001  idx 0-149  (150)
+  chunk-002  idx 150-299  (150)
+  chunk-003  idx 300-449  (150)
+  chunk-004  idx 450-599  (150)
+  chunk-005  idx 600-749  (150)
+  chunk-006  idx 750-899  (150)
+  chunk-007  idx 900-1049  (150)
+  chunk-008  idx 1050-1199  (150)
+  chunk-009  idx 1200-1349  (150)
+  chunk-010  idx 1350-1464  (115)
+
+chunk work units: 0 rewritten by this run, 0 stale removed (write-if-changed)
+
+dropped placeholder rows:
+  N/A (section X)
+  N/A (section Y)
+
+repaired wiki rows:
+  cl_promoted_settings_acknowledged  (section C)
+    wiki cells   : defaultValue="1" flags="1696196680965" description="cl, a :"
+    restored     : defaultValue="1696196680965" flags=[cl, a] descriptionEn=""
+    why          : wiki spilled the default value into the Flags column and the flag list into the Description column
+  sv_mapvetopickvote_phase_duration  (section S)
+    wiki cells   : defaultValue="[1" flags="5][2" description="15][3:20][4:10][5:10][6:5] : sv, release : How many seconds each phase lasts"
+    restored     : defaultValue="[1 | 5][2 | 15][3:20][4:10][5:10][6:5]" flags=[sv, release] descriptionEn="How many seconds each phase lasts"
+    why          : default value contains " | " twice and the wiki split the cells on those pipes
+  tv_broadcast_url  (section T)
+    wiki cells   : defaultValue="http" flags="//localhost" description="8080 : release : URL of the broadcast relay"
+    restored     : defaultValue="http://localhost:8080" flags=[release] descriptionEn="URL of the broadcast relay"
+    why          : wiki consumed the ":" separators: default value rendered as `http | //localhost | 8080 …`
+  tv_broadcast_url1  (section T)
+    wiki cells   : defaultValue="http" flags="//localhost" description="8080 : release : URL of the broadcast relay1"
+    restored     : defaultValue="http://localhost:8080" flags=[release] descriptionEn="URL of the broadcast relay1"
+    why          : same corruption as tv_broadcast_url
+
+source-defect ledger (meta.sourceDefects): 13 entries in 6 classes
+  detectors:
+    unbalanced-bracket             3  括号不闭合/不配对
+    spacing-inside-parens          4  括号内侧多余空格
+    possessive-s                   1  所有格错误（…s's）
+    duplicate-word                 2  单词重复
+    missing-space-after-sentence   1  句末句号后缺空格
+    duplicate-punctuation          2  标点重复（.. ；不含省略号与 C++ :: 作用域）
+    double-space                   0  连续两个空格
+    unbalanced-double-quote        0  双引号数量为奇数
+  entries:
+    [70] duplicate-word (单词重复) detail=miny miny
+         "Draw a bbox Arguments: minx miny miny maxx maxy maxz <lifetime = 10.0> <r g b a>"
+    [223] duplicate-punctuation (标点重复（.. ；不含省略号与 C++ :: 作用域）) detail=..
+         "Control the crosshair shown when observing a bot. 0: Show player crosshair. 1: Show player crosshair only when bot can be taken over, otherwise show default.. 2: Always show default crosshair for bots."
+    [281] spacing-inside-parens (括号内侧多余空格) detail=" )"
+         "Draw fps meter at top of screen (1 = fps, 2 = smooth fps, 3 = server MS, 4 = Show FPS and Log to file )"
+    [292] duplicate-word (单词重复) detail=are are
+         "Toggle set the player names and team names to the opposite side in which they are are on the spectator panel."
+    [455] duplicate-punctuation (标点重复（.. ；不含省略号与 C++ :: 作用域）) detail=..
+         "Give a supply of ammo for current weapon.."
+    [661] unbalanced-bracket (括号不闭合/不配对) detail=(×0、)×1
+         "Logs attacks. Values are: 0=off, 1=enemy, 2=teammate, 3=both)"
+    [805] unbalanced-bracket (括号不闭合/不配对) detail=(×1、)×0
+         "Vertical offset for drawing the mesh (useful for flat planes where the mesh is often a fixed offset from the physical ground"
+    [864] spacing-inside-parens (括号内侧多余空格) detail=" )"
+         "For servers behind NAT/DHCP meant to be exposed to the public internet, this is the public facing ip address string: ('x.x.x.x' )"
+    [898] spacing-inside-parens (括号内侧多余空格) detail=" )"
+         "Play a recorded demo file (.dem )."
+    [908] unbalanced-bracket (括号不闭合/不配对) detail=(×1、)×0
+         "Flow through spawn groups for vis (0 == default, 1 == always visible, 2 == never visible."
+    [1008] possessive-s (所有格错误（…s's）) detail=Changes's
+         "Changes's player's model"
+    [1143] missing-space-after-sentence (句末句号后缺空格) detail=y.Ex
+         "Base time scale of Killer Replay.Experimental."
+    [1232] spacing-inside-parens (括号内侧多余空格) detail="( "
+         "Server is a lan server ( no heartbeat, no authentication, no non-class C addresses )"
+
+flagFrequency:
+  cheat                  1248
+  sv                     1168
+  cl                     1092
+  release                1037
+  rep                    519
+  a                      360
+  nf                     100
+  per_user               73
+  norecord               37
+  user                   26
+  server_can_execute     25
+  clientcmd_can_execute  18
+  vconsole_fuzzy         10
+  vconsole_set_focus     5
+  nolog                  4
+  prot                   4
+  server_cant_query      4
+  demo                   3
+  execute_per_tick       2
+  disconnected           1
+  sp                     1
+
+checks: 2581/2581 passed
+
+outputs:
+  data/commands.json
+  data/translation/glossary.json
+  data/translation/README.md
+  data/translation/chunks/*.json (10 files)
+  data/translation/out/ (translator output dir, kept)
+  data/prepare-report.txt

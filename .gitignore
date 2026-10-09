@@ -1,0 +1,13 @@
+# 依赖（pnpm install 可重现）
+node_modules/
+
+# 构建产物
+dist/
+
+# AgentTeams 运行时状态（协作过程数据，不属于交付物）
+.agent-teams/
+
+# 前端自测脚本产生的临时文件 / 子进程日志
+*.tmp
+*-tmp.*
+dsh-subprocess-*.log

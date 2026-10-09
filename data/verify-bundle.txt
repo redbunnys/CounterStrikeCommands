@@ -1,0 +1,533 @@
+
+===== S0 输入与环境 =====
+  · 工作区根目录           : C:\Users\Administrator\Desktop\cs2 指令
+  · node                   : v24.21.0
+  · data/commands.json     : 821439 字节  sha256=c6ce50e8b41567911926e22cff25a4f060befa058debffd4a6ebb4c0160673a1
+  · data/raw/cs2_wiki.html : 379154 字节  sha256=b6c2013d18cc58450a629d64ca0da5f7f325469b2e0403cbbe0a7d440b731ee2
+  · 随机种子               : 20261008
+  · HTML: Cvar list 区域 336425 字符；数据行 2530；表头行 27
+  · HTML: 带 nbsp+冒号 标记的坏行 4 -> cl_promoted_settings_acknowledged, sv_mapvetopickvote_phase_duration, tv_broadcast_url, tv_broadcast_url1
+  [PASS] HTML 数据行数 === 2530（2528 条命令 + 2 条 N/A 占位行）  :: 2530
+  [PASS] HTML 每个数据行都是 4 个单元格  :: 0 行不是 4 格
+  [PASS] HTML 表头行（th）共 27 行且不参与命令表  :: 27
+
+===== S1 数据集副本一致性（app/public 与 dist 分发副本） =====
+  [PASS] app/public/data/commands.json 存在
+  [PASS] app/public 副本与 data/commands.json 字节完全相同  :: copy=c6ce50e8b41567911926e22cff25a4f060befa058debffd4a6ebb4c0160673a1/821439B vs data=c6ce50e8b41567911926e22cff25a4f060befa058debffd4a6ebb4c0160673a1/821439B
+  [PASS] 两个副本解析后结构完全相等
+  · dist/data/commands.json: 821439 字节 sha256=c6ce50e8b41567911926e22cff25a4f060befa058debffd4a6ebb4c0160673a1
+  [PASS] dist/data/commands.json 与 data/commands.json 字节完全相同（不是旧英文副本）  :: dist=c6ce50e8b41567911926e22cff25a4f060befa058debffd4a6ebb4c0160673a1/821439B
+  [PASS] dist/data/commands.json sha256 === 契约值 c6ce50e8…673a1  :: c6ce50e8b41567911926e22cff25a4f060befa058debffd4a6ebb4c0160673a1
+  [PASS] dist 副本内含 1587 条已翻译描述
+
+===== S2 结构不变量：条数 / 唯一性 / id / 排序 / 字段 / 占位行 =====
+  [PASS] commands 条数 === 2528  :: 2528
+  [PASS] meta.commands === 2528  :: 2528
+  [PASS] command 唯一（无重复）
+  [PASS] 不存在 command === "N/A" 的占位行
+  [PASS] 不存在 defaultValue/descriptionEn === "N/A" 的残留占位内容
+  [PASS] id 为 1..2528 连续
+  [PASS] 按 command 升序（码点序）
+  [PASS] 每条的键顺序严格为 [id, command, defaultValue, flags, descriptionEn, descriptionZh, section]
+  [PASS] section 全为 A-Z 或 "_"
+  · defaultValue: null 2 条 (hostname, name)；"cmd" 609 条
+  [PASS] defaultValue === null 恰好 2 条（hostname, name）  :: hostname,name
+  [PASS] meta.defaultValueNull / defaultValueCmd 与实测一致  :: 2/609 vs 2/609
+
+===== S3 defaultValue 完整性（无 "|" 误拆痕迹）与 4 个修复行精确取值 =====
+  [PASS] 修复行 tv_broadcast_url 的 defaultValue 精确等于契约值  :: "http://localhost:8080"
+  [PASS] 修复行 tv_broadcast_url1 的 defaultValue 精确等于契约值  :: "http://localhost:8080"
+  [PASS] 修复行 cl_promoted_settings_acknowledged 的 defaultValue 精确等于契约值  :: "1696196680965"
+  [PASS] 修复行 sv_mapvetopickvote_phase_duration 的 defaultValue 精确等于契约值  :: "[1 | 5][2 | 15][3:20][4:10][5:10][6:5]"
+  [PASS] 没有任何 defaultValue 携带 nbsp 实体/字符残渣
+  [PASS] 没有任何 defaultValue 含 run-on 拼接痕迹（" : " 或被吞分隔符留下的 ":" 空隙）
+  · defaultValue 含方括号的命令：sv_mapvetopickvote_phase_duration=[1 | 5][2 | 15][3:20][4:10][5:10][6:5]
+  [PASS] 唯一含方括号默认值的命令是 sv_mapvetopickvote_phase_duration（复制串只由命令名+取值拼成）  :: sv_mapvetopickvote_phase_duration
+
+===== S4 flags 白名单与来源保真 =====
+  [PASS] 所有 flag 都落在 21 条白名单内
+  [PASS] 每条内部 flag 无重复
+  [PASS] meta.flags 与白名单一致
+  [PASS] meta.flagFrequency 与实测一致（键集合与计数）
+  [PASS] meta.unknownFlagTokens / unhandledRunOnRows 均为空数组
+
+===== S5 翻译覆盖：复算 meta 两个数字 + 覆盖率 =====
+  · 有英文描述的命令 1587；唯一英文描述 1465；无英文描述 941
+  [PASS] 有英文描述的命令数 === 1587（独立复算，不读 meta）  :: 1587
+  [PASS] 唯一英文描述数 === 1465（独立复算，不读 meta）  :: 1465
+  [PASS] meta.withEnglishDescription 未说谎  :: 1587
+  [PASS] meta.uniqueEnglishDescriptions 未说谎  :: 1465
+  [PASS] meta.emptyEnglishDescriptions === 2528 - 1587 = 941
+  [PASS] 有英文描述的命令 100% 有非空中文（空译文数 === 0）  :: 0 条：
+  [PASS] 有英文描述的命令 100% 含 CJK 字符（含 CJK 比例 = 100%）  :: 0 条：
+  · 空译文 0 条；含 CJK 比例 100.00%
+  [PASS] 无英文描述的命令（941 条）descriptionZh 保持空  :: 0 条
+  · 唯一中文译文 1465 条
+  [PASS] meta.translationStatus 数字与实测一致  :: {"descriptionZhFilled":1587,"uniqueTranslations":1465,"emptyTranslations":0,"commandsWithoutEnglish":941,"outDir":"data/translation/out","workUnits":10,"mergedAt":"2026-10-08T15:10:00.000Z","mergedBy":"tools/merge-translations.mjs"}
+  [PASS] 同一英文描述的所有命令拿到完全相同的译文（merge 未错位）
+
+===== S6 与源站 HTML 全量比对（2530 行 + 随机 40 条样本） =====
+  [PASS] HTML 里 "N/A" 占位行恰好 2 条且未进入 dataset
+  [PASS] HTML 数据行 - 占位行 === 2528  :: 2528
+  [PASS] HTML 中 command 无重复
+  [PASS] HTML 每一行都能对上 dataset 且 command/defaultValue/flags/descriptionEn/section 全一致  :: 0 处不一致：
+  [PASS] dataset 里没有 HTML 中不存在的命令
+  --- 随机抽样 40 条（seed=20261008，可复现）---
+    sv_extract_ammo_from_dropped_weapons  [S] default="false" flags=[sv,cl,rep,release] desc=
+    cl_hud_radar_scale  [C] default="1" flags=[cl,a,release] desc=
+    cl_weapon_clip_thinwalls  [C] default="true" flags=[cl,rep,cheat] desc=
+    mp_give_player_c4  [M] default="true" flags=[sv,cl,rep,release] desc=Whether this map should spawn a c4 bomb for a player or not.
+    vmix_output  [V] default="cmd" flags=[cheat] desc=Dump main graph control output values
+    ent_clear_debug_overlays  [E] default="cmd" flags=[sv,cheat] desc=Clears all debug overlays
+    player_competitive_maplist_2v2_10_0_C8D88986  [P] default="mg_de_overpass,mg_de_vertigo,mg_de_inferno,mg_de_nuke" flags=[cl,a] desc=
+    gameinstructor_dump_run_lesson_counts  [G] default="cmd" flags=[cl,cheat] desc=Gives a list of lessons that been completed or shown
+    mp_death_drop_healthshot  [M] default="true" flags=[sv,cl,rep,release] desc=Drop healthshot on player death
+    r_csgo_mboit_bias  [R] default="0.000005" flags=[cl,cheat] desc=
+    sv_showbullethits  [S] default="0" flags=[sv,cl,rep,release] desc=1=show hits and near misses, 2=show hits only
+    cl_script_add_watch_pattern  [C] default="cmd" flags=[cl,cheat] desc=Add a watch to the game debug overlay
+    sv_shield_explosive_damage_crouch_bonus  [S] default="10" flags=[sv,cl,rep,release] desc=
+    setpos_player  [S] default="cmd" flags=[sv,cheat] desc=Move specified player to specified origin (must have sv_cheats).
+    ui_playsettings_flags_listen_competitive  [U] default="16" flags=[cl,a,release] desc=
+    mat_wireframe  [M] default="0" flags=[cheat] desc=0=Off, 1=Surface Wireframe, 2=Transparent Wireframe
+    nav_obstacle_validate  [N] default="false" flags=[sv,cheat] desc=
+    debugoverlay_cycle_state  [D] default="cmd" flags=[sv,cheat] desc=Toggles visibility of the debug overlay system.
+    nav_toggle_deselecting  [N] default="cmd" flags=[sv,cheat] desc=Start or stop continuously removing from the selected set.
+    nav_draw_area_split_by_nav_link_mgr  [N] default="false" flags=[sv,cheat] desc=
+    cash_team_rescued_hostage  [C] default="600" flags=[sv,cl,nf,rep,release] desc=
+    r_flashlightshadowatten  [R] default="0.35" flags=[cl,cheat] desc=
+    cl_script_reload_code  [C] default="cmd" flags=[cl,cheat] desc=Execute a vscript file, replacing existing functions with the function…(+19)
+    shatterglass_cleanup  [S] default="true" flags=[sv,cl,rep,cheat] desc=
+    ammo_556mm_small_max  [A] default="40" flags=[sv,cl,rep,release] desc=
+    snd_sos_stop_soundevent_guid  [S] default="cmd" flags=[cheat] desc=Stops a specified soundevent
+    hideconsole  [H] default="cmd" flags=[norecord,release] desc=Hide the console.
+    c_minpitch  [C] default="0" flags=[cl,a] desc=
+    cl_showmem  [C] default="0" flags=[cl,release] desc=Draw approximate memory use at top of screen
+    cl_ent_text_no_name_really_i_mean_it  [C] default="false" flags=[cl,cheat] desc=
+    nav_path_fixup_gap_segments  [N] default="false" flags=[sv,cheat] desc=
+    cash_player_killed_teammate  [C] default="-300" flags=[sv,cl,nf,rep,release] desc=
+    sv_teamid_overhead  [S] default="true" flags=[sv,cl,nf,rep,release] desc=Shows teamID over player's heads. 0 = off, 1 = on
+    ent_setpos  [E] default="cmd" flags=[sv,cheat] desc=Move entity to position
+    nav_smooth_draw_calc  [N] default="false" flags=[sv,cheat] desc=
+    nav_gen_connect_angle_ignore_z  [N] default="true" flags=[cheat] desc=
+    cl_disable_round_end_report  [C] default="false" flags=[cl,a,release] desc=
+    bot_mimic_yaw_offset  [B] default="180" flags=[sv,cheat] desc=
+    sv_maxunlag  [S] default="0.2" flags=[sv,release] desc=Maximum lag compensation in seconds
+    tv_relayvoice  [T] default="true" flags=[release] desc=Relay voice data: 0=off, 1=on
+  [PASS] 随机 40 条 HTML 抽样全部命中
+
+===== S7 翻译质量抽样（随机 40 条 英→中 对照，供人工判读） =====
+    ■ inferno_max_flames
+      EN: Maximum number of flames that can be created
+      ZH: 可以创建的火焰数量上限
+    ■ mp_teamscore_1
+      EN: A non-empty string for best-of-N maps won by the first team.
+      ZH: 非空字符串，用于表示队伍 1 在 N 局制系列赛中赢下的地图数。
+    ■ ent_show_contexts
+      EN: Show entity contexts in ent_text display
+      ZH: 在 ent_text 显示中展示实体上下文
+    ■ cl_ent_text_sticky_clear
+      EN: Clears the list of names to display text debugging information about the given entity(ies) on top of the entity (See Overlay Text) Arguments: {entity_name} / {class_name} / {entity_index} / {no argument = pick what player is looking at}
+      ZH: 清空要显示文本调试信息的实体名称名单（显示在实体上方，见“叠加文本”）。参数：{entity_name} / {class_name} / {entity_index} / {no argument = pick what player is looking at}
+    ■ cl_clockdrift_max_ticks
+      EN: Maximum number of ticks the clock is allowed to drift before the client snaps its clock to the server's.
+      ZH: 客户端时钟直接对齐服务器时钟前允许漂移的最大 tick 数
+    ■ rcon_password
+      EN: remote console password.
+      ZH: 远程控制台密码。
+    ■ snd_steamaudio_export_scene
+      EN: Exports scene currently used by Steam Audio as a phononscene file.
+      ZH: 把 Steam Audio 当前使用的场景导出为 phononscene 文件。
+    ■ host_timescale_inc
+      EN: Increment the timescale by one step
+      ZH: 把时间缩放提高一档
+    ■ cam_showangles
+      EN: When in thirdperson, print viewangles/idealangles/cameraoffsets to the console.
+      ZH: 第三人称下把 viewangles/idealangles/cameraoffsets 打印到控制台
+    ■ cl_script_add_watch
+      EN: Add a watch to the game debug overlay
+      ZH: 向游戏调试叠加层添加监视项
+    ■ sv_steamgroup
+      EN: The ID of the steam group that this server belongs to. You can find your group's ID on the admin profile page in the steam community.
+      ZH: 该服务器所属 Steam 组的 ID。你可以在 Steam 社区的管理员资料页找到你的组 ID。
+    ■ cl_script_remove_watch_pattern
+      EN: Remove a watch from the game debug overlay
+      ZH: 从游戏调试叠加层移除监视项
+    ■ sv_hibernate_postgame_delay
+      EN: # of seconds to wait after final client leaves before hibernating.
+      ZH: 最后一名客户端离开后、进入休眠前等待的秒数。
+    ■ playsoundscape
+      EN: Forces a soundscape to play
+      ZH: 强制播放一个环境音
+    ■ install_dlc_workshoptools_cvar
+      EN: DLC Install Status
+      ZH: DLC 安装状态
+    ■ bot_randombuy
+      EN: should bots ignore their prefered weapons and just buy weapons at random?
+      ZH: 机器人是否应忽略其偏好武器，改为随机购买武器？
+    ■ cl_deathcam_audio_mix_phase2_fade_time
+      EN: Sets the amount of time we fade out over.
+      ZH: 设置淡出所用的时间
+    ■ particle_test_attach_mode
+      EN: Possible Values: 'start_at_attachment', 'follow_attachment', 'start_at_origin', 'follow_origin'
+      ZH: 可选值：'start_at_attachment'、'follow_attachment'、'start_at_origin'、'follow_origin'
+    ■ cl_ent_hierarchy
+      EN: Prints the entity hierarchy tree rooted at the specified ent(s)
+      ZH: 打印以指定实体为根的实体层级树
+    ■ cl_teamid_overhead_mode
+      EN: Always show team id over teammates. 1 = pips; 2 = pips, name, and equipment
+      ZH: 始终在队友头顶显示队伍标识。1 = 光点；2 = 光点、名字和装备
+    ■ sv_server_graphic1
+      EN: A 360x60 (<16kb) image file in /csgo/ that will be displayed to spectators.
+      ZH: /csgo/ 中一个 360x60（<16kb）的图片文件，会显示给观战者。
+    ■ weapon_accuracy_nospread
+      EN: Disable weapon inaccuracy spread
+      ZH: 禁用武器不精准散布
+    ■ script_help
+      EN: Output help for script functions
+      ZH: 输出脚本函数的帮助
+    ■ mp_dm_teammode_kill_score
+      EN: Team deathmatch victory points to award for enemy kill
+      ZH: 团队死斗中击杀敌人奖励的胜利点数
+    ■ mp_ct_default_primary
+      EN: The default primary (rifle) weapon that the CTs will spawn with
+      ZH: 反恐精英默认携带的主武器（步枪）
+    ■ demolist
+      EN: Print demo sequence list.
+      ZH: 打印录像序列列表
+    ■ subclass_create
+      EN: Creates an entity of the given subclass where the player is looking.
+      ZH: 在玩家所看的位置创建一个指定子类的实体。
+    ■ r_drawworld
+      EN: Render the world.
+      ZH: 渲染世界。
+    ■ mp_backup_round_auto
+      EN: If enabled will keep in-memory backups to handle reconnecting players even if the backup files aren't written to disk
+      ZH: 启用后即使备份文件未写入磁盘，也会保留内存中的备份以处理重连的玩家
+    ■ escape
+      EN: Escape key pressed.
+      ZH: 按下了 Esc 键
+    ■ contributionscore_assist
+      EN: amount of contribution score added for an assist
+      ZH: 每次助攻增加的贡献分
+    ■ script_trace_enable
+      EN: Turn on a particular trace output by file or function name
+      ZH: 按文件或函数名开启特定的跟踪输出
+    ■ mp_dm_teammode_bonus_score
+      EN: Team deathmatch victory points to award for kill with bonus weapon
+      ZH: 团队死斗中用奖励武器击杀奖励的胜利点数
+    ■ viewmodel_fov
+      EN: Viewmodel FOV
+      ZH: 持枪视角 FOV
+    ■ bot_kill
+      EN: bot_kill <all> <t\|ct> <type> <difficulty> <name> - Kills a specific bot, or all bots, matching the given criteria.
+      ZH: bot_kill <all> <t\|ct> <type> <difficulty> <name> - 杀死符合给定条件的某个机器人或所有机器人
+    ■ setpos_player
+      EN: Move specified player to specified origin (must have sv_cheats).
+      ZH: 把指定玩家移动到指定原点（需要 sv_cheats）。
+    ■ debug_purchase_defidx
+      EN: Purchase an item by defindex
+      ZH: 按 defindex 购买物品
+    ■ cl_player_ping_mute
+      EN: If 1, player pinging will make a sound, if 0, pings will be silent
+      ZH: 为 1 时玩家标记会发出声音，为 0 时标记静音
+    ■ cl_ent_ungrab
+      EN: un-grabs all objects
+      ZH: 松开所有已抓取的物体
+    ■ bot_max_visible_smoke_length
+      EN: Bots will see players through smoke clouds up to this length.
+      ZH: 机器人在该距离内可以透过烟雾看到玩家
+  [PASS] 随机 40 条译文均非空且含 CJK（格式底线；语义判读见任务报告）
+  · 译文/原文长度比：最小 0.167，最大 5.000
+  --- 最短 10 条（最可能漏译）---
+    0.17 closecaption
+       EN: Enable close captioning.
+       ZH: 启用字幕
+    0.17 contributionscore_bomb_planted
+       EN: amount of contribution score for planting a bomb
+       ZH: 下包获得的贡献分
+    0.18 mp_friendlyfire
+       EN: Allows team members to injure other members of their team
+       ZH: 允许队友伤害其他队友
+    0.19 cc_delay_time
+       EN: Close caption delay before showing caption.
+       ZH: 显示字幕前的延迟
+    0.19 mp_shorthanded_cash_bonus_ignore_kicked
+       EN: Determines whether kicked players are included in the assessment for short-handedness
+       ZH: 决定被踢出的玩家是否计入缺人判定
+    0.19 tv_listen_voice_indices_h
+       EN: High 32 bits of bitfield of playerslots to listen to voice messages from when connected to SourceTV, default is none
+       ZH: 上述玩家槽位位掩码的高 32 位，默认不接收
+    0.19 r_particle_max_draw_distance
+       EN: The maximum distance that particles will render
+       ZH: 粒子渲染的最大距离
+    0.19 animgraph_record_all
+       EN: Automatically start recording AnimGraphs when they get created, and save them to disk when they are destroyed
+       ZH: 动画图创建时自动开始录制，销毁时保存到磁盘
+    0.19 contributionscore_cash_bundle
+       EN: amount of contribution score for picking up a cash bundle
+       ZH: 拾取现金包获得的贡献分
+    0.19 mp_playerid_hold
+       EN: Number of seconds to keep showing old information in the status bar
+       ZH: 状态栏继续显示旧信息的秒数
+  --- 最长 10 条（最可能添加内容）---
+    5.00 cl_radar_rotate
+       EN: 1
+       ZH: 1（开启）
+    1.97 bot_stop
+       EN: all> | <not_bomber> | <t> | <ct>
+       ZH: all> | <not_bomber> | <t> | <ct>（可选值：全部 / 非炸弹携带者 / 恐怖分子 / 反恐精英）
+    1.67 viewmodel_offset_z
+       EN: viewmodel_offset_z
+       ZH: viewmodel_offset_z（持枪视角 Z 轴偏移）
+    1.67 viewmodel_offset_y
+       EN: viewmodel_offset_y
+       ZH: viewmodel_offset_y（持枪视角 Y 轴偏移）
+    1.67 viewmodel_offset_x
+       EN: viewmodel_offset_x
+       ZH: viewmodel_offset_x（持枪视角 X 轴偏移）
+    1.60 menuselect
+       EN: menuselect
+       ZH: menuselect（菜单选择）
+    1.56 test_list_entities
+       EN: test-list entities
+       ZH: test-list entities：列出实体（测试用）
+    1.56 cl_test_list_entities
+       EN: test-list entities
+       ZH: test-list entities：列出实体（测试用）
+    1.50 log
+       EN: off >.
+       ZH: off >（关闭）
+    1.29 viewmodel_presetpos
+       EN: 1:'Desktop', 2:'Couch', 3:'Classic'
+       ZH: 1：'Desktop'（桌面），2：'Couch'（沙发），3：'Classic'（经典）
+  [PASS] 没有译文与英文原文完全相同的条目（不是漏翻）
+  [PASS] 最短译文的长度比 >= 0.12（无整句漏译痕迹）  :: minRatio=0.167 (closecaption)
+  · 译文长度比 > 1.4（原文退化为标识符/取值、译文补中文释义）的条目 9 条：log, cl_test_list_entities, test_list_entities, menuselect, viewmodel_offset_x, viewmodel_offset_y, viewmodel_offset_z, bot_stop, cl_radar_rotate
+
+===== S8 前端：真实 pnpm build + 真实服务 + 真实浏览器 DOM 交互 =====
+  --- pnpm build 输出（末 12 行）---
+    vite v5.4.11 building for production...
+    transforming...
+    ✓ 43 modules transformed.
+    rendering chunks...
+    computing gzip size...
+    dist/index.html                   0.58 kB │ gzip:  0.48 kB
+    dist/assets/index-fcKai-3j.css   11.72 kB │ gzip:  3.03 kB
+    dist/assets/index-BYtbf0tz.js   173.68 kB │ gzip: 58.13 kB
+    ✓ built in 8.75s
+    [plugin cs2-frozen-dataset] [cs2-dataset] 已复制数据集 C:\Users\Administrator\Desktop\cs2 指令\data\commands.json -> C:\Users\Administrator\Desktop\cs2 指令\dist\data\commands.json (802.2 KB, 821439 字节)
+    
+    $ tsc --noEmit -p tsconfig.json && vite build
+  [PASS] pnpm build 退出码 === 0  :: exit=0
+  [PASS] build 日志显示数据集已被复制到 dist（不是旧副本）
+  [PASS] build 之后 dist/data/commands.json 仍与 data/commands.json 字节完全相同  :: c6ce50e8b41567911926e22cff25a4f060befa058debffd4a6ebb4c0160673a1/821439B
+  [PASS] vite preview 服务可访问（真实产物）  ::   ➜  Local:   http://127.0.0.1:4391/
+
+  [PASS] preview GET /data/commands.json 返回 200 + JSON  :: 200 application/json; charset=utf-8
+  [PASS] preview 提供的数据集与本地 data/commands.json 字节完全相同（含 1587 条中文）  :: http=c6ce50e8b41567911926e22cff25a4f060befa058debffd4a6ebb4c0160673a1/821439B
+  [PASS] preview 数据集里中文描述条数 === 1587
+  [PASS] preview index.html 引用了打包产物
+  · 打包 JS: /assets/index-BYtbf0tz.js 178036 字节 sha256=2741463afa281d69a6362aa6aec30a16110a6b6f85e8b43476466966b66e7fab
+  [PASS] harness 服务提供的 JS 与 preview 服务同字节（同源驱动不影响保真度）
+  --- 浏览器 harness 回传（真实 DOM 驱动 + clipboard 打桩）---
+    initial_count=全部 2528 条
+    initial_rows=80
+    q_sv_cheats_count=筛选结果 6 / 2528 条
+    q_sv_cheats_rows=setang|setang_exact|setpos|setpos_exact|setpos_player|sv_cheats
+    q_SV_CHEATS_count=筛选结果 6 / 2528 条
+    q_SV_CHEATS_rows=setang|setang_exact|setpos|setpos_exact|setpos_player|sv_cheats
+    q_zh_count=筛选结果 1 / 2528 条
+    q_zh_rows=CS_WarnFriendlyDamageInterval
+    q_mp_roundt_count=筛选结果 3 / 2528 条
+    q_mp_roundt_rows=mp_roundtime|mp_roundtime_defuse|mp_roundtime_hostage
+    chip_cheat_found=true
+    flag_cheat_count=筛选结果 1248 / 2528 条
+    flag_cheat_active=true
+    chip_section_M_found=true
+    flag_cheat_plus_M_count=筛选结果 44 / 2528 条
+    default_none_count=筛选结果 2 / 2528 条
+    default_none_rows=hostname|name
+    clipboard_stub=ok
+    row_found=true
+    copy_line="sv_cheats false"
+    copy_name="sv_cheats"
+    select_all_found=true
+    batch_bar=true
+    batch_values="setang\nsetang_exact\nsetpos\nsetpos_exact\nsetpos_player\nsv_cheats false"
+    batch_names="setang\nsetang_exact\nsetpos\nsetpos_exact\nsetpos_player\nsv_cheats"
+    copy_edited="sv_cheats 0"
+    DONE=1
+  [PASS] 初始文案为「全部 2528 条」  :: 全部 2528 条
+  [PASS] 首屏按 80 条分块渲染（不是一次性 2528 行）  :: 80
+  [PASS] [交叉] 真实 filter.ts 与我的独立实现一致：query="sv_cheats"  :: 6 vs 6
+  [PASS] 浏览器搜索 "sv_cheats" 命中数 === 6  :: 筛选结果 6 / 2528 条 -> 6
+  [PASS] 浏览器搜索结果每一行都真的含关键词 "sv_cheats"  :: setang,setang_exact,setpos,setpos_exact,setpos_player,sv_cheats
+  [PASS] [交叉] 真实 filter.ts 与我的独立实现一致：query="SV_CHEATS"  :: 6 vs 6
+  [PASS] 浏览器搜索 "SV_CHEATS" 命中数 === 6  :: 筛选结果 6 / 2528 条 -> 6
+  [PASS] 浏览器搜索结果每一行都真的含关键词 "SV_CHEATS"  :: setang,setang_exact,setpos,setpos_exact,setpos_player,sv_cheats
+  [PASS] [交叉] 真实 filter.ts 与我的独立实现一致：query="定义服务"  :: 1 vs 1
+  [PASS] 浏览器搜索 "定义服务" 命中数 === 1  :: 筛选结果 1 / 2528 条 -> 1
+  [PASS] 浏览器搜索结果每一行都真的含关键词 "定义服务"  :: CS_WarnFriendlyDamageInterval
+  [PASS] [交叉] 真实 filter.ts 与我的独立实现一致：query="mp_roundt"  :: 3 vs 3
+  [PASS] 浏览器搜索 "mp_roundt" 命中数 === 3  :: 筛选结果 3 / 2528 条 -> 3
+  [PASS] 浏览器搜索结果每一行都真的含关键词 "mp_roundt"  :: mp_roundtime,mp_roundtime_defuse,mp_roundtime_hostage
+  [PASS] 浏览器点击「作弊」标记筛选命中 1248 条  :: 筛选结果 1248 / 2528 条
+  [PASS] 「作弊」chip 处于选中态（aria-pressed=true）  :: true
+  [PASS] 浏览器再点「首字母 M」= 跨维度 AND，命中 44 条  :: 筛选结果 44 / 2528 条 (M 单维=299)
+  [PASS] 「无默认值」筛选命中 2 条且为 hostname/name  :: 筛选结果 2 / 2528 条 :: hostname|name
+  [PASS] 浏览器点「复制命令+值」写出的字符串 === "sv_cheats false"  :: got="sv_cheats false"
+  [PASS] 浏览器点「仅命令」写出的字符串 === "sv_cheats"  :: "sv_cheats"
+  [PASS] 浏览器勾选后「全选当前结果」再批量复制（命令+值）=== 6 行真实拼装  :: got="setang\nsetang_exact\nsetpos\nsetpos_exact\nsetpos_player\nsv_cheats false"
+  [PASS] 浏览器批量复制命令名 === 结果集的命令名 LF 拼接  :: got="setang\nsetang_exact\nsetpos\nsetpos_exact\nsetpos_player\nsv_cheats"
+  [PASS] 浏览器把行内「值」改成 0 后复制 === "sv_cheats 0"  :: "sv_cheats 0"
+  [PASS] 复制串全程不含任何被翻译的方括号占位符（剪贴板里不会出现中文占位符）  :: ["sv_cheats false","setang\nsetang_exact\nsetpos\nsetpos_exact\nsetpos_player\nsv_cheats false"]
+  实际剪贴板内容：copy_line="sv_cheats false"；batch_values="setang\nsetang_exact\nsetpos\nsetpos_exact\nsetpos_player\nsv_cheats false"
+
+===== S9 坏行专项：HTML 独立枚举 vs meta.repairedRows =====
+  HTML 判据（原始单元格含 &#160;/&nbsp; 且紧邻 ":"）命中 4 行：cl_promoted_settings_acknowledged, sv_mapvetopickvote_phase_duration, tv_broadcast_url, tv_broadcast_url1
+  meta.repairedRows（4 行）：cl_promoted_settings_acknowledged, sv_mapvetopickvote_phase_duration, tv_broadcast_url, tv_broadcast_url1
+  [PASS] HTML 独立枚举的坏行 === meta.repairedRows（数量与集合都一致）  :: html=[cl_promoted_settings_acknowledged,sv_mapvetopickvote_phase_duration,tv_broadcast_url,tv_broadcast_url1] meta=[cl_promoted_settings_acknowledged,sv_mapvetopickvote_phase_duration,tv_broadcast_url,tv_broadcast_url1]
+  [PASS] 假阳性排除：changelevel 描述里有 " : " 但原始单元格没有 nbsp 实体标记  :: desc=changelevel <mapname> :Multiplayer change level. marker=false
+  [PASS] 假阳性排除：map 描述里有 " : " 但原始单元格没有 nbsp 实体标记  :: desc=map <mapname> :Load a new map. marker=false
+  · cl_promoted_settings_acknowledged: 还原 default="1696196680965" flags=[cl,a] desc=
+      wikiCells=HTML原始单元格? true；通用重算 flags/desc 与枚举一致? true；结构自洽? true (直接命中单元格)
+  · sv_mapvetopickvote_phase_duration: 还原 default="[1 | 5][2 | 15][3:20][4:10][5:10][6:5]" flags=[sv,release] desc=How many seconds each phase lasts
+      wikiCells=HTML原始单元格? true；通用重算 flags/desc 与枚举一致? true；结构自洽? true (骨架等同)
+  · tv_broadcast_url: 还原 default="http://localhost:8080" flags=[release] desc=URL of the broadcast relay
+      wikiCells=HTML原始单元格? true；通用重算 flags/desc 与枚举一致? true；结构自洽? true (骨架等同)
+  · tv_broadcast_url1: 还原 default="http://localhost:8080" flags=[release] desc=URL of the broadcast relay1
+      wikiCells=HTML原始单元格? true；通用重算 flags/desc 与枚举一致? true；结构自洽? true (骨架等同)
+  [PASS] 4 个坏行的 wikiCells（原始损坏单元格）与 HTML 逐字一致
+  [PASS] 4 个坏行的还原 flags/description 可由 run-on 分段通用重算
+  [PASS] 4 个坏行的还原式结构自洽（默认值可由被拆散的单元格 + 被吞分隔符重建）
+  [PASS] 4 个坏行的 dataset 取值 === meta.restored === 契约值
+  [PASS] 4 个坏行的 section 与 HTML 段落一致
+  [PASS] 全库再无其它单元格携带 nbsp 实体标记
+  [PASS] 全库任何字段都不含 nbsp 残渣（descriptionEn/descriptionZh/defaultValue）
+
+===== S10 邻行污染：4 个坏行 × 前后邻行（8 个邻居）逐字段比对 =====
+  cl_promoted_settings_acknowledged ← cl_predictweapons  [OK]
+  cl_promoted_settings_acknowledged → cl_prop_debug  [OK]
+  sv_mapvetopickvote_phase_duration ← sv_mapvetopickvote_maps  [OK]
+  sv_mapvetopickvote_phase_duration → sv_mapvetopickvote_rnd  [OK]
+  tv_broadcast_url ← tv_broadcast_status  [OK]
+  tv_broadcast_url → tv_broadcast_url1  [OK(repaired neighbour)]
+  tv_broadcast_url1 ← tv_broadcast_url  [OK(repaired neighbour)]
+  tv_broadcast_url1 → tv_chatgroupsize  [OK]
+  [PASS] 8 个邻行全部取回并逐字段一致（修复没有连带破坏邻行）
+  [PASS] tv_broadcast_url 与 tv_broadcast_url1 互为邻居且双双被识别为坏行
+
+===== S11 静默失效防护：防御断言 + 隔离负向测试 =====
+  prepare-data.mjs 的防御断言（运行在 raw JSON 层）：
+    535: const unhandledRunOnRows = [];
+    536: const misalignedRows = [];
+    569: misalignment.push(`defaultValue ${JSON.stringify(rawDefault)} is a bare engine-flag token`);
+    575: misalignedRows.push({
+    598: const isRunOnRow = runOn.seps.length > 0 && (badFlags.length > 0 || runOnFlags.length > 0);
+    599: if (isRunOnRow) {
+    601: check(!!repair, `run-on row ${command} is enumerated in WIKI_ROW_REPAIRS`);
+    633: unhandledRunOnRows.push({ command, wikiCells: { defaultValue, flags: flags.join(', '), description: descriptionEn } });
+  verify-dataset.mjs 的防御断言（运行在原始 HTML 层）：
+    371: const WIKI_NBSP_COLON = /(?:&#160;|&nbsp;)\s*:|&#x[aA]0;|&#160/; // marker as served in the HTML
+    432: const criterionA = htmlDataRows.filter((r) => r.cells.some((c) => WIKI_NBSP_COLON.test(c.raw)));
+    435: const criterionB = htmlDataRows.filter(
+    445: const corruptNames = namesOf(criterionA);
+    468: 'the two independent corruption criteria agree',
+    469: JSON.stringify(namesOf(criterionA)) === JSON.stringify(namesOf(criterionB)),
+    470: `A=[${namesOf(criterionA)}] B=[${namesOf(criterionB)}]`
+    473: 'html corrupt-row set === meta.repairedRows set (no unfixed/new corrupt row)',
+    474: JSON.stringify(corruptNames) === JSON.stringify((meta.repairedRows ?? []).map((r) => r.command).sort()),
+    475: `html=[${corruptNames}] meta=[${(meta.repairedRows ?? []).map((r) => r.command).sort()}]`
+  [PASS] prepare-data.mjs 有「未登记的 run-on 行 ⇒ 断言失败」逻辑链
+  [PASS] verify-dataset.mjs 有「HTML 坏行集合 === meta.repairedRows」的 HTML 级断言
+  [PASS] prepare-data.mjs 含有与判据 A/B 正交的「错位防护」判据（t10 封死 t7 报告盲区的那一条）
+  [PASS] 负向测试 N1：撤销修复 ⇒ prepare-data 退出码非 0 且指出具体行  :: exit=1 ::   FAILED: repaired default value of tv_broadcast_url (expected "http://localhost:8080", got "http://localhost:9999") | BUILD FAILED: 1 check(s) failed:
+  [PASS] 负向测试 N2：注入未登记坏行 ⇒ prepare-data 直接失败（不静默放过）  :: exit=1 ::   FAILED: run-on row zzz_verify_injected_runon is enumerated in WIKI_ROW_REPAIRS |   FAILED: no unknown flag tokens left behind: zzz_verify_injected_runon[//injected] |   FAILED: every corrupt run-on row has an enumerated repair: zzz_verify_injected_runon |   FAILED: commands.length (expected 2528, …(+96)
+  N3 反向回归：prepare-data 退出码=1（拒绝=true，点名该行=true，来自新增错位判据=true，误触发防误删守卫=false）
+     探针输入：defaultValue="cl"（其实是取值片段）、flags=[sv]（全白名单）、description="x] : Some description."（无 &#160; 标记）
+     旧判据是否仍命中：prepare 的 run-on 判据=false、HTML 判据A=false、判据B=false（全为 false ⇒ 确属原盲区）
+     失败信息：FAILED: no misaligned row (bare engine-flag token as Default Value / value duplicated into the Flags cell): zzz_verify_gap_probe(defaultValue="cl" flags=[sv] defaultValue "cl" is a bare engine-flag token)
+     是否产出污染行：{"id":2529,"command":"zzz_verify_gap_probe","defaultValue":"cl","flags":["sv"],"descriptionEn":"x] : Some description.","descriptionZh":"","section":"Z"}
+  [PASS] 负向测试 N3（反向回归）：t7 的盲区反例现在必须被 prepare-data 拒绝，退出码非 0 且失败信息点名该行  :: exit=1 :: FAILED: no misaligned row (bare engine-flag token as Default Value / value duplicated into the Flags cell): zzz_verify_gap_probe(defaultValue="cl" flags=[sv] defaultValue "cl" is a bare engine-flag token)
+  [PASS] N3 的拒绝来自 t10 新增的正交「错位防护」判据，而不是误触发「防误删译文」守卫或计数断言  :: byMisalignment=true rejectsByGuard=false :: FAILED: no misaligned row (bare engine-flag token as Default Value / value duplicated into the Flags cell): zzz_verify_gap_probe(defaultValue="cl" flags=[sv] defaultValue "cl" is a bare engine-flag to…(+4)
+  [PASS] N3：该形态确实不被旧的两级判据覆盖（盲区定义成立），盲区现已封死  :: prepareDetects=false A=false B=false
+  [PASS] 负向测试 N1/N2/N3 均按预期失败（N3 为反向回归：必须被拒绝）
+
+===== S12 占位符/标识符保真（中英文逐字一致） =====
+  · {} 与 <> 两类占位符：涉及 122 条命令，70 种，386 处
+  [PASS] 所有 {} / <> 占位符在中文里逐字保留（集合完全相同，无丢失）
+  [PASS] 中文没有凭空多出 {} / <> 占位符
+  · [] 方括号占位符：涉及 14 条命令，12 种，19 处；其中 6 条的中文方括号内容被意译
+    · 方括号被意译：cl_crosshair_dynamic_maxdist_splitratio  [inner = cl_crosshairsize*(1-cl_crosshair_dynamic_maxdist_splitratio), outer = cl_crosshairsize*cl_crosshair_dynamic_maxdist_splitratio]
+        EN: If using cl_crosshairstyle 2, this is the ratio used to determine how long the inner and outer xhair pips will be. [inner = cl_crosshairsize*(1-cl_crosshair_dyn…(+99)
+        ZH: 使用 cl_crosshairstyle 2 时，该比例决定内外准星线的长度。[inner = cl_crosshairsize*(1-cl_crosshair_dynamic_maxdist_splitratio)，outer = cl_crosshairsize*cl_crosshair_dynamic_maxdi…(+22)
+    · 方括号被意译：cl_ent_text256  [within 256 units of the player]
+        EN: Displays text debugging information about the given entity(ies) [within 256 units of the player] on top of the entity (See Overlay Text) Arguments: {entity_name…(+82)
+        ZH: 在实体上方显示指定实体的文本调试信息 [玩家 256 单位范围内]（见“叠加文本”）。参数：{entity_name} / {class_name} / {entity_index} / {no argument = pick what player is looking at}
+    · 方括号被意译：cl_ent_text_radius  [near the player]
+        EN: Displays text debugging information about the given entity(ies) [near the player] on top of the entity (See Overlay Text) 2 Arguments: <Radius> <{entity_name} /…(+80)
+        ZH: 在实体上方显示指定实体的文本调试信息 [玩家附近]（见“叠加文本”）2 参数：<Radius> <{entity_name} / {class_name} / {entity_index} / {no argument = pick what player is looking at}>
+    · 方括号被意译：ent_text256  [within 256 units of the player]
+        EN: Displays text debugging information about the given entity(ies) [within 256 units of the player] on top of the entity (See Overlay Text) Arguments: {entity_name…(+82)
+        ZH: 在实体上方显示指定实体的文本调试信息 [玩家 256 单位范围内]（见“叠加文本”）。参数：{entity_name} / {class_name} / {entity_index} / {no argument = pick what player is looking at}
+    · 方括号被意译：ent_text_radius  [near the player]
+        EN: Displays text debugging information about the given entity(ies) [near the player] on top of the entity (See Overlay Text) 2 Arguments: <Radius> <{entity_name} /…(+80)
+        ZH: 在实体上方显示指定实体的文本调试信息 [玩家附近]（见“叠加文本”）2 参数：<Radius> <{entity_name} / {class_name} / {entity_index} / {no argument = pick what player is looking at}>
+    · 方括号被意译：sv_disable_immunity_alpha  [mod authors use this]
+        EN: If set, clients won't slam the player model render settings each frame for immunity [mod authors use this]
+        ZH: 设置后，客户端不会为了免疫而每帧反复覆盖玩家模型渲染设置［mod 作者使用］
+  [PASS] 方括号内容被意译的条目集合 === 已知清单（captain 裁定 3 条 + 本次新发现的 sv_disable_immunity_alpha）  :: cl_crosshair_dynamic_maxdist_splitratio, cl_ent_text256, cl_ent_text_radius, ent_text256, ent_text_radius, sv_disable_immunity_alpha
+  [PASS] 方括号意译不会进入任何可复制字符串（相关命令的 defaultValue 不含方括号）  :: cl_crosshair_dynamic_maxdist_splitratio, cl_ent_text256, cl_ent_text_radius, ent_text256, ent_text_radius, sv_disable_immunity_alpha
+  · 含 %s/%1 类占位符的命令 1 条
+  [PASS] %s / %1 类占位符在中文里逐字保留
+  · parameter-tokens.md 声明 82 种 / 255 处
+  · 实测（按命令计）：82 种；{}<>+[] 合计 405 处
+  · 实测（按唯一描述计）：82 种 / 271 处
+  [PASS] md 声明的占位符都能在数据里找到（无凭空声明）
+  [PASS] 数据里的占位符都在 md 声明中（无漏登记）
+  · 逐 token 出现次数：md 声明合计 255；按 md 口径（唯一描述 + 最左非重叠匹配）复算合计 255；朴素口径按唯一描述 271 处 / 按命令 405 处（差异来自嵌套 token 与重复描述）
+  [PASS] md 每个 token 的出现次数都能被「唯一描述 + 最左非重叠匹配」口径精确复算（声明无臆造）
+  · chunks 描述总数 1465，唯一 1465；dataset 唯一 1465
+  [PASS] chunks 的唯一描述集合 === dataset 的唯一描述集合（翻译工作单元未错位）  :: chunkOnly=0 dsOnly=0 total=1465
+  · 描述含 "\|" 的命令 2 条：bot_kick, bot_kill；全库 EN 中出现 2 处，ZH 2 处
+  [PASS] <t\|ct> 的反斜杠未被擦除（英文 2 条、中文同样 2 条且含反斜杠）  :: bot_kick:true,bot_kill:true
+  [PASS] 全库 descriptionZh 中 "\|" 的出现次数与 descriptionEn 相同（无一处被擦成 "|"）  :: EN=2 ZH=2
+
+===== S13 meta.sourceDefects 独立复核（源站原文残缺，不是翻译缺陷） =====
+  · meta.sourceDefects.count=13；entries=13
+  [PASS] sourceDefects.count === entries.length
+  [PASS] 每条形缺条目的 index 都能命中同文本的唯一描述（索引契约正确）
+  --- meta.sourceDefects 逐条（declared vs 我的独立复算）---
+    [70] duplicate-word                 recomputed=duplicate-word                 Draw a bbox Arguments: minx miny miny maxx maxy maxz <lifetime = 10.0> <r g b a>
+    [223] duplicate-punctuation          recomputed=duplicate-punctuation          Control the crosshair shown when observing a bot. 0: Show player crosshair. 1: Show player…(+7)
+    [281] spacing-inside-parens          recomputed=spacing-inside-parens          Draw fps meter at top of screen (1 = fps, 2 = smooth fps, 3 = server MS, 4 = Show FPS and …(+6)
+    [292] duplicate-word                 recomputed=duplicate-word                 Toggle set the player names and team names to the opposite side in which they are are on t…(+6)
+    [455] duplicate-punctuation          recomputed=duplicate-punctuation          Give a supply of ammo for current weapon..
+    [661] unbalanced-bracket             recomputed=unbalanced-bracket             Logs attacks. Values are: 0=off, 1=enemy, 2=teammate, 3=both)
+    [805] unbalanced-bracket             recomputed=unbalanced-bracket             Vertical offset for drawing the mesh (useful for flat planes where the mesh is often a fix…(+6)
+    [864] spacing-inside-parens          recomputed=spacing-inside-parens          For servers behind NAT/DHCP meant to be exposed to the public internet, this is the public…(+6)
+    [898] spacing-inside-parens          recomputed=spacing-inside-parens          Play a recorded demo file (.dem ).
+    [908] unbalanced-bracket             recomputed=unbalanced-bracket             Flow through spawn groups for vis (0 == default, 1 == always visible, 2 == never visible.
+    [1008] possessive-s                   recomputed=possessive-s                   Changes's player's model
+    [1143] missing-space-after-sentence   recomputed=missing-space-after-sentence   Base time scale of Killer Replay.Experimental.
+    [1232] spacing-inside-parens          recomputed=spacing-inside-parens          Server is a lan server ( no heartbeat, no authentication, no non-class C addresses )
+  [PASS] 6 类可独立判定的残缺（括号/括号内空格/所有格/重复词/重复标点/句末缺空格）复算结果与 meta 声明一致
+  [PASS] 13 条残缺在 HTML 原文里逐字一致（残缺来自源站，不是解析或翻译引入）
+
+===== 汇总 =====
+  通过 120 / 120；失败 0；未验证 0
+    S0 输入与环境                                                 pass=3 fail=0
+    S1 数据集副本一致性（app/public 与 dist 分发副本）                      pass=6 fail=0
+    S2 结构不变量：条数 / 唯一性 / id / 排序 / 字段 / 占位行                   pass=11 fail=0
+    S3 defaultValue 完整性（无 "|" 误拆痕迹）与 4 个修复行精确取值              pass=7 fail=0
+    S4 flags 白名单与来源保真                                        pass=5 fail=0
+    S5 翻译覆盖：复算 meta 两个数字 + 覆盖率                               pass=10 fail=0
+    S6 与源站 HTML 全量比对（2530 行 + 随机 40 条样本）                     pass=6 fail=0
+    S7 翻译质量抽样（随机 40 条 英→中 对照，供人工判读）                          pass=3 fail=0
+    S8 前端：真实 pnpm build + 真实服务 + 真实浏览器 DOM 交互                pass=33 fail=0
+    S9 坏行专项：HTML 独立枚举 vs meta.repairedRows                   pass=10 fail=0
+    S10 邻行污染：4 个坏行 × 前后邻行（8 个邻居）逐字段比对                        pass=2 fail=0
+    S11 静默失效防护：防御断言 + 隔离负向测试                                 pass=9 fail=0
+    S12 占位符/标识符保真（中英文逐字一致）                                   pass=11 fail=0
+    S13 meta.sourceDefects 独立复核（源站原文残缺，不是翻译缺陷）               pass=4 fail=0
+  未验证清单：(none)

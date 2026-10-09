@@ -1,0 +1,148 @@
+verify-dataset: independent invariant check
+  dataset : data/commands.json (2528 commands)
+  chunks  : 10 files, 1465 descriptions, indices 0..1464
+  stage   : merged (descriptionZh filled 1587/1587, unique translations 1465)
+
+wiki corrupt-row audit
+  html rows scanned        : 2530 (in 27 standard-tables)
+  criterion A (nbsp+colon) : 4 -> cl_promoted_settings_acknowledged, sv_mapvetopickvote_phase_duration, tv_broadcast_url, tv_broadcast_url1
+  criterion B (bad flag)   : 4 -> cl_promoted_settings_acknowledged, sv_mapvetopickvote_phase_duration, tv_broadcast_url, tv_broadcast_url1
+  criterion C (misaligned) : 0 -> (none)
+  full HTML<->dataset scan : 2528/2530 rows, 12640 fields, mismatches 0, missing 0, extra 0
+  enumerated in meta       : 4 -> cl_promoted_settings_acknowledged, sv_mapvetopickvote_phase_duration, tv_broadcast_url, tv_broadcast_url1
+    cl_promoted_settings_acknowledged
+      wiki cells : dv="1" flags="1696196680965" desc="cl, a :"
+      restored   : dv="1696196680965" flags=[cl, a] desc=""
+    sv_mapvetopickvote_phase_duration
+      wiki cells : dv="[1" flags="5][2" desc="15][3:20][4:10][5:10][6:5] : sv, release : How many seconds each phase lasts"
+      restored   : dv="[1 | 5][2 | 15][3:20][4:10][5:10][6:5]" flags=[sv, release] desc="How many seconds each phase lasts"
+    tv_broadcast_url
+      wiki cells : dv="http" flags="//localhost" desc="8080 : release : URL of the broadcast relay"
+      restored   : dv="http://localhost:8080" flags=[release] desc="URL of the broadcast relay"
+    tv_broadcast_url1
+      wiki cells : dv="http" flags="//localhost" desc="8080 : release : URL of the broadcast relay1"
+      restored   : dv="http://localhost:8080" flags=[release] desc="URL of the broadcast relay1"
+  neighbours checked       : 8
+    cl_promoted_settings_acknowledged prev -> cl_predictweapons [table 4] : OK
+    cl_promoted_settings_acknowledged next -> cl_prop_debug [table 4] : OK
+    sv_mapvetopickvote_phase_duration prev -> sv_mapvetopickvote_maps [table 20] : OK
+    sv_mapvetopickvote_phase_duration next -> sv_mapvetopickvote_rnd [table 20] : OK
+    tv_broadcast_url prev -> tv_broadcast_status [table 21] : OK
+    tv_broadcast_url next -> tv_broadcast_url1 [table 21] : OK (repaired row)
+    tv_broadcast_url1 prev -> tv_broadcast_url [table 21] : OK (repaired row)
+    tv_broadcast_url1 next -> tv_chatgroupsize [table 21] : OK
+
+source-defect ledger (meta.sourceDefects)
+  entries : 13 (registered in meta)
+  rescan  : 13 hits from the independent re-scan; unregistered = 0
+    [70] duplicate-word :: "Draw a bbox Arguments: minx miny miny maxx maxy maxz <lifetime = 10.0> <r g b a>"
+    [223] duplicate-punctuation :: "Control the crosshair shown when observing a bot. 0: Show player crosshair. 1: Show player crosshair only when bot can be taken over, otherwise show default.. 2: Always show default crosshair for bots."
+    [281] spacing-inside-parens :: "Draw fps meter at top of screen (1 = fps, 2 = smooth fps, 3 = server MS, 4 = Show FPS and Log to file )"
+    [292] duplicate-word :: "Toggle set the player names and team names to the opposite side in which they are are on the spectator panel."
+    [455] duplicate-punctuation :: "Give a supply of ammo for current weapon.."
+    [661] unbalanced-bracket :: "Logs attacks. Values are: 0=off, 1=enemy, 2=teammate, 3=both)"
+    [805] unbalanced-bracket :: "Vertical offset for drawing the mesh (useful for flat planes where the mesh is often a fixed offset from the physical ground"
+    [864] spacing-inside-parens :: "For servers behind NAT/DHCP meant to be exposed to the public internet, this is the public facing ip address string: ('x.x.x.x' )"
+    [898] spacing-inside-parens :: "Play a recorded demo file (.dem )."
+    [908] unbalanced-bracket :: "Flow through spawn groups for vis (0 == default, 1 == always visible, 2 == never visible."
+    [1008] possessive-s :: "Changes's player's model"
+    [1143] missing-space-after-sentence :: "Base time scale of Killer Replay.Experimental."
+    [1232] spacing-inside-parens :: "Server is a lan server ( no heartbeat, no authentication, no non-class C addresses )"
+
+  PASS  commands.json has meta and commands
+  PASS  commands.length === 2528
+  PASS  every record carries exactly the frozen keys in order
+  PASS  id is a contiguous 1..2528 sequence
+  PASS  commands are sorted ascending
+  PASS  every command is unique
+  PASS  no "N/A" placeholder rows remain
+  PASS  defaultValue is string|null
+  PASS  descriptionEn/descriptionZh are strings
+  PASS  merged stage: every command with descriptionEn has a non-empty CJK descriptionZh
+  PASS  merged stage: commands without descriptionEn keep an empty descriptionZh
+  PASS  merged stage: filled count === withEnglishDescription
+  PASS  section is a letter A-Z or "_"
+  PASS  no "Cvar_list" section survives
+  PASS  every flag is whitelisted
+  PASS  no row repeats a flag
+  PASS  whitelist has exactly the 21 contract flags
+  PASS  flags match the raw parse (whitelist-filtered, order kept, deduped) for all non-repaired rows
+  PASS  meta lists exactly the four repaired rows
+  PASS  repaired defaultValue of tv_broadcast_url
+  PASS  repaired defaultValue of tv_broadcast_url1
+  PASS  repaired defaultValue of cl_promoted_settings_acknowledged
+  PASS  repaired defaultValue of sv_mapvetopickvote_phase_duration
+  PASS  tv_broadcast_url flags are [release]
+  PASS  cl_promoted_settings_acknowledged flags are [cl, a]
+  PASS  chunk files exist
+  PASS  meta.chunks matches the number of chunk files
+  PASS  chunk files are self-consistent
+  PASS  chunk indices cover 0..N-1 contiguously (no gap, no overlap)
+  PASS  all chunk descriptions are non-empty
+  PASS  index order in every chunk file is ascending
+  PASS  unique non-empty English descriptions === chunk description total
+  PASS  unique non-empty English descriptions === max index + 1
+  PASS  withEnglishDescription matches the dataset
+  PASS  meta.uniqueEnglishDescriptions matches
+  PASS  every command descriptionEn resolves to a chunk index (or is empty)
+  PASS  no unresolved descriptions
+  PASS  chunk descriptions are globally unique
+  PASS  meta.source present
+  PASS  meta.sourceRetrieved present
+  PASS  meta.sourceBuild present
+  PASS  meta.generatedAt present
+  PASS  meta.commands present
+  PASS  meta.withEnglishDescription present
+  PASS  meta.uniqueEnglishDescriptions present
+  PASS  meta.chunks present
+  PASS  meta.commands === 2528
+  PASS  meta.sections has no Cvar_list
+  PASS  glossary covers all 21 flags
+  PASS  every flag has a Chinese name and a note
+  PASS  flag labels are keyed by whitelisted flags only
+  PASS  glossary has >= 60 core terms
+  PASS  core terms are non-empty Chinese
+  PASS  required sample terms exist (convar/demo/warmup/spectator/hostage/hitbox/tickrate)
+  PASS  glossary has a do-not-translate section
+  PASS  glossary has Chinese flag-order reference
+  PASS  data/translation/README.md exists
+  PASS  README documents the output schema
+  PASS  README lists the hard constraints
+  PASS  data/translation/out/ exists
+  PASS  data/translation/out/ is a directory holding .gitkeep
+  PASS  translation output files exist (10 expected)
+  PASS  every translation output: entries keys === chunk indices (no more, no less)
+  PASS  translation outputs cover all description indices exactly once
+  PASS  every translation value is a non-empty CJK string
+  PASS  merged dataset: descriptionZh equals the chunk-mapped translation for every command
+  PASS  app/public/data/commands.json exists (frontend runtime copy)
+  PASS  frontend copy is byte-identical to data/commands.json
+  PASS  html tables parsed
+  PASS  html section headings resolved for every standard-table
+  PASS  criterion C (misaligned row: bare flag token as Default Value) finds no row outside meta.repairedRows
+  PASS  the two independent corruption criteria agree
+  PASS  html corrupt-row set === meta.repairedRows set (no unfixed/new corrupt row)
+  PASS  meta.repairedRows entries carry wiki cells -> restored fields
+  PASS  every repaired row is restored to its meta values in the dataset
+  PASS  no residue: no dataset field carries the nbsp marker
+  PASS  no neighbour of a corrupt row is contaminated (prev/next compared field by field)
+  PASS  every corrupt row had both neighbours resolved
+  PASS  no command field carries an un-repaired placeholder
+  PASS  F5: every HTML data row has exactly 4 cells
+  PASS  F5: html data rows = 2 placeholders + 2528 dataset rows
+  PASS  F5: 2528 rows x 5 fields compared against the served HTML
+  PASS  F5: no field mismatch between the HTML page and data/commands.json
+  PASS  F5: no HTML row is missing from the dataset
+  PASS  F5: no dataset command is missing from the HTML page
+  PASS  F5: the placeholder rows stay out of the dataset
+  PASS  meta.sourceDefects.entries present (>= 5)
+  PASS  meta.sourceDefects.count matches entries
+  PASS  every source-defect entry resolves to its chunk description (index + verbatim text)
+  PASS  the five translator-reported defects are registered verbatim
+  PASS  no duplicate (index, type) source-defect entries
+  PASS  no unregistered source defect (independent re-scan -> ledger)
+  PASS  no phantom ledger entry (ledger -> independent re-scan)
+  PASS  source-defect policy is documented for translators and reviewers
+
+RESULT: 94/94 checks passed
+VERDICT: PASS — the dataset, the translation work units and the glossary satisfy the frozen contract.

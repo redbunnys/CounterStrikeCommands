@@ -1,0 +1,909 @@
+<!DOCTYPE html>
+<html lang="zh-CN"><head>
+    <script type="module">
+import RefreshRuntime from "/@react-refresh"
+RefreshRuntime.injectIntoGlobalHook(window)
+window.$RefreshReg$ = () => {}
+window.$RefreshSig$ = () => (type) => type
+window.__vite_plugin_react_preamble_installed__ = true
+</script>
+
+    <script type="module" src="/@vite/client"></script>
+
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="color-scheme" content="dark light">
+    <meta name="description" content="CS2 控制台命令与变量中文查询工具：2528 条命令，支持搜索、按标记/首字母/默认值筛选，一键复制到 .cfg">
+    <title>CS2 控制台命令与变量查询（中文）</title>
+  <style type="text/css" data-vite-dev-id="C:/Users/Administrator/Desktop/cs2 指令/app/src/styles.css">:root {
+  color-scheme: dark;
+  --bg: #0d1117;
+  --bg-elev: #161b22;
+  --bg-elev-2: #1c2230;
+  --border: #2b3340;
+  --border-strong: #3d4a5c;
+  --fg: #e6edf3;
+  --fg-dim: #9aa7b4;
+  --fg-faint: #6e7d8d;
+  --accent: #f0a020;
+  --accent-strong: #ffb733;
+  --accent-ink: #241a06;
+  --ok: #3fb950;
+  --err: #f85149;
+  --info: #58a6ff;
+  --mono: ui-monospace, SFMono-Regular, "Cascadia Mono", Consolas, "Liberation Mono", Menlo, monospace;
+  --radius: 8px;
+  --shadow: 0 8px 24px rgba(0, 0, 0, 0.45);
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html,
+body {
+  margin: 0;
+  padding: 0;
+  background: var(--bg);
+  color: var(--fg);
+  font-family: system-ui, -apple-system, "Segoe UI", "Microsoft YaHei", "PingFang SC", "Noto Sans SC", sans-serif;
+  font-size: 15px;
+  line-height: 1.5;
+}
+
+a {
+  color: var(--info);
+  word-break: break-all;
+}
+
+code,
+kbd {
+  font-family: var(--mono);
+  font-size: 0.92em;
+}
+
+kbd {
+  padding: 1px 6px;
+  border: 1px solid var(--border-strong);
+  border-bottom-width: 2px;
+  border-radius: 4px;
+  background: var(--bg-elev-2);
+  color: var(--fg);
+}
+
+.app-shell {
+  max-width: 1280px;
+  margin: 0 auto;
+  padding: 20px 18px 40px;
+}
+
+/* ---------- 头部 ---------- */
+.app-header {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 14px;
+  align-items: flex-end;
+  justify-content: space-between;
+  padding-bottom: 14px;
+  border-bottom: 1px solid var(--border);
+}
+
+.app-header h1 {
+  margin: 0 0 4px;
+  font-size: 1.5rem;
+  letter-spacing: 0.2px;
+}
+
+.app-header__sub {
+  margin: 0;
+  color: var(--fg-dim);
+  font-size: 0.9rem;
+}
+
+.app-header__stats {
+  display: flex;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+
+.stat {
+  background: var(--bg-elev);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 6px 12px;
+  font-size: 0.85rem;
+  color: var(--fg-dim);
+}
+
+.stat strong {
+  color: var(--accent-strong);
+  font-size: 1rem;
+  margin-right: 4px;
+}
+
+/* ---------- 搜索 ---------- */
+.search-bar {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin: 16px 0 10px;
+  position: sticky;
+  top: 0;
+  z-index: 20;
+  padding: 10px 0;
+  background: linear-gradient(var(--bg) 78%, rgba(13, 17, 23, 0));
+}
+
+.search-bar__input-wrap {
+  position: relative;
+  flex: 1 1 320px;
+}
+
+.search-bar__input {
+  width: 100%;
+  padding: 11px 34px 11px 14px;
+  font-size: 1rem;
+  color: var(--fg);
+  background: var(--bg-elev);
+  border: 1px solid var(--border-strong);
+  border-radius: var(--radius);
+  outline: none;
+}
+
+.search-bar__input:focus {
+  border-color: var(--accent);
+  box-shadow: 0 0 0 3px rgba(240, 160, 32, 0.2);
+}
+
+.search-bar__clear {
+  position: absolute;
+  right: 8px;
+  top: 50%;
+  transform: translateY(-50%);
+  border: none;
+  background: transparent;
+  color: var(--fg-dim);
+  font-size: 1.2rem;
+  cursor: pointer;
+  line-height: 1;
+  padding: 4px 6px;
+}
+
+.search-bar__clear:hover {
+  color: var(--fg);
+}
+
+.search-bar__count {
+  color: var(--fg-dim);
+  font-size: 0.9rem;
+  white-space: nowrap;
+}
+
+/* ---------- 筛选 ---------- */
+.filters {
+  background: var(--bg-elev);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 10px 12px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.filters__row {
+  display: flex;
+  gap: 10px;
+  align-items: flex-start;
+}
+
+.filters__label {
+  flex: 0 0 56px;
+  padding-top: 5px;
+  color: var(--fg-faint);
+  font-size: 0.82rem;
+  text-align: right;
+}
+
+.filters__clear {
+  margin-left: auto;
+  align-self: center;
+}
+
+.chips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  flex: 1 1 auto;
+  min-width: 0;
+}
+
+.chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  padding: 4px 9px;
+  border: 1px solid var(--border-strong);
+  border-radius: 999px;
+  background: var(--bg-elev-2);
+  color: var(--fg-dim);
+  font-size: 0.84rem;
+  cursor: pointer;
+  transition: border-color 0.12s, color 0.12s, background 0.12s;
+}
+
+.chip:hover {
+  border-color: var(--accent);
+  color: var(--fg);
+}
+
+.chip.is-active {
+  background: var(--accent);
+  border-color: var(--accent-strong);
+  color: var(--accent-ink);
+}
+
+.chip.is-active .chip__code,
+.chip.is-active .chip__count {
+  color: rgba(36, 26, 6, 0.75);
+}
+
+.chip__zh {
+  font-weight: 600;
+}
+
+.chip__code {
+  font-family: var(--mono);
+  font-size: 0.75rem;
+  color: var(--fg-faint);
+}
+
+.chip__count {
+  font-size: 0.72rem;
+  color: var(--fg-faint);
+  background: rgba(255, 255, 255, 0.06);
+  border-radius: 999px;
+  padding: 0 5px;
+}
+
+.chip--section {
+  min-width: 34px;
+  justify-content: center;
+  font-family: var(--mono);
+}
+
+.chip--preset {
+  border-style: dashed;
+}
+
+.shortcut-hint {
+  margin: 10px 2px;
+  color: var(--fg-faint);
+  font-size: 0.82rem;
+}
+
+.shortcut-hint__toggle {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  margin-left: 12px;
+  color: var(--fg-dim);
+  cursor: pointer;
+  user-select: none;
+}
+
+.shortcut-hint__toggle input {
+  accent-color: var(--accent);
+  cursor: pointer;
+}
+
+/* ---------- 参数占位符 ---------- */
+.ph {
+  font-family: var(--mono);
+  font-size: 0.92em;
+  color: var(--info);
+  text-decoration: underline dotted rgba(88, 166, 255, 0.5);
+  text-underline-offset: 3px;
+  cursor: help;
+}
+
+.ph__zh {
+  font-family: inherit;
+  font-size: 0.82em;
+  color: var(--fg-faint);
+  text-decoration: none;
+  margin-left: 3px;
+}
+
+.glossary {
+  margin: 10px 0;
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  background: var(--bg-elev);
+  padding: 8px 12px;
+}
+
+.glossary__summary {
+  cursor: pointer;
+  color: var(--fg-dim);
+  font-size: 0.88rem;
+}
+
+.glossary__summary:hover {
+  color: var(--fg);
+}
+
+.glossary__note {
+  margin: 8px 0;
+  color: var(--fg-faint);
+  font-size: 0.82rem;
+}
+
+.glossary__note code {
+  color: var(--info);
+}
+
+.glossary__search {
+  width: 100%;
+  max-width: 360px;
+  padding: 6px 10px;
+  background: var(--bg);
+  border: 1px solid var(--border-strong);
+  border-radius: 6px;
+  color: var(--fg);
+  outline: none;
+}
+
+.glossary__search:focus {
+  border-color: var(--accent);
+}
+
+.glossary__list {
+  list-style: none;
+  margin: 10px 0 0;
+  padding: 0;
+  max-height: 320px;
+  overflow: auto;
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(420px, 1fr));
+  gap: 4px 14px;
+}
+
+.glossary__item {
+  display: flex;
+  align-items: baseline;
+  gap: 8px;
+  padding: 3px 0;
+  border-bottom: 1px dashed var(--border);
+  font-size: 0.84rem;
+}
+
+.glossary__token {
+  color: var(--info);
+  flex: 0 1 auto;
+  overflow-wrap: anywhere;
+}
+
+.glossary__zh {
+  color: var(--fg-dim);
+  flex: 1 1 auto;
+}
+
+.glossary__count {
+  color: var(--fg-faint);
+  font-size: 0.76rem;
+  flex: 0 0 auto;
+}
+
+/* ---------- 提示条 ---------- */
+.notice {
+  display: flex;
+  gap: 8px;
+  align-items: baseline;
+  padding: 8px 12px;
+  margin: 8px 0;
+  border: 1px solid var(--border-strong);
+  border-left: 3px solid var(--info);
+  border-radius: var(--radius);
+  background: var(--bg-elev);
+  font-size: 0.88rem;
+  color: var(--fg-dim);
+}
+
+.notice--warn {
+  border-left-color: var(--accent);
+}
+
+.notice strong {
+  color: var(--fg);
+  white-space: nowrap;
+}
+
+/* ---------- 列表 ---------- */
+.app-main {
+  margin-top: 12px;
+}
+
+.cmd-list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.cmd-row {
+  display: grid;
+  grid-template-columns: 30px minmax(0, 1fr) minmax(240px, auto);
+  gap: 10px;
+  align-items: start;
+  padding: 10px 12px;
+  background: var(--bg-elev);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+}
+
+.cmd-row:hover {
+  border-color: var(--border-strong);
+}
+
+.cmd-row.is-selected {
+  border-color: var(--accent);
+  background: var(--bg-elev-2);
+}
+
+.cmd-row__check {
+  padding-top: 3px;
+  display: flex;
+  justify-content: center;
+}
+
+.cmd-row__check input {
+  width: 16px;
+  height: 16px;
+  accent-color: var(--accent);
+  cursor: pointer;
+}
+
+.cmd-row__body {
+  min-width: 0;
+}
+
+.cmd-row__head {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 6px;
+}
+
+.cmd-name {
+  font-family: var(--mono);
+  font-size: 0.98rem;
+  font-weight: 600;
+  color: var(--accent-strong);
+  background: none;
+  border: none;
+  padding: 0;
+  cursor: pointer;
+  text-align: left;
+  word-break: break-all;
+}
+
+.cmd-name:hover {
+  text-decoration: underline;
+}
+
+.badge {
+  display: inline-block;
+  padding: 1px 7px;
+  border-radius: 999px;
+  font-size: 0.72rem;
+  line-height: 1.55;
+  border: 1px solid var(--border-strong);
+  color: var(--fg-dim);
+  background: var(--bg-elev-2);
+  white-space: nowrap;
+}
+
+.badge--section {
+  font-family: var(--mono);
+  color: var(--fg-faint);
+}
+
+.badge--flag {
+  border-color: rgba(240, 160, 32, 0.4);
+  color: var(--accent);
+}
+
+.badge--flag.flag-cheat {
+  border-color: rgba(248, 81, 73, 0.5);
+  color: #ff8b83;
+}
+
+.badge--flag.flag-sv {
+  border-color: rgba(88, 166, 255, 0.5);
+  color: #7ec1ff;
+}
+
+.badge--flag.flag-cl {
+  border-color: rgba(63, 185, 80, 0.5);
+  color: #7ee787;
+}
+
+.badge--untranslated {
+  margin-left: 6px;
+  border-color: rgba(240, 160, 32, 0.5);
+  color: var(--accent);
+}
+
+.cmd-row__desc {
+  margin: 6px 0 2px;
+  color: var(--fg);
+  font-size: 0.9rem;
+  overflow-wrap: anywhere;
+}
+
+.desc-zh {
+  color: var(--fg);
+}
+
+.desc-en {
+  color: #c9d5e1;
+}
+
+.desc-empty {
+  color: var(--fg-faint);
+  font-style: italic;
+}
+
+.cmd-row__meta {
+  margin: 0;
+  color: var(--fg-faint);
+  font-size: 0.8rem;
+}
+
+.cmd-row__default code {
+  color: var(--fg-dim);
+  background: var(--bg-elev-2);
+  border-radius: 4px;
+  padding: 1px 5px;
+}
+
+.cmd-row__default em {
+  color: var(--fg-faint);
+  font-style: normal;
+  margin-left: 4px;
+}
+
+.cmd-row__actions {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  align-items: stretch;
+}
+
+.value-field {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 0.8rem;
+  color: var(--fg-faint);
+}
+
+.value-field__input {
+  flex: 1 1 auto;
+  min-width: 0;
+  width: 100%;
+  padding: 5px 8px;
+  font-family: var(--mono);
+  font-size: 0.85rem;
+  color: var(--fg);
+  background: var(--bg);
+  border: 1px solid var(--border-strong);
+  border-radius: 6px;
+  outline: none;
+}
+
+.value-field__input:focus {
+  border-color: var(--accent);
+}
+
+.cmd-row__buttons {
+  display: flex;
+  gap: 6px;
+  justify-content: flex-end;
+}
+
+/* ---------- 按钮 ---------- */
+.btn {
+  padding: 6px 12px;
+  border-radius: 6px;
+  border: 1px solid var(--border-strong);
+  background: var(--bg-elev-2);
+  color: var(--fg);
+  font-size: 0.85rem;
+  cursor: pointer;
+  white-space: nowrap;
+  transition: border-color 0.12s, background 0.12s, color 0.12s;
+}
+
+.btn:hover {
+  border-color: var(--accent);
+}
+
+.btn--sm {
+  padding: 4px 9px;
+  font-size: 0.8rem;
+}
+
+.btn--primary {
+  background: var(--accent);
+  border-color: var(--accent-strong);
+  color: var(--accent-ink);
+  font-weight: 600;
+}
+
+.btn--primary:hover {
+  background: var(--accent-strong);
+}
+
+.btn--ghost {
+  background: transparent;
+  color: var(--fg-dim);
+}
+
+/* ---------- 分块渲染 / 空态 ---------- */
+.cmd-list__more {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+  padding: 16px 0 4px;
+  color: var(--fg-faint);
+  font-size: 0.85rem;
+}
+
+.empty-state {
+  text-align: center;
+  padding: 48px 16px;
+  border: 1px dashed var(--border-strong);
+  border-radius: var(--radius);
+  background: var(--bg-elev);
+}
+
+.empty-state__title {
+  margin: 0 0 8px;
+  font-size: 1.1rem;
+}
+
+.empty-state__hint {
+  margin: 0 0 16px;
+  color: var(--fg-dim);
+  font-size: 0.9rem;
+}
+
+/* ---------- 状态卡片（加载/错误） ---------- */
+.state-card {
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  background: var(--bg-elev);
+  padding: 20px;
+}
+
+.state-card--error {
+  border-left: 4px solid var(--err);
+}
+
+.state-card h2 {
+  margin: 0 0 8px;
+  font-size: 1.15rem;
+}
+
+.state-card h3 {
+  margin: 16px 0 6px;
+  font-size: 0.95rem;
+  color: var(--fg-dim);
+}
+
+.state-card__message {
+  margin: 0 0 8px;
+  color: var(--fg);
+}
+
+.state-card__detail {
+  margin: 0;
+  padding: 10px;
+  background: var(--bg);
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  color: var(--fg-dim);
+  font-family: var(--mono);
+  font-size: 0.8rem;
+  white-space: pre-wrap;
+  max-height: 220px;
+  overflow: auto;
+}
+
+.state-card__hints {
+  margin: 0 0 16px;
+  padding-left: 20px;
+  color: var(--fg-dim);
+  font-size: 0.88rem;
+}
+
+.state-card__hints li {
+  margin-bottom: 6px;
+}
+
+/* ---------- 批量条 ---------- */
+.batch-bar {
+  position: fixed;
+  left: 50%;
+  bottom: 16px;
+  transform: translateX(-50%);
+  z-index: 40;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 10px 14px;
+  border: 1px solid var(--accent);
+  border-radius: 12px;
+  background: rgba(22, 27, 34, 0.97);
+  box-shadow: var(--shadow);
+  max-width: min(1180px, calc(100vw - 24px));
+  flex-wrap: wrap;
+}
+
+.batch-bar__count {
+  font-weight: 600;
+  color: var(--accent-strong);
+  white-space: nowrap;
+}
+
+.batch-bar__actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+}
+
+.batch-bar-spacer {
+  height: 72px;
+}
+
+/* ---------- Toast ---------- */
+.toast {
+  position: fixed;
+  left: 50%;
+  bottom: 92px;
+  transform: translateX(-50%);
+  z-index: 60;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 9px 14px;
+  border-radius: 999px;
+  border: 1px solid var(--border-strong);
+  background: rgba(22, 27, 34, 0.98);
+  box-shadow: var(--shadow);
+  font-size: 0.88rem;
+  max-width: min(720px, calc(100vw - 24px));
+}
+
+.toast__dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: var(--ok);
+  flex: 0 0 auto;
+}
+
+.toast--error .toast__dot {
+  background: var(--err);
+}
+
+.toast--info .toast__dot {
+  background: var(--info);
+}
+
+.toast__close {
+  border: none;
+  background: transparent;
+  color: var(--fg-dim);
+  cursor: pointer;
+  font-size: 1rem;
+  line-height: 1;
+}
+
+/* ---------- 手动复制面板 ---------- */
+.modal-backdrop {
+  position: fixed;
+  inset: 0;
+  z-index: 80;
+  background: rgba(0, 0, 0, 0.6);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 18px;
+}
+
+.modal {
+  width: min(680px, 100%);
+  background: var(--bg-elev);
+  border: 1px solid var(--border-strong);
+  border-radius: 12px;
+  padding: 18px;
+  box-shadow: var(--shadow);
+}
+
+.modal__title {
+  margin: 0 0 8px;
+  font-size: 1.05rem;
+}
+
+.modal__hint {
+  margin: 0 0 10px;
+  color: var(--fg-dim);
+  font-size: 0.88rem;
+}
+
+.modal__textarea {
+  width: 100%;
+  font-family: var(--mono);
+  font-size: 0.85rem;
+  color: var(--fg);
+  background: var(--bg);
+  border: 1px solid var(--border-strong);
+  border-radius: 6px;
+  padding: 10px;
+  resize: vertical;
+}
+
+.modal__actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 8px;
+  margin-top: 12px;
+}
+
+/* ---------- 页脚 ---------- */
+.app-footer {
+  margin-top: 32px;
+  padding-top: 12px;
+  border-top: 1px solid var(--border);
+  color: var(--fg-faint);
+  font-size: 0.8rem;
+}
+
+.app-footer p {
+  margin: 4px 0;
+}
+
+.app-footer__note {
+  color: var(--accent);
+}
+
+@media (max-width: 860px) {
+  .cmd-row {
+    grid-template-columns: 28px minmax(0, 1fr);
+  }
+
+  .cmd-row__actions {
+    grid-column: 2;
+  }
+
+  .filters__row {
+    flex-direction: column;
+  }
+
+  .filters__label {
+    text-align: left;
+    padding-top: 0;
+  }
+}
+</style></head>
+  <body>
+    <div id="root"><div class="app-shell"><header class="app-header"><div class="app-header__titles"><h1>CS2 控制台命令与变量查询</h1><p class="app-header__sub">Valve 开发者维基全表 · 共 2528 条 · 支持搜索 / 标记与首字母筛选 / 一键复制到 .cfg</p></div><div class="app-header__stats"><span class="stat"><strong>2528</strong> 条命令</span><span class="stat"><strong>1587</strong> 条已有中文</span><span class="stat"><strong>2528</strong> 条命中</span></div></header><div class="search-bar"><div class="search-bar__input-wrap"><input type="search" class="search-bar__input" placeholder="搜索命令名或描述（中英文均可），如 sv_cheats、回合、mp_roundt…" spellcheck="false" autocomplete="off" aria-label="搜索命令" value=""></div><span class="search-bar__count" role="status">全部 2528 条</span></div><section class="filters" aria-label="筛选条件"><div class="filters__row"><span class="filters__label">常用</span><div class="chips chips--presets"><button type="button" class="chip chip--preset" title="需要 sv_cheats 1 才能使用（再次点击取消）" aria-pressed="false">仅显示作弊</button><button type="button" class="chip chip--preset" title="只在服务器端存在（再次点击取消）" aria-pressed="false">仅服务端</button><button type="button" class="chip chip--preset" title="只在客户端存在（再次点击取消）" aria-pressed="false">仅客户端</button><button type="button" class="chip chip--preset" title="正式版可用，未被开发分支隐藏（再次点击取消）" aria-pressed="false">仅正式版</button></div></div><div class="filters__row"><span class="filters__label">标记</span><div class="chips"><button type="button" class="chip" aria-pressed="false" title="sv — 服务端：仅在服务器端存在（server）"><span class="chip__zh">服务端</span><span class="chip__code">sv</span><span class="chip__count">1168</span></button><button type="button" class="chip" aria-pressed="false" title="cl — 客户端：仅在客户端存在（client）"><span class="chip__zh">客户端</span><span class="chip__code">cl</span><span class="chip__count">1092</span></button><button type="button" class="chip" aria-pressed="false" title="rep — 可复制：取值会复制（replicate）到其他机器，客户端能看到服务器的值"><span class="chip__zh">可复制</span><span class="chip__code">rep</span><span class="chip__count">519</span></button><button type="button" class="chip" aria-pressed="false" title="cheat — 作弊：需要服务器开启 sv_cheats 1 才能使用；联机比赛中通常禁用"><span class="chip__zh">作弊</span><span class="chip__code">cheat</span><span class="chip__count">1248</span></button><button type="button" class="chip" aria-pressed="false" title="release — 正式版：正式版中可用的命令/变量，未被开发分支隐藏"><span class="chip__zh">正式版</span><span class="chip__code">release</span><span class="chip__count">1037</span></button><button type="button" class="chip" aria-pressed="false" title="nf — 不可设为默认：不可写入配置文件当作永久默认值（not in config file）"><span class="chip__zh">不可设为默认</span><span class="chip__code">nf</span><span class="chip__count">100</span></button><button type="button" class="chip" aria-pressed="false" title="a — 存档：会被存档保存（archive），换图/重连后保留"><span class="chip__zh">存档</span><span class="chip__code">a</span><span class="chip__count">360</span></button><button type="button" class="chip" aria-pressed="false" title="per_user — 按用户：按每个用户分别保存取值"><span class="chip__zh">按用户</span><span class="chip__code">per_user</span><span class="chip__count">73</span></button><button type="button" class="chip" aria-pressed="false" title="user — 用户信息：用户信息类变量（如 SteamID、玩家名）"><span class="chip__zh">用户信息</span><span class="chip__code">user</span><span class="chip__count">26</span></button><button type="button" class="chip" aria-pressed="false" title="norecord — 不录制：不写入 demo 录像"><span class="chip__zh">不录制</span><span class="chip__code">norecord</span><span class="chip__count">37</span></button><button type="button" class="chip" aria-pressed="false" title="sp — 单机：仅在单机（singleplayer）模式可用"><span class="chip__zh">单机</span><span class="chip__code">sp</span><span class="chip__count">1</span></button><button type="button" class="chip" aria-pressed="false" title="demo — Demo 录像：demo 录像播放相关"><span class="chip__zh">Demo 录像</span><span class="chip__code">demo</span><span class="chip__count">3</span></button><button type="button" class="chip" aria-pressed="false" title="nolog — 不记日志：不写入游戏日志"><span class="chip__zh">不记日志</span><span class="chip__code">nolog</span><span class="chip__count">4</span></button><button type="button" class="chip" aria-pressed="false" title="server_can_execute — 服务端可执行：允许服务器端执行该命令"><span class="chip__zh">服务端可执行</span><span class="chip__code">server_can_execute</span><span class="chip__count">25</span></button><button type="button" class="chip" aria-pressed="false" title="clientcmd_can_execute — 客户端可执行：允许客户端执行该命令"><span class="chip__zh">客户端可执行</span><span class="chip__code">clientcmd_can_execute</span><span class="chip__count">18</span></button><button type="button" class="chip" aria-pressed="false" title="vconsole_fuzzy — 虚拟控制台模糊匹配：虚拟控制台可按模糊关键字匹配"><span class="chip__zh">虚拟控制台模糊匹配</span><span class="chip__code">vconsole_fuzzy</span><span class="chip__count">10</span></button><button type="button" class="chip" aria-pressed="false" title="vconsole_set_focus — 虚拟控制台设焦点：虚拟控制台执行后自动获取焦点"><span class="chip__zh">虚拟控制台设焦点</span><span class="chip__code">vconsole_set_focus</span><span class="chip__count">5</span></button><button type="button" class="chip" aria-pressed="false" title="server_cant_query — 服务端不可查询：服务器无法查询该变量"><span class="chip__zh">服务端不可查询</span><span class="chip__code">server_cant_query</span><span class="chip__count">4</span></button><button type="button" class="chip" aria-pressed="false" title="prot — 受保护：受保护变量，不允许随意修改"><span class="chip__zh">受保护</span><span class="chip__code">prot</span><span class="chip__count">4</span></button><button type="button" class="chip" aria-pressed="false" title="execute_per_tick — 每帧执行：每个 tick 都会执行一次"><span class="chip__zh">每帧执行</span><span class="chip__code">execute_per_tick</span><span class="chip__count">2</span></button><button type="button" class="chip" aria-pressed="false" title="disconnected — 断线可用：断开连接状态下也可使用"><span class="chip__zh">断线可用</span><span class="chip__code">disconnected</span><span class="chip__count">1</span></button></div></div><div class="filters__row"><span class="filters__label">首字母</span><div class="chips chips--sections"><button type="button" class="chip chip--section" aria-pressed="false" title="其它（_）：1 条">_<span class="chip__count">1</span></button><button type="button" class="chip chip--section" aria-pressed="false" title="A：43 条">A<span class="chip__count">43</span></button><button type="button" class="chip chip--section" aria-pressed="false" title="B：69 条">B<span class="chip__count">69</span></button><button type="button" class="chip chip--section" aria-pressed="false" title="C：466 条">C<span class="chip__count">466</span></button><button type="button" class="chip chip--section" aria-pressed="false" title="D：47 条">D<span class="chip__count">47</span></button><button type="button" class="chip chip--section" aria-pressed="false" title="E：78 条">E<span class="chip__count">78</span></button><button type="button" class="chip chip--section" aria-pressed="false" title="F：41 条">F<span class="chip__count">41</span></button><button type="button" class="chip chip--section" aria-pressed="false" title="G：25 条">G<span class="chip__count">25</span></button><button type="button" class="chip chip--section" aria-pressed="false" title="H：24 条">H<span class="chip__count">24</span></button><button type="button" class="chip chip--section" aria-pressed="false" title="I：38 条">I<span class="chip__count">38</span></button><button type="button" class="chip chip--section" aria-pressed="false" title="J：37 条">J<span class="chip__count">37</span></button><button type="button" class="chip chip--section" aria-pressed="false" title="K：7 条">K<span class="chip__count">7</span></button><button type="button" class="chip chip--section" aria-pressed="false" title="L：31 条">L<span class="chip__count">31</span></button><button type="button" class="chip chip--section" aria-pressed="false" title="M：299 条">M<span class="chip__count">299</span></button><button type="button" class="chip chip--section" aria-pressed="false" title="N：300 条">N<span class="chip__count">300</span></button><button type="button" class="chip chip--section" aria-pressed="false" title="O：2 条">O<span class="chip__count">2</span></button><button type="button" class="chip chip--section" aria-pressed="false" title="P：52 条">P<span class="chip__count">52</span></button><button type="button" class="chip chip--section" aria-pressed="false" title="Q：7 条">Q<span class="chip__count">7</span></button><button type="button" class="chip chip--section" aria-pressed="false" title="R：199 条">R<span class="chip__count">199</span></button><button type="button" class="chip chip--section" aria-pressed="false" title="S：577 条">S<span class="chip__count">577</span></button><button type="button" class="chip chip--section" aria-pressed="false" title="T：82 条">T<span class="chip__count">82</span></button><button type="button" class="chip chip--section" aria-pressed="false" title="U：52 条">U<span class="chip__count">52</span></button><button type="button" class="chip chip--section" aria-pressed="false" title="V：37 条">V<span class="chip__count">37</span></button><button type="button" class="chip chip--section" aria-pressed="false" title="W：13 条">W<span class="chip__count">13</span></button><button type="button" class="chip chip--section" aria-pressed="false" title="Z：1 条">Z<span class="chip__count">1</span></button></div></div><div class="filters__row"><span class="filters__label">默认值</span><div class="chips"><button type="button" class="chip is-active" aria-pressed="true" title="不按默认值筛选">全部</button><button type="button" class="chip" aria-pressed="false" title="default value 不为空">有默认值</button><button type="button" class="chip" aria-pressed="false" title="default value 为空（数据源未给出）">无默认值</button></div><button type="button" class="btn btn--ghost filters__clear">清空筛选</button></div></section><p class="shortcut-hint">快捷键：<kbd>Enter</kbd> 复制第一条结果 · <kbd>Esc</kbd> 清空搜索/筛选 · <kbd>/</kbd> 聚焦搜索框 · 行内「值」可编辑后再复制<label class="shortcut-hint__toggle" title="描述里的参数占位符（如 &lt;player&gt;）显示中文释义"><input type="checkbox" checked="">显示参数释义</label></p><details class="glossary"><summary class="glossary__summary">参数占位符对照表（82 种 · 描述中共出现 748 处 · 另有 3 种译文变体）</summary><p class="glossary__note">占位符在描述与复制内容里都是<b>逐字保留英文</b>的技术参数（直接粘进 .cfg / 控制台）， 这里只提供中文释义；<code>&lt;t\|ct&gt;</code> 里的反斜杠是源站原文，属于正确数据。</p><input type="search" class="glossary__search" placeholder="过滤占位符，如 entity、player、map…" spellcheck="false" value=""><ul class="glossary__list"><li class="glossary__item"><code class="glossary__token">[inner = cl_crosshairsize*(1-cl_crosshair_dynamic_maxdist_splitratio), outer = cl_crosshairsize*cl_crosshair_dynamic_maxdist_splitratio]</code><span class="glossary__zh">内间距 = cl_crosshairsize×(1-cl_crosshair_dynamic_maxdist_splitratio)，外间距 = cl_crosshairsize×cl_crosshair_dynamic_maxdist_splitratio</span><span class="glossary__count">×1</span></li><li class="glossary__item"><code class="glossary__token">&lt;{entity_name} / {class_name} / {entity_index} / {no argument = pick what player is looking at}&gt;</code><span class="glossary__zh">实体名称 / 实体类名 / 实体编号 / 不带参数时取玩家正看向的目标</span><span class="glossary__count">×14</span></li><li class="glossary__item"><code class="glossary__token">{no argument = pick what player is looking at}</code><span class="glossary__zh">不带参数时 = 取当前玩家正看向的目标</span><span class="glossary__count">×118</span></li><li class="glossary__item"><code class="glossary__token">[within 256 units of the player]</code><span class="glossary__zh">玩家周围 256 单位范围内</span><span class="glossary__count">×2</span></li><li class="glossary__item"><code class="glossary__token">&lt;ent index or -1 for all&gt;</code><span class="glossary__zh">实体编号；-1 表示全部</span><span class="glossary__count">×4</span></li><li class="glossary__item"><code class="glossary__token">[&lt;player name or index&gt;]</code><span class="glossary__zh">玩家名称或编号</span><span class="glossary__count">×2</span></li><li class="glossary__item"><code class="glossary__token">&lt;weapon subclass name&gt;</code><span class="glossary__zh">武器子类别名称</span><span class="glossary__count">×2</span></li><li class="glossary__item"><code class="glossary__token">[mod authors use this]</code><span class="glossary__zh">供 Mod 作者使用</span><span class="glossary__count">×1</span></li><li class="glossary__item"><code class="glossary__token">&lt;optional: allangles&gt;</code><span class="glossary__zh">可选参数：allangles（全角度）</span><span class="glossary__count">×2</span></li><li class="glossary__item"><code class="glossary__token">&lt;markup_group name&gt;</code><span class="glossary__zh">标记分组名称</span><span class="glossary__count">×4</span></li><li class="glossary__item"><code class="glossary__token">[&lt;retrigger time&gt;]</code><span class="glossary__zh">重复触发间隔时间</span><span class="glossary__count">×4</span></li><li class="glossary__item"><code class="glossary__token">&lt;lifetime = 10.0&gt;</code><span class="glossary__zh">存活时间（秒），默认 10.0</span><span class="glossary__count">×8</span></li><li class="glossary__item"><code class="glossary__token">&lt;new entity name&gt;</code><span class="glossary__zh">新的实体名称</span><span class="glossary__count">×4</span></li><li class="glossary__item"><code class="glossary__token">&lt;threshold bytes&gt;</code><span class="glossary__zh">阈值（字节）</span><span class="glossary__count">×2</span></li><li class="glossary__item"><code class="glossary__token">[near the player]</code><span class="glossary__zh">玩家附近</span><span class="glossary__count">×2</span></li><li class="glossary__item"><code class="glossary__token">&lt;health to lose&gt;</code><span class="glossary__zh">扣除的生命值</span><span class="glossary__count">×2</span></li><li class="glossary__item"><code class="glossary__token">&lt;option:entname&gt;</code><span class="glossary__zh">可选参数：实体名称</span><span class="glossary__count">×4</span></li><li class="glossary__item"><code class="glossary__token">[&lt;max distance&gt;]</code><span class="glossary__zh">最大距离</span><span class="glossary__count">×4</span></li><li class="glossary__item"><code class="glossary__token">&lt;distance 1024&gt;</code><span class="glossary__zh">距离（默认 1024）</span><span class="glossary__count">×2</span></li><li class="glossary__item"><code class="glossary__token">&lt;distance away&gt;</code><span class="glossary__zh">距离</span><span class="glossary__count">×2</span></li><li class="glossary__item"><code class="glossary__token">&lt;roll:optional&gt;</code><span class="glossary__zh">横滚角（可选）</span><span class="glossary__count">×4</span></li><li class="glossary__item"><code class="glossary__token">&lt;new_subclass&gt;</code><span class="glossary__zh">新的子类别</span><span class="glossary__count">×2</span></li><li class="glossary__item"><code class="glossary__token">&lt;scale factor&gt;</code><span class="glossary__zh">缩放系数</span><span class="glossary__count">×4</span></li><li class="glossary__item"><code class="glossary__token">{entity_index}</code><span class="glossary__zh">实体编号</span><span class="glossary__count">×118</span></li><li class="glossary__item"><code class="glossary__token">&lt;effect name&gt;</code><span class="glossary__zh">效果名称</span><span class="glossary__count">×2</span></li><li class="glossary__item"><code class="glossary__token">&lt;entity name&gt;</code><span class="glossary__zh">实体名称</span><span class="glossary__count">×4</span></li><li class="glossary__item"><code class="glossary__token">&lt;heuristic #&gt;</code><span class="glossary__zh">启发式编号</span><span class="glossary__count">×2</span></li><li class="glossary__item"><code class="glossary__token">&lt;magnitude 0&gt;</code><span class="glossary__zh">强度（0 表示关闭）</span><span class="glossary__count">×2</span></li><li class="glossary__item"><code class="glossary__token">&lt;weaponclass&gt;</code><span class="glossary__zh">武器类别</span><span class="glossary__count">×2</span></li><li class="glossary__item"><code class="glossary__token">&lt;world_index&gt;</code><span class="glossary__zh">世界（地图）编号</span><span class="glossary__count">×4</span></li><li class="glossary__item"><code class="glossary__token">[output name]</code><span class="glossary__zh">输出名称</span><span class="glossary__count">×2</span></li><li class="glossary__item"><code class="glossary__token">{0=no, 1=yes}</code><span class="glossary__zh">可选值：0 = 否，1 = 是</span><span class="glossary__count">×2</span></li><li class="glossary__item"><code class="glossary__token">{entity_name}</code><span class="glossary__zh">实体名称</span><span class="glossary__count">×122</span></li><li class="glossary__item"><code class="glossary__token">&lt;class name&gt;</code><span class="glossary__zh">类名</span><span class="glossary__count">×2</span></li><li class="glossary__item"><code class="glossary__token">&lt;difficulty&gt;</code><span class="glossary__zh">难度</span><span class="glossary__count">×12</span></li><li class="glossary__item"><code class="glossary__token">&lt;globalname&gt;</code><span class="glossary__zh">全局变量名</span><span class="glossary__count">×2</span></li><li class="glossary__item"><code class="glossary__token">&lt;not_bomber&gt;</code><span class="glossary__zh">非炸弹携带者</span><span class="glossary__count">×2</span></li><li class="glossary__item"><code class="glossary__token">{.vmdl name}</code><span class="glossary__zh">模型文件名（.vmdl）</span><span class="glossary__count">×4</span></li><li class="glossary__item"><code class="glossary__token">{any, CT, T}</code><span class="glossary__zh">可选值：任意 / 反恐精英 / 恐怖分子</span><span class="glossary__count">×2</span></li><li class="glossary__item"><code class="glossary__token">{class_name}</code><span class="glossary__zh">实体类名</span><span class="glossary__count">×122</span></li><li class="glossary__item"><code class="glossary__token">{time r g b}</code><span class="glossary__zh">时间（秒）与红、绿、蓝三个分量</span><span class="glossary__count">×4</span></li><li class="glossary__item"><code class="glossary__token">&lt;classname&gt;</code><span class="glossary__zh">类名</span><span class="glossary__count">×2</span></li><li class="glossary__item"><code class="glossary__token">&lt;eventname&gt;</code><span class="glossary__zh">事件名称</span><span class="glossary__count">×4</span></li><li class="glossary__item"><code class="glossary__token">&lt;exit code&gt;</code><span class="glossary__zh">进程退出码</span><span class="glossary__count">×2</span></li><li class="glossary__item"><code class="glossary__token">&lt;item_name&gt;</code><span class="glossary__zh">物品名称</span><span class="glossary__count">×2</span></li><li class="glossary__item"><code class="glossary__token">&lt;magnitude&gt;</code><span class="glossary__zh">强度</span><span class="glossary__count">×2</span></li><li class="glossary__item"><code class="glossary__token">&lt;substring&gt;</code><span class="glossary__zh">子字符串</span><span class="glossary__count">×4</span></li><li class="glossary__item"><code class="glossary__token">&lt;funcname&gt;</code><span class="glossary__zh">函数名</span><span class="glossary__count">×4</span></li><li class="glossary__item"><code class="glossary__token">&lt;concept&gt;</code><span class="glossary__zh">概念</span><span class="glossary__count">×2</span></li><li class="glossary__item"><code class="glossary__token">&lt;flags 0&gt;</code><span class="glossary__zh">标志位（0 表示关闭）</span><span class="glossary__count">×2</span></li><li class="glossary__item"><code class="glossary__token">&lt;mapname&gt;</code><span class="glossary__zh">地图名称</span><span class="glossary__count">×4</span></li><li class="glossary__item"><code class="glossary__token">&lt;r g b a&gt;</code><span class="glossary__zh">红、绿、蓝、透明度四个分量</span><span class="glossary__count">×8</span></li><li class="glossary__item"><code class="glossary__token">&lt;scale 0&gt;</code><span class="glossary__zh">缩放值（0 表示关闭）</span><span class="glossary__count">×2</span></li><li class="glossary__item"><code class="glossary__token">&lt;varname&gt;</code><span class="glossary__zh">变量名</span><span class="glossary__count">×2</span></li><li class="glossary__item"><code class="glossary__token">&lt;x value&gt;</code><span class="glossary__zh">X 轴数值</span><span class="glossary__count">×4</span></li><li class="glossary__item"><code class="glossary__token">&lt;y value&gt;</code><span class="glossary__zh">Y 轴数值</span><span class="glossary__count">×4</span></li><li class="glossary__item"><code class="glossary__token">&lt;z value&gt;</code><span class="glossary__zh">Z 轴数值</span><span class="glossary__count">×4</span></li><li class="glossary__item"><code class="glossary__token">[0.3 - 1]</code><span class="glossary__zh">取值范围 0.3 - 1</span><span class="glossary__count">×2</span></li><li class="glossary__item"><code class="glossary__token">&lt;Radius&gt;</code><span class="glossary__zh">半径</span><span class="glossary__count">×4</span></li><li class="glossary__item"><code class="glossary__token">&lt;commit&gt;</code><span class="glossary__zh">提交</span><span class="glossary__count">×2</span></li><li class="glossary__item"><code class="glossary__token">&lt;player&gt;</code><span class="glossary__zh">玩家</span><span class="glossary__count">×4</span></li><li class="glossary__item"><code class="glossary__token">&lt;target&gt;</code><span class="glossary__zh">目标</span><span class="glossary__count">×6</span></li><li class="glossary__item"><code class="glossary__token">[action]</code><span class="glossary__zh">动作</span><span class="glossary__count">×2</span></li><li class="glossary__item"><code class="glossary__token">&lt;delay&gt;</code><span class="glossary__zh">延迟时间</span><span class="glossary__count">×2</span></li><li class="glossary__item"><code class="glossary__token">&lt;flags&gt;</code><span class="glossary__zh">标志位</span><span class="glossary__count">×2</span></li><li class="glossary__item"><code class="glossary__token">&lt;index&gt;</code><span class="glossary__zh">编号</span><span class="glossary__count">×4</span></li><li class="glossary__item"><code class="glossary__token">&lt;scale&gt;</code><span class="glossary__zh">缩放值</span><span class="glossary__count">×2</span></li><li class="glossary__item"><code class="glossary__token">&lt;skill&gt;</code><span class="glossary__zh">技能值（0-100）</span><span class="glossary__count">×2</span></li><li class="glossary__item"><code class="glossary__token">&lt;state&gt;</code><span class="glossary__zh">状态</span><span class="glossary__count">×2</span></li><li class="glossary__item"><code class="glossary__token">&lt;t\|ct&gt;</code><span class="glossary__zh">阵营筛选：t（恐怖分子）或 ct（反恐精英）</span><span class="glossary__count">×4</span></li><li class="glossary__item"><code class="glossary__token">&lt;value&gt;</code><span class="glossary__zh">数值</span><span class="glossary__count">×4</span></li><li class="glossary__item"><code class="glossary__token">[0 - 1]</code><span class="glossary__zh">取值范围 0 - 1</span><span class="glossary__count">×4</span></li><li class="glossary__item"><code class="glossary__token">[delay]</code><span class="glossary__zh">延迟时间</span><span class="glossary__count">×4</span></li><li class="glossary__item"><code class="glossary__token">[value]</code><span class="glossary__zh">数值</span><span class="glossary__count">×4</span></li><li class="glossary__item"><code class="glossary__token">&lt;name&gt;</code><span class="glossary__zh">名称</span><span class="glossary__count">×10</span></li><li class="glossary__item"><code class="glossary__token">&lt;type&gt;</code><span class="glossary__zh">类型</span><span class="glossary__count">×10</span></li><li class="glossary__item"><code class="glossary__token">&lt;all&gt;</code><span class="glossary__zh">是否对全部目标生效</span><span class="glossary__count">×4</span></li><li class="glossary__item"><code class="glossary__token">&lt;ct&gt;</code><span class="glossary__zh">反恐精英阵营</span><span class="glossary__count">×2</span></li><li class="glossary__item"><code class="glossary__token">&lt;N&gt;</code><span class="glossary__zh">数量</span><span class="glossary__count">×2</span></li><li class="glossary__item"><code class="glossary__token">&lt;t&gt;</code><span class="glossary__zh">恐怖分子阵营</span><span class="glossary__count">×2</span></li><li class="glossary__item"><code class="glossary__token">[0]</code><span class="glossary__zh">取值 0</span><span class="glossary__count">×2</span></li><li class="glossary__item"><code class="glossary__token">[1]</code><span class="glossary__zh">取值 1</span><span class="glossary__count">×6</span></li></ul></details><div class="notice" role="status"><strong>中文描述已全部合并：</strong><span>1587 / 1587 条有英文原文的命令均已翻译为简体中文；另有 941 条命令源站本身没有提供描述。</span></div><main class="app-main"><div class="cmd-list-wrap"><ul class="cmd-list"><li class="cmd-row" data-command="+lookatweapon"><label class="cmd-row__check" title="勾选后可批量复制"><input type="checkbox" aria-label="选择 +lookatweapon"></label><div class="cmd-row__body"><div class="cmd-row__head"><button type="button" class="cmd-name" title="点击复制命令名">+lookatweapon</button><span class="badge badge--section" title="首字母段落：L">L</span><span class="badge badge--flag flag-cl" title="cl — 客户端：仅在客户端存在（client）">客户端</span><span class="badge badge--flag flag-release" title="release — 正式版：正式版中可用的命令/变量，未被开发分支隐藏">正式版</span></div><p class="cmd-row__desc"><span class="desc-empty">（数据源未提供描述）</span></p><p class="cmd-row__meta"><span class="cmd-row__default">默认值：<code>cmd</code><em>（该条是命令，不是变量）</em></span></p></div><div class="cmd-row__actions"><label class="value-field" title="可编辑：复制时会用这里的值"><span>值</span><input type="text" class="value-field__input" placeholder="可留空" spellcheck="false" value=""></label><div class="cmd-row__buttons"><button type="button" class="btn btn--primary btn--sm" title="复制：+lookatweapon">复制命令+值</button><button type="button" class="btn btn--sm" title="复制：+lookatweapon">仅命令</button></div></div></li><li class="cmd-row" data-command="+quickbuyradial"><label class="cmd-row__check" title="勾选后可批量复制"><input type="checkbox" aria-label="选择 +quickbuyradial"></label><div class="cmd-row__body"><div class="cmd-row__head"><button type="button" class="cmd-name" title="点击复制命令名">+quickbuyradial</button><span class="badge badge--section" title="首字母段落：Q">Q</span><span class="badge badge--flag flag-cl" title="cl — 客户端：仅在客户端存在（client）">客户端</span><span class="badge badge--flag flag-release" title="release — 正式版：正式版中可用的命令/变量，未被开发分支隐藏">正式版</span></div><p class="cmd-row__desc"><span class="desc-empty">（数据源未提供描述）</span></p><p class="cmd-row__meta"><span class="cmd-row__default">默认值：<code>cmd</code><em>（该条是命令，不是变量）</em></span></p></div><div class="cmd-row__actions"><label class="value-field" title="可编辑：复制时会用这里的值"><span>值</span><input type="text" class="value-field__input" placeholder="可留空" spellcheck="false" value=""></label><div class="cmd-row__buttons"><button type="button" class="btn btn--primary btn--sm" title="复制：+quickbuyradial">复制命令+值</button><button type="button" class="btn btn--sm" title="复制：+quickbuyradial">仅命令</button></div></div></li><li class="cmd-row" data-command="+quickgrenaderadial"><label class="cmd-row__check" title="勾选后可批量复制"><input type="checkbox" aria-label="选择 +quickgrenaderadial"></label><div class="cmd-row__body"><div class="cmd-row__head"><button type="button" class="cmd-name" title="点击复制命令名">+quickgrenaderadial</button><span class="badge badge--section" title="首字母段落：Q">Q</span><span class="badge badge--flag flag-cl" title="cl — 客户端：仅在客户端存在（client）">客户端</span><span class="badge badge--flag flag-release" title="release — 正式版：正式版中可用的命令/变量，未被开发分支隐藏">正式版</span></div><p class="cmd-row__desc"><span class="desc-empty">（数据源未提供描述）</span></p><p class="cmd-row__meta"><span class="cmd-row__default">默认值：<code>cmd</code><em>（该条是命令，不是变量）</em></span></p></div><div class="cmd-row__actions"><label class="value-field" title="可编辑：复制时会用这里的值"><span>值</span><input type="text" class="value-field__input" placeholder="可留空" spellcheck="false" value=""></label><div class="cmd-row__buttons"><button type="button" class="btn btn--primary btn--sm" title="复制：+quickgrenaderadial">复制命令+值</button><button type="button" class="btn btn--sm" title="复制：+quickgrenaderadial">仅命令</button></div></div></li><li class="cmd-row" data-command="+quickinv"><label class="cmd-row__check" title="勾选后可批量复制"><input type="checkbox" aria-label="选择 +quickinv"></label><div class="cmd-row__body"><div class="cmd-row__head"><button type="button" class="cmd-name" title="点击复制命令名">+quickinv</button><span class="badge badge--section" title="首字母段落：Q">Q</span><span class="badge badge--flag flag-cl" title="cl — 客户端：仅在客户端存在（client）">客户端</span><span class="badge badge--flag flag-release" title="release — 正式版：正式版中可用的命令/变量，未被开发分支隐藏">正式版</span></div><p class="cmd-row__desc"><span class="desc-empty">（数据源未提供描述）</span></p><p class="cmd-row__meta"><span class="cmd-row__default">默认值：<code>cmd</code><em>（该条是命令，不是变量）</em></span></p></div><div class="cmd-row__actions"><label class="value-field" title="可编辑：复制时会用这里的值"><span>值</span><input type="text" class="value-field__input" placeholder="可留空" spellcheck="false" value=""></label><div class="cmd-row__buttons"><button type="button" class="btn btn--primary btn--sm" title="复制：+quickinv">复制命令+值</button><button type="button" class="btn btn--sm" title="复制：+quickinv">仅命令</button></div></div></li><li class="cmd-row" data-command="+radialradio"><label class="cmd-row__check" title="勾选后可批量复制"><input type="checkbox" aria-label="选择 +radialradio"></label><div class="cmd-row__body"><div class="cmd-row__head"><button type="button" class="cmd-name" title="点击复制命令名">+radialradio</button><span class="badge badge--section" title="首字母段落：R">R</span><span class="badge badge--flag flag-cl" title="cl — 客户端：仅在客户端存在（client）">客户端</span><span class="badge badge--flag flag-release" title="release — 正式版：正式版中可用的命令/变量，未被开发分支隐藏">正式版</span></div><p class="cmd-row__desc"><span class="desc-empty">（数据源未提供描述）</span></p><p class="cmd-row__meta"><span class="cmd-row__default">默认值：<code>cmd</code><em>（该条是命令，不是变量）</em></span></p></div><div class="cmd-row__actions"><label class="value-field" title="可编辑：复制时会用这里的值"><span>值</span><input type="text" class="value-field__input" placeholder="可留空" spellcheck="false" value=""></label><div class="cmd-row__buttons"><button type="button" class="btn btn--primary btn--sm" title="复制：+radialradio">复制命令+值</button><button type="button" class="btn btn--sm" title="复制：+radialradio">仅命令</button></div></div></li><li class="cmd-row" data-command="+radialradio2"><label class="cmd-row__check" title="勾选后可批量复制"><input type="checkbox" aria-label="选择 +radialradio2"></label><div class="cmd-row__body"><div class="cmd-row__head"><button type="button" class="cmd-name" title="点击复制命令名">+radialradio2</button><span class="badge badge--section" title="首字母段落：R">R</span><span class="badge badge--flag flag-cl" title="cl — 客户端：仅在客户端存在（client）">客户端</span><span class="badge badge--flag flag-release" title="release — 正式版：正式版中可用的命令/变量，未被开发分支隐藏">正式版</span></div><p class="cmd-row__desc"><span class="desc-empty">（数据源未提供描述）</span></p><p class="cmd-row__meta"><span class="cmd-row__default">默认值：<code>cmd</code><em>（该条是命令，不是变量）</em></span></p></div><div class="cmd-row__actions"><label class="value-field" title="可编辑：复制时会用这里的值"><span>值</span><input type="text" class="value-field__input" placeholder="可留空" spellcheck="false" value=""></label><div class="cmd-row__buttons"><button type="button" class="btn btn--primary btn--sm" title="复制：+radialradio2">复制命令+值</button><button type="button" class="btn btn--sm" title="复制：+radialradio2">仅命令</button></div></div></li><li class="cmd-row" data-command="+radialradio3"><label class="cmd-row__check" title="勾选后可批量复制"><input type="checkbox" aria-label="选择 +radialradio3"></label><div class="cmd-row__body"><div class="cmd-row__head"><button type="button" class="cmd-name" title="点击复制命令名">+radialradio3</button><span class="badge badge--section" title="首字母段落：R">R</span><span class="badge badge--flag flag-cl" title="cl — 客户端：仅在客户端存在（client）">客户端</span><span class="badge badge--flag flag-release" title="release — 正式版：正式版中可用的命令/变量，未被开发分支隐藏">正式版</span></div><p class="cmd-row__desc"><span class="desc-empty">（数据源未提供描述）</span></p><p class="cmd-row__meta"><span class="cmd-row__default">默认值：<code>cmd</code><em>（该条是命令，不是变量）</em></span></p></div><div class="cmd-row__actions"><label class="value-field" title="可编辑：复制时会用这里的值"><span>值</span><input type="text" class="value-field__input" placeholder="可留空" spellcheck="false" value=""></label><div class="cmd-row__buttons"><button type="button" class="btn btn--primary btn--sm" title="复制：+radialradio3">复制命令+值</button><button type="button" class="btn btn--sm" title="复制：+radialradio3">仅命令</button></div></div></li><li class="cmd-row" data-command="+spray_menu"><label class="cmd-row__check" title="勾选后可批量复制"><input type="checkbox" aria-label="选择 +spray_menu"></label><div class="cmd-row__body"><div class="cmd-row__head"><button type="button" class="cmd-name" title="点击复制命令名">+spray_menu</button><span class="badge badge--section" title="首字母段落：S">S</span><span class="badge badge--flag flag-cl" title="cl — 客户端：仅在客户端存在（client）">客户端</span><span class="badge badge--flag flag-release" title="release — 正式版：正式版中可用的命令/变量，未被开发分支隐藏">正式版</span></div><p class="cmd-row__desc"><span class="desc-empty">（数据源未提供描述）</span></p><p class="cmd-row__meta"><span class="cmd-row__default">默认值：<code>cmd</code><em>（该条是命令，不是变量）</em></span></p></div><div class="cmd-row__actions"><label class="value-field" title="可编辑：复制时会用这里的值"><span>值</span><input type="text" class="value-field__input" placeholder="可留空" spellcheck="false" value=""></label><div class="cmd-row__buttons"><button type="button" class="btn btn--primary btn--sm" title="复制：+spray_menu">复制命令+值</button><button type="button" class="btn btn--sm" title="复制：+spray_menu">仅命令</button></div></div></li><li class="cmd-row" data-command="-lookatweapon"><label class="cmd-row__check" title="勾选后可批量复制"><input type="checkbox" aria-label="选择 -lookatweapon"></label><div class="cmd-row__body"><div class="cmd-row__head"><button type="button" class="cmd-name" title="点击复制命令名">-lookatweapon</button><span class="badge badge--section" title="首字母段落：L">L</span><span class="badge badge--flag flag-cl" title="cl — 客户端：仅在客户端存在（client）">客户端</span><span class="badge badge--flag flag-release" title="release — 正式版：正式版中可用的命令/变量，未被开发分支隐藏">正式版</span></div><p class="cmd-row__desc"><span class="desc-empty">（数据源未提供描述）</span></p><p class="cmd-row__meta"><span class="cmd-row__default">默认值：<code>cmd</code><em>（该条是命令，不是变量）</em></span></p></div><div class="cmd-row__actions"><label class="value-field" title="可编辑：复制时会用这里的值"><span>值</span><input type="text" class="value-field__input" placeholder="可留空" spellcheck="false" value=""></label><div class="cmd-row__buttons"><button type="button" class="btn btn--primary btn--sm" title="复制：-lookatweapon">复制命令+值</button><button type="button" class="btn btn--sm" title="复制：-lookatweapon">仅命令</button></div></div></li><li class="cmd-row" data-command="-quickbuyradial"><label class="cmd-row__check" title="勾选后可批量复制"><input type="checkbox" aria-label="选择 -quickbuyradial"></label><div class="cmd-row__body"><div class="cmd-row__head"><button type="button" class="cmd-name" title="点击复制命令名">-quickbuyradial</button><span class="badge badge--section" title="首字母段落：Q">Q</span><span class="badge badge--flag flag-cl" title="cl — 客户端：仅在客户端存在（client）">客户端</span><span class="badge badge--flag flag-release" title="release — 正式版：正式版中可用的命令/变量，未被开发分支隐藏">正式版</span></div><p class="cmd-row__desc"><span class="desc-empty">（数据源未提供描述）</span></p><p class="cmd-row__meta"><span class="cmd-row__default">默认值：<code>cmd</code><em>（该条是命令，不是变量）</em></span></p></div><div class="cmd-row__actions"><label class="value-field" title="可编辑：复制时会用这里的值"><span>值</span><input type="text" class="value-field__input" placeholder="可留空" spellcheck="false" value=""></label><div class="cmd-row__buttons"><button type="button" class="btn btn--primary btn--sm" title="复制：-quickbuyradial">复制命令+值</button><button type="button" class="btn btn--sm" title="复制：-quickbuyradial">仅命令</button></div></div></li><li class="cmd-row" data-command="-quickgrenaderadial"><label class="cmd-row__check" title="勾选后可批量复制"><input type="checkbox" aria-label="选择 -quickgrenaderadial"></label><div class="cmd-row__body"><div class="cmd-row__head"><button type="button" class="cmd-name" title="点击复制命令名">-quickgrenaderadial</button><span class="badge badge--section" title="首字母段落：Q">Q</span><span class="badge badge--flag flag-cl" title="cl — 客户端：仅在客户端存在（client）">客户端</span><span class="badge badge--flag flag-release" title="release — 正式版：正式版中可用的命令/变量，未被开发分支隐藏">正式版</span></div><p class="cmd-row__desc"><span class="desc-empty">（数据源未提供描述）</span></p><p class="cmd-row__meta"><span class="cmd-row__default">默认值：<code>cmd</code><em>（该条是命令，不是变量）</em></span></p></div><div class="cmd-row__actions"><label class="value-field" title="可编辑：复制时会用这里的值"><span>值</span><input type="text" class="value-field__input" placeholder="可留空" spellcheck="false" value=""></label><div class="cmd-row__buttons"><button type="button" class="btn btn--primary btn--sm" title="复制：-quickgrenaderadial">复制命令+值</button><button type="button" class="btn btn--sm" title="复制：-quickgrenaderadial">仅命令</button></div></div></li><li class="cmd-row" data-command="-quickinv"><label class="cmd-row__check" title="勾选后可批量复制"><input type="checkbox" aria-label="选择 -quickinv"></label><div class="cmd-row__body"><div class="cmd-row__head"><button type="button" class="cmd-name" title="点击复制命令名">-quickinv</button><span class="badge badge--section" title="首字母段落：Q">Q</span><span class="badge badge--flag flag-cl" title="cl — 客户端：仅在客户端存在（client）">客户端</span><span class="badge badge--flag flag-release" title="release — 正式版：正式版中可用的命令/变量，未被开发分支隐藏">正式版</span></div><p class="cmd-row__desc"><span class="desc-empty">（数据源未提供描述）</span></p><p class="cmd-row__meta"><span class="cmd-row__default">默认值：<code>cmd</code><em>（该条是命令，不是变量）</em></span></p></div><div class="cmd-row__actions"><label class="value-field" title="可编辑：复制时会用这里的值"><span>值</span><input type="text" class="value-field__input" placeholder="可留空" spellcheck="false" value=""></label><div class="cmd-row__buttons"><button type="button" class="btn btn--primary btn--sm" title="复制：-quickinv">复制命令+值</button><button type="button" class="btn btn--sm" title="复制：-quickinv">仅命令</button></div></div></li><li class="cmd-row" data-command="-radialradio"><label class="cmd-row__check" title="勾选后可批量复制"><input type="checkbox" aria-label="选择 -radialradio"></label><div class="cmd-row__body"><div class="cmd-row__head"><button type="button" class="cmd-name" title="点击复制命令名">-radialradio</button><span class="badge badge--section" title="首字母段落：R">R</span><span class="badge badge--flag flag-cl" title="cl — 客户端：仅在客户端存在（client）">客户端</span><span class="badge badge--flag flag-release" title="release — 正式版：正式版中可用的命令/变量，未被开发分支隐藏">正式版</span></div><p class="cmd-row__desc"><span class="desc-empty">（数据源未提供描述）</span></p><p class="cmd-row__meta"><span class="cmd-row__default">默认值：<code>cmd</code><em>（该条是命令，不是变量）</em></span></p></div><div class="cmd-row__actions"><label class="value-field" title="可编辑：复制时会用这里的值"><span>值</span><input type="text" class="value-field__input" placeholder="可留空" spellcheck="false" value=""></label><div class="cmd-row__buttons"><button type="button" class="btn btn--primary btn--sm" title="复制：-radialradio">复制命令+值</button><button type="button" class="btn btn--sm" title="复制：-radialradio">仅命令</button></div></div></li><li class="cmd-row" data-command="-radialradio2"><label class="cmd-row__check" title="勾选后可批量复制"><input type="checkbox" aria-label="选择 -radialradio2"></label><div class="cmd-row__body"><div class="cmd-row__head"><button type="button" class="cmd-name" title="点击复制命令名">-radialradio2</button><span class="badge badge--section" title="首字母段落：R">R</span><span class="badge badge--flag flag-cl" title="cl — 客户端：仅在客户端存在（client）">客户端</span><span class="badge badge--flag flag-release" title="release — 正式版：正式版中可用的命令/变量，未被开发分支隐藏">正式版</span></div><p class="cmd-row__desc"><span class="desc-empty">（数据源未提供描述）</span></p><p class="cmd-row__meta"><span class="cmd-row__default">默认值：<code>cmd</code><em>（该条是命令，不是变量）</em></span></p></div><div class="cmd-row__actions"><label class="value-field" title="可编辑：复制时会用这里的值"><span>值</span><input type="text" class="value-field__input" placeholder="可留空" spellcheck="false" value=""></label><div class="cmd-row__buttons"><button type="button" class="btn btn--primary btn--sm" title="复制：-radialradio2">复制命令+值</button><button type="button" class="btn btn--sm" title="复制：-radialradio2">仅命令</button></div></div></li><li class="cmd-row" data-command="-radialradio3"><label class="cmd-row__check" title="勾选后可批量复制"><input type="checkbox" aria-label="选择 -radialradio3"></label><div class="cmd-row__body"><div class="cmd-row__head"><button type="button" class="cmd-name" title="点击复制命令名">-radialradio3</button><span class="badge badge--section" title="首字母段落：R">R</span><span class="badge badge--flag flag-cl" title="cl — 客户端：仅在客户端存在（client）">客户端</span><span class="badge badge--flag flag-release" title="release — 正式版：正式版中可用的命令/变量，未被开发分支隐藏">正式版</span></div><p class="cmd-row__desc"><span class="desc-empty">（数据源未提供描述）</span></p><p class="cmd-row__meta"><span class="cmd-row__default">默认值：<code>cmd</code><em>（该条是命令，不是变量）</em></span></p></div><div class="cmd-row__actions"><label class="value-field" title="可编辑：复制时会用这里的值"><span>值</span><input type="text" class="value-field__input" placeholder="可留空" spellcheck="false" value=""></label><div class="cmd-row__buttons"><button type="button" class="btn btn--primary btn--sm" title="复制：-radialradio3">复制命令+值</button><button type="button" class="btn btn--sm" title="复制：-radialradio3">仅命令</button></div></div></li><li class="cmd-row" data-command="-spray_menu"><label class="cmd-row__check" title="勾选后可批量复制"><input type="checkbox" aria-label="选择 -spray_menu"></label><div class="cmd-row__body"><div class="cmd-row__head"><button type="button" class="cmd-name" title="点击复制命令名">-spray_menu</button><span class="badge badge--section" title="首字母段落：S">S</span><span class="badge badge--flag flag-cl" title="cl — 客户端：仅在客户端存在（client）">客户端</span><span class="badge badge--flag flag-release" title="release — 正式版：正式版中可用的命令/变量，未被开发分支隐藏">正式版</span></div><p class="cmd-row__desc"><span class="desc-empty">（数据源未提供描述）</span></p><p class="cmd-row__meta"><span class="cmd-row__default">默认值：<code>cmd</code><em>（该条是命令，不是变量）</em></span></p></div><div class="cmd-row__actions"><label class="value-field" title="可编辑：复制时会用这里的值"><span>值</span><input type="text" class="value-field__input" placeholder="可留空" spellcheck="false" value=""></label><div class="cmd-row__buttons"><button type="button" class="btn btn--primary btn--sm" title="复制：-spray_menu">复制命令+值</button><button type="button" class="btn btn--sm" title="复制：-spray_menu">仅命令</button></div></div></li><li class="cmd-row" data-command="CS_WarnFriendlyDamageInterval"><label class="cmd-row__check" title="勾选后可批量复制"><input type="checkbox" aria-label="选择 CS_WarnFriendlyDamageInterval"></label><div class="cmd-row__body"><div class="cmd-row__head"><button type="button" class="cmd-name" title="点击复制命令名">CS_WarnFriendlyDamageInterval</button><span class="badge badge--section" title="首字母段落：C">C</span><span class="badge badge--flag flag-sv" title="sv — 服务端：仅在服务器端存在（server）">服务端</span><span class="badge badge--flag flag-cheat" title="cheat — 作弊：需要服务器开启 sv_cheats 1 才能使用；联机比赛中通常禁用">作弊</span></div><p class="cmd-row__desc"><span class="desc-zh"><span>定义服务器通知客户端“玩家伤害了友军”的频率</span></span></p><p class="cmd-row__meta"><span class="cmd-row__default">默认值：<code>3</code></span></p></div><div class="cmd-row__actions"><label class="value-field" title="可编辑：复制时会用这里的值"><span>值</span><input type="text" class="value-field__input" placeholder="可留空" spellcheck="false" value="3"></label><div class="cmd-row__buttons"><button type="button" class="btn btn--primary btn--sm" title="复制：CS_WarnFriendlyDamageInterval 3">复制命令+值</button><button type="button" class="btn btn--sm" title="复制：CS_WarnFriendlyDamageInterval">仅命令</button></div></div></li><li class="cmd-row" data-command="CreatePredictionError"><label class="cmd-row__check" title="勾选后可批量复制"><input type="checkbox" aria-label="选择 CreatePredictionError"></label><div class="cmd-row__body"><div class="cmd-row__head"><button type="button" class="cmd-name" title="点击复制命令名">CreatePredictionError</button><span class="badge badge--section" title="首字母段落：C">C</span><span class="badge badge--flag flag-sv" title="sv — 服务端：仅在服务器端存在（server）">服务端</span><span class="badge badge--flag flag-cheat" title="cheat — 作弊：需要服务器开启 sv_cheats 1 才能使用；联机比赛中通常禁用">作弊</span></div><p class="cmd-row__desc"><span class="desc-zh"><span>制造一个预测错误</span></span></p><p class="cmd-row__meta"><span class="cmd-row__default">默认值：<code>cmd</code><em>（该条是命令，不是变量）</em></span></p></div><div class="cmd-row__actions"><label class="value-field" title="可编辑：复制时会用这里的值"><span>值</span><input type="text" class="value-field__input" placeholder="可留空" spellcheck="false" value=""></label><div class="cmd-row__buttons"><button type="button" class="btn btn--primary btn--sm" title="复制：CreatePredictionError">复制命令+值</button><button type="button" class="btn btn--sm" title="复制：CreatePredictionError">仅命令</button></div></div></li><li class="cmd-row" data-command="Test_CreateEntity"><label class="cmd-row__check" title="勾选后可批量复制"><input type="checkbox" aria-label="选择 Test_CreateEntity"></label><div class="cmd-row__body"><div class="cmd-row__head"><button type="button" class="cmd-name" title="点击复制命令名">Test_CreateEntity</button><span class="badge badge--section" title="首字母段落：T">T</span><span class="badge badge--flag flag-sv" title="sv — 服务端：仅在服务器端存在（server）">服务端</span><span class="badge badge--flag flag-cheat" title="cheat — 作弊：需要服务器开启 sv_cheats 1 才能使用；联机比赛中通常禁用">作弊</span></div><p class="cmd-row__desc"><span class="desc-empty">（数据源未提供描述）</span></p><p class="cmd-row__meta"><span class="cmd-row__default">默认值：<code>cmd</code><em>（该条是命令，不是变量）</em></span></p></div><div class="cmd-row__actions"><label class="value-field" title="可编辑：复制时会用这里的值"><span>值</span><input type="text" class="value-field__input" placeholder="可留空" spellcheck="false" value=""></label><div class="cmd-row__buttons"><button type="button" class="btn btn--primary btn--sm" title="复制：Test_CreateEntity">复制命令+值</button><button type="button" class="btn btn--sm" title="复制：Test_CreateEntity">仅命令</button></div></div></li><li class="cmd-row" data-command="Test_EHandle"><label class="cmd-row__check" title="勾选后可批量复制"><input type="checkbox" aria-label="选择 Test_EHandle"></label><div class="cmd-row__body"><div class="cmd-row__head"><button type="button" class="cmd-name" title="点击复制命令名">Test_EHandle</button><span class="badge badge--section" title="首字母段落：T">T</span><span class="badge badge--flag flag-sv" title="sv — 服务端：仅在服务器端存在（server）">服务端</span><span class="badge badge--flag flag-cheat" title="cheat — 作弊：需要服务器开启 sv_cheats 1 才能使用；联机比赛中通常禁用">作弊</span></div><p class="cmd-row__desc"><span class="desc-empty">（数据源未提供描述）</span></p><p class="cmd-row__meta"><span class="cmd-row__default">默认值：<code>cmd</code><em>（该条是命令，不是变量）</em></span></p></div><div class="cmd-row__actions"><label class="value-field" title="可编辑：复制时会用这里的值"><span>值</span><input type="text" class="value-field__input" placeholder="可留空" spellcheck="false" value=""></label><div class="cmd-row__buttons"><button type="button" class="btn btn--primary btn--sm" title="复制：Test_EHandle">复制命令+值</button><button type="button" class="btn btn--sm" title="复制：Test_EHandle">仅命令</button></div></div></li><li class="cmd-row" data-command="Test_ExitProcess"><label class="cmd-row__check" title="勾选后可批量复制"><input type="checkbox" aria-label="选择 Test_ExitProcess"></label><div class="cmd-row__body"><div class="cmd-row__head"><button type="button" class="cmd-name" title="点击复制命令名">Test_ExitProcess</button><span class="badge badge--section" title="首字母段落：T">T</span><span class="badge badge--flag flag-cheat" title="cheat — 作弊：需要服务器开启 sv_cheats 1 才能使用；联机比赛中通常禁用">作弊</span></div><p class="cmd-row__desc"><span class="desc-zh"><span>Test_ExitProcess </span><abbr class="ph" title="参数占位符 &lt;exit code&gt;：进程退出码（复制时保持原样，可直接粘进 .cfg）">&lt;exit code&gt;<span class="ph__zh">〔进程退出码〕</span></abbr><span> - 立即结束进程</span></span></p><p class="cmd-row__meta"><span class="cmd-row__default">默认值：<code>cmd</code><em>（该条是命令，不是变量）</em></span></p></div><div class="cmd-row__actions"><label class="value-field" title="可编辑：复制时会用这里的值"><span>值</span><input type="text" class="value-field__input" placeholder="可留空" spellcheck="false" value=""></label><div class="cmd-row__buttons"><button type="button" class="btn btn--primary btn--sm" title="复制：Test_ExitProcess">复制命令+值</button><button type="button" class="btn btn--sm" title="复制：Test_ExitProcess">仅命令</button></div></div></li><li class="cmd-row" data-command="Test_RandomPlayerPosition"><label class="cmd-row__check" title="勾选后可批量复制"><input type="checkbox" aria-label="选择 Test_RandomPlayerPosition"></label><div class="cmd-row__body"><div class="cmd-row__head"><button type="button" class="cmd-name" title="点击复制命令名">Test_RandomPlayerPosition</button><span class="badge badge--section" title="首字母段落：T">T</span><span class="badge badge--flag flag-sv" title="sv — 服务端：仅在服务器端存在（server）">服务端</span><span class="badge badge--flag flag-cheat" title="cheat — 作弊：需要服务器开启 sv_cheats 1 才能使用；联机比赛中通常禁用">作弊</span></div><p class="cmd-row__desc"><span class="desc-empty">（数据源未提供描述）</span></p><p class="cmd-row__meta"><span class="cmd-row__default">默认值：<code>cmd</code><em>（该条是命令，不是变量）</em></span></p></div><div class="cmd-row__actions"><label class="value-field" title="可编辑：复制时会用这里的值"><span>值</span><input type="text" class="value-field__input" placeholder="可留空" spellcheck="false" value=""></label><div class="cmd-row__buttons"><button type="button" class="btn btn--primary btn--sm" title="复制：Test_RandomPlayerPosition">复制命令+值</button><button type="button" class="btn btn--sm" title="复制：Test_RandomPlayerPosition">仅命令</button></div></div></li><li class="cmd-row" data-command="_record"><label class="cmd-row__check" title="勾选后可批量复制"><input type="checkbox" aria-label="选择 _record"></label><div class="cmd-row__body"><div class="cmd-row__head"><button type="button" class="cmd-name" title="点击复制命令名">_record</button><span class="badge badge--section" title="首字母段落：其它（_）">_</span><span class="badge badge--flag flag-norecord" title="norecord — 不录制：不写入 demo 录像">不录制</span><span class="badge badge--flag flag-release" title="release — 正式版：正式版中可用的命令/变量，未被开发分支隐藏">正式版</span></div><p class="cmd-row__desc"><span class="desc-zh"><span>增量录制录像（demo）</span></span></p><p class="cmd-row__meta"><span class="cmd-row__default">默认值：<code>cmd</code><em>（该条是命令，不是变量）</em></span></p></div><div class="cmd-row__actions"><label class="value-field" title="可编辑：复制时会用这里的值"><span>值</span><input type="text" class="value-field__input" placeholder="可留空" spellcheck="false" value=""></label><div class="cmd-row__buttons"><button type="button" class="btn btn--primary btn--sm" title="复制：_record">复制命令+值</button><button type="button" class="btn btn--sm" title="复制：_record">仅命令</button></div></div></li><li class="cmd-row" data-command="adsp_debug"><label class="cmd-row__check" title="勾选后可批量复制"><input type="checkbox" aria-label="选择 adsp_debug"></label><div class="cmd-row__body"><div class="cmd-row__head"><button type="button" class="cmd-name" title="点击复制命令名">adsp_debug</button><span class="badge badge--section" title="首字母段落：A">A</span><span class="badge badge--flag flag-a" title="a — 存档：会被存档保存（archive），换图/重连后保留">存档</span></div><p class="cmd-row__desc"><span class="desc-empty">（数据源未提供描述）</span></p><p class="cmd-row__meta"><span class="cmd-row__default">默认值：<code>0</code></span></p></div><div class="cmd-row__actions"><label class="value-field" title="可编辑：复制时会用这里的值"><span>值</span><input type="text" class="value-field__input" placeholder="可留空" spellcheck="false" value="0"></label><div class="cmd-row__buttons"><button type="button" class="btn btn--primary btn--sm" title="复制：adsp_debug 0">复制命令+值</button><button type="button" class="btn btn--sm" title="复制：adsp_debug">仅命令</button></div></div></li><li class="cmd-row" data-command="ai_debug_dyninteractions"><label class="cmd-row__check" title="勾选后可批量复制"><input type="checkbox" aria-label="选择 ai_debug_dyninteractions"></label><div class="cmd-row__body"><div class="cmd-row__head"><button type="button" class="cmd-name" title="点击复制命令名">ai_debug_dyninteractions</button><span class="badge badge--section" title="首字母段落：A">A</span><span class="badge badge--flag flag-sv" title="sv — 服务端：仅在服务器端存在（server）">服务端</span><span class="badge badge--flag flag-cheat" title="cheat — 作弊：需要服务器开启 sv_cheats 1 才能使用；联机比赛中通常禁用">作弊</span></div><p class="cmd-row__desc"><span class="desc-zh"><span>调试 NPC 动态交互系统</span></span></p><p class="cmd-row__meta"><span class="cmd-row__default">默认值：<code>0</code></span></p></div><div class="cmd-row__actions"><label class="value-field" title="可编辑：复制时会用这里的值"><span>值</span><input type="text" class="value-field__input" placeholder="可留空" spellcheck="false" value="0"></label><div class="cmd-row__buttons"><button type="button" class="btn btn--primary btn--sm" title="复制：ai_debug_dyninteractions 0">复制命令+值</button><button type="button" class="btn btn--sm" title="复制：ai_debug_dyninteractions">仅命令</button></div></div></li><li class="cmd-row" data-command="ai_debug_los"><label class="cmd-row__check" title="勾选后可批量复制"><input type="checkbox" aria-label="选择 ai_debug_los"></label><div class="cmd-row__body"><div class="cmd-row__head"><button type="button" class="cmd-name" title="点击复制命令名">ai_debug_los</button><span class="badge badge--section" title="首字母段落：A">A</span><span class="badge badge--flag flag-sv" title="sv — 服务端：仅在服务器端存在（server）">服务端</span><span class="badge badge--flag flag-cheat" title="cheat — 作弊：需要服务器开启 sv_cheats 1 才能使用；联机比赛中通常禁用">作弊</span></div><p class="cmd-row__desc"><span class="desc-zh"><span>NPC 视线（LOS）调试模式。为 1 时，阻挡 NPC 视线的实心实体会以白色包围盒高亮显示；为 2 时，会显示那些若为实心便会阻挡视线的非实心实体。</span></span></p><p class="cmd-row__meta"><span class="cmd-row__default">默认值：<code>0</code></span></p></div><div class="cmd-row__actions"><label class="value-field" title="可编辑：复制时会用这里的值"><span>值</span><input type="text" class="value-field__input" placeholder="可留空" spellcheck="false" value="0"></label><div class="cmd-row__buttons"><button type="button" class="btn btn--primary btn--sm" title="复制：ai_debug_los 0">复制命令+值</button><button type="button" class="btn btn--sm" title="复制：ai_debug_los">仅命令</button></div></div></li><li class="cmd-row" data-command="ai_debug_off_nav"><label class="cmd-row__check" title="勾选后可批量复制"><input type="checkbox" aria-label="选择 ai_debug_off_nav"></label><div class="cmd-row__body"><div class="cmd-row__head"><button type="button" class="cmd-name" title="点击复制命令名">ai_debug_off_nav</button><span class="badge badge--section" title="首字母段落：A">A</span><span class="badge badge--flag flag-sv" title="sv — 服务端：仅在服务器端存在（server）">服务端</span><span class="badge badge--flag flag-cheat" title="cheat — 作弊：需要服务器开启 sv_cheats 1 才能使用；联机比赛中通常禁用">作弊</span></div><p class="cmd-row__desc"><span class="desc-empty">（数据源未提供描述）</span></p><p class="cmd-row__meta"><span class="cmd-row__default">默认值：<code>false</code></span></p></div><div class="cmd-row__actions"><label class="value-field" title="可编辑：复制时会用这里的值"><span>值</span><input type="text" class="value-field__input" placeholder="可留空" spellcheck="false" value="false"></label><div class="cmd-row__buttons"><button type="button" class="btn btn--primary btn--sm" title="复制：ai_debug_off_nav false">复制命令+值</button><button type="button" class="btn btn--sm" title="复制：ai_debug_off_nav">仅命令</button></div></div></li><li class="cmd-row" data-command="ai_debug_shoot_positions"><label class="cmd-row__check" title="勾选后可批量复制"><input type="checkbox" aria-label="选择 ai_debug_shoot_positions"></label><div class="cmd-row__body"><div class="cmd-row__head"><button type="button" class="cmd-name" title="点击复制命令名">ai_debug_shoot_positions</button><span class="badge badge--section" title="首字母段落：A">A</span><span class="badge badge--flag flag-sv" title="sv — 服务端：仅在服务器端存在（server）">服务端</span><span class="badge badge--flag flag-cl" title="cl — 客户端：仅在客户端存在（client）">客户端</span><span class="badge badge--flag flag-rep" title="rep — 可复制：取值会复制（replicate）到其他机器，客户端能看到服务器的值">可复制</span><span class="badge badge--flag flag-cheat" title="cheat — 作弊：需要服务器开启 sv_cheats 1 才能使用；联机比赛中通常禁用">作弊</span></div><p class="cmd-row__desc"><span class="desc-empty">（数据源未提供描述）</span></p><p class="cmd-row__meta"><span class="cmd-row__default">默认值：<code>0</code></span></p></div><div class="cmd-row__actions"><label class="value-field" title="可编辑：复制时会用这里的值"><span>值</span><input type="text" class="value-field__input" placeholder="可留空" spellcheck="false" value="0"></label><div class="cmd-row__buttons"><button type="button" class="btn btn--primary btn--sm" title="复制：ai_debug_shoot_positions 0">复制命令+值</button><button type="button" class="btn btn--sm" title="复制：ai_debug_shoot_positions">仅命令</button></div></div></li><li class="cmd-row" data-command="ai_disabled"><label class="cmd-row__check" title="勾选后可批量复制"><input type="checkbox" aria-label="选择 ai_disabled"></label><div class="cmd-row__body"><div class="cmd-row__head"><button type="button" class="cmd-name" title="点击复制命令名">ai_disabled</button><span class="badge badge--section" title="首字母段落：A">A</span><span class="badge badge--flag flag-sv" title="sv — 服务端：仅在服务器端存在（server）">服务端</span><span class="badge badge--flag flag-cl" title="cl — 客户端：仅在客户端存在（client）">客户端</span><span class="badge badge--flag flag-rep" title="rep — 可复制：取值会复制（replicate）到其他机器，客户端能看到服务器的值">可复制</span><span class="badge badge--flag flag-cheat" title="cheat — 作弊：需要服务器开启 sv_cheats 1 才能使用；联机比赛中通常禁用">作弊</span></div><p class="cmd-row__desc"><span class="desc-empty">（数据源未提供描述）</span></p><p class="cmd-row__meta"><span class="cmd-row__default">默认值：<code>false</code></span></p></div><div class="cmd-row__actions"><label class="value-field" title="可编辑：复制时会用这里的值"><span>值</span><input type="text" class="value-field__input" placeholder="可留空" spellcheck="false" value="false"></label><div class="cmd-row__buttons"><button type="button" class="btn btn--primary btn--sm" title="复制：ai_disabled false">复制命令+值</button><button type="button" class="btn btn--sm" title="复制：ai_disabled">仅命令</button></div></div></li><li class="cmd-row" data-command="ai_show_current_nav"><label class="cmd-row__check" title="勾选后可批量复制"><input type="checkbox" aria-label="选择 ai_show_current_nav"></label><div class="cmd-row__body"><div class="cmd-row__head"><button type="button" class="cmd-name" title="点击复制命令名">ai_show_current_nav</button><span class="badge badge--section" title="首字母段落：A">A</span><span class="badge badge--flag flag-sv" title="sv — 服务端：仅在服务器端存在（server）">服务端</span><span class="badge badge--flag flag-cheat" title="cheat — 作弊：需要服务器开启 sv_cheats 1 才能使用；联机比赛中通常禁用">作弊</span></div><p class="cmd-row__desc"><span class="desc-empty">（数据源未提供描述）</span></p><p class="cmd-row__meta"><span class="cmd-row__default">默认值：<code>false</code></span></p></div><div class="cmd-row__actions"><label class="value-field" title="可编辑：复制时会用这里的值"><span>值</span><input type="text" class="value-field__input" placeholder="可留空" spellcheck="false" value="false"></label><div class="cmd-row__buttons"><button type="button" class="btn btn--primary btn--sm" title="复制：ai_show_current_nav false">复制命令+值</button><button type="button" class="btn btn--sm" title="复制：ai_show_current_nav">仅命令</button></div></div></li><li class="cmd-row" data-command="alias"><label class="cmd-row__check" title="勾选后可批量复制"><input type="checkbox" aria-label="选择 alias"></label><div class="cmd-row__body"><div class="cmd-row__head"><button type="button" class="cmd-name" title="点击复制命令名">alias</button><span class="badge badge--section" title="首字母段落：A">A</span><span class="badge badge--flag flag-release" title="release — 正式版：正式版中可用的命令/变量，未被开发分支隐藏">正式版</span></div><p class="cmd-row__desc"><span class="desc-zh"><span>为命令设置别名</span></span></p><p class="cmd-row__meta"><span class="cmd-row__default">默认值：<code>cmd</code><em>（该条是命令，不是变量）</em></span></p></div><div class="cmd-row__actions"><label class="value-field" title="可编辑：复制时会用这里的值"><span>值</span><input type="text" class="value-field__input" placeholder="可留空" spellcheck="false" value=""></label><div class="cmd-row__buttons"><button type="button" class="btn btn--primary btn--sm" title="复制：alias">复制命令+值</button><button type="button" class="btn btn--sm" title="复制：alias">仅命令</button></div></div></li><li class="cmd-row" data-command="ammo_338mag_max"><label class="cmd-row__check" title="勾选后可批量复制"><input type="checkbox" aria-label="选择 ammo_338mag_max"></label><div class="cmd-row__body"><div class="cmd-row__head"><button type="button" class="cmd-name" title="点击复制命令名">ammo_338mag_max</button><span class="badge badge--section" title="首字母段落：A">A</span><span class="badge badge--flag flag-sv" title="sv — 服务端：仅在服务器端存在（server）">服务端</span><span class="badge badge--flag flag-cl" title="cl — 客户端：仅在客户端存在（client）">客户端</span><span class="badge badge--flag flag-rep" title="rep — 可复制：取值会复制（replicate）到其他机器，客户端能看到服务器的值">可复制</span><span class="badge badge--flag flag-release" title="release — 正式版：正式版中可用的命令/变量，未被开发分支隐藏">正式版</span></div><p class="cmd-row__desc"><span class="desc-empty">（数据源未提供描述）</span></p><p class="cmd-row__meta"><span class="cmd-row__default">默认值：<code>30</code></span></p></div><div class="cmd-row__actions"><label class="value-field" title="可编辑：复制时会用这里的值"><span>值</span><input type="text" class="value-field__input" placeholder="可留空" spellcheck="false" value="30"></label><div class="cmd-row__buttons"><button type="button" class="btn btn--primary btn--sm" title="复制：ammo_338mag_max 30">复制命令+值</button><button type="button" class="btn btn--sm" title="复制：ammo_338mag_max">仅命令</button></div></div></li><li class="cmd-row" data-command="ammo_357sig_max"><label class="cmd-row__check" title="勾选后可批量复制"><input type="checkbox" aria-label="选择 ammo_357sig_max"></label><div class="cmd-row__body"><div class="cmd-row__head"><button type="button" class="cmd-name" title="点击复制命令名">ammo_357sig_max</button><span class="badge badge--section" title="首字母段落：A">A</span><span class="badge badge--flag flag-sv" title="sv — 服务端：仅在服务器端存在（server）">服务端</span><span class="badge badge--flag flag-cl" title="cl — 客户端：仅在客户端存在（client）">客户端</span><span class="badge badge--flag flag-rep" title="rep — 可复制：取值会复制（replicate）到其他机器，客户端能看到服务器的值">可复制</span><span class="badge badge--flag flag-release" title="release — 正式版：正式版中可用的命令/变量，未被开发分支隐藏">正式版</span></div><p class="cmd-row__desc"><span class="desc-empty">（数据源未提供描述）</span></p><p class="cmd-row__meta"><span class="cmd-row__default">默认值：<code>52</code></span></p></div><div class="cmd-row__actions"><label class="value-field" title="可编辑：复制时会用这里的值"><span>值</span><input type="text" class="value-field__input" placeholder="可留空" spellcheck="false" value="52"></label><div class="cmd-row__buttons"><button type="button" class="btn btn--primary btn--sm" title="复制：ammo_357sig_max 52">复制命令+值</button><button type="button" class="btn btn--sm" title="复制：ammo_357sig_max">仅命令</button></div></div></li><li class="cmd-row" data-command="ammo_357sig_min_max"><label class="cmd-row__check" title="勾选后可批量复制"><input type="checkbox" aria-label="选择 ammo_357sig_min_max"></label><div class="cmd-row__body"><div class="cmd-row__head"><button type="button" class="cmd-name" title="点击复制命令名">ammo_357sig_min_max</button><span class="badge badge--section" title="首字母段落：A">A</span><span class="badge badge--flag flag-sv" title="sv — 服务端：仅在服务器端存在（server）">服务端</span><span class="badge badge--flag flag-cl" title="cl — 客户端：仅在客户端存在（client）">客户端</span><span class="badge badge--flag flag-rep" title="rep — 可复制：取值会复制（replicate）到其他机器，客户端能看到服务器的值">可复制</span><span class="badge badge--flag flag-release" title="release — 正式版：正式版中可用的命令/变量，未被开发分支隐藏">正式版</span></div><p class="cmd-row__desc"><span class="desc-empty">（数据源未提供描述）</span></p><p class="cmd-row__meta"><span class="cmd-row__default">默认值：<code>12</code></span></p></div><div class="cmd-row__actions"><label class="value-field" title="可编辑：复制时会用这里的值"><span>值</span><input type="text" class="value-field__input" placeholder="可留空" spellcheck="false" value="12"></label><div class="cmd-row__buttons"><button type="button" class="btn btn--primary btn--sm" title="复制：ammo_357sig_min_max 12">复制命令+值</button><button type="button" class="btn btn--sm" title="复制：ammo_357sig_min_max">仅命令</button></div></div></li><li class="cmd-row" data-command="ammo_357sig_p250_max"><label class="cmd-row__check" title="勾选后可批量复制"><input type="checkbox" aria-label="选择 ammo_357sig_p250_max"></label><div class="cmd-row__body"><div class="cmd-row__head"><button type="button" class="cmd-name" title="点击复制命令名">ammo_357sig_p250_max</button><span class="badge badge--section" title="首字母段落：A">A</span><span class="badge badge--flag flag-sv" title="sv — 服务端：仅在服务器端存在（server）">服务端</span><span class="badge badge--flag flag-cl" title="cl — 客户端：仅在客户端存在（client）">客户端</span><span class="badge badge--flag flag-rep" title="rep — 可复制：取值会复制（replicate）到其他机器，客户端能看到服务器的值">可复制</span><span class="badge badge--flag flag-release" title="release — 正式版：正式版中可用的命令/变量，未被开发分支隐藏">正式版</span></div><p class="cmd-row__desc"><span class="desc-empty">（数据源未提供描述）</span></p><p class="cmd-row__meta"><span class="cmd-row__default">默认值：<code>26</code></span></p></div><div class="cmd-row__actions"><label class="value-field" title="可编辑：复制时会用这里的值"><span>值</span><input type="text" class="value-field__input" placeholder="可留空" spellcheck="false" value="26"></label><div class="cmd-row__buttons"><button type="button" class="btn btn--primary btn--sm" title="复制：ammo_357sig_p250_max 26">复制命令+值</button><button type="button" class="btn btn--sm" title="复制：ammo_357sig_p250_max">仅命令</button></div></div></li><li class="cmd-row" data-command="ammo_357sig_small_max"><label class="cmd-row__check" title="勾选后可批量复制"><input type="checkbox" aria-label="选择 ammo_357sig_small_max"></label><div class="cmd-row__body"><div class="cmd-row__head"><button type="button" class="cmd-name" title="点击复制命令名">ammo_357sig_small_max</button><span class="badge badge--section" title="首字母段落：A">A</span><span class="badge badge--flag flag-sv" title="sv — 服务端：仅在服务器端存在（server）">服务端</span><span class="badge badge--flag flag-cl" title="cl — 客户端：仅在客户端存在（client）">客户端</span><span class="badge badge--flag flag-rep" title="rep — 可复制：取值会复制（replicate）到其他机器，客户端能看到服务器的值">可复制</span><span class="badge badge--flag flag-release" title="release — 正式版：正式版中可用的命令/变量，未被开发分支隐藏">正式版</span></div><p class="cmd-row__desc"><span class="desc-empty">（数据源未提供描述）</span></p><p class="cmd-row__meta"><span class="cmd-row__default">默认值：<code>24</code></span></p></div><div class="cmd-row__actions"><label class="value-field" title="可编辑：复制时会用这里的值"><span>值</span><input type="text" class="value-field__input" placeholder="可留空" spellcheck="false" value="24"></label><div class="cmd-row__buttons"><button type="button" class="btn btn--primary btn--sm" title="复制：ammo_357sig_small_max 24">复制命令+值</button><button type="button" class="btn btn--sm" title="复制：ammo_357sig_small_max">仅命令</button></div></div></li><li class="cmd-row" data-command="ammo_45acp_max"><label class="cmd-row__check" title="勾选后可批量复制"><input type="checkbox" aria-label="选择 ammo_45acp_max"></label><div class="cmd-row__body"><div class="cmd-row__head"><button type="button" class="cmd-name" title="点击复制命令名">ammo_45acp_max</button><span class="badge badge--section" title="首字母段落：A">A</span><span class="badge badge--flag flag-sv" title="sv — 服务端：仅在服务器端存在（server）">服务端</span><span class="badge badge--flag flag-cl" title="cl — 客户端：仅在客户端存在（client）">客户端</span><span class="badge badge--flag flag-rep" title="rep — 可复制：取值会复制（replicate）到其他机器，客户端能看到服务器的值">可复制</span><span class="badge badge--flag flag-release" title="release — 正式版：正式版中可用的命令/变量，未被开发分支隐藏">正式版</span></div><p class="cmd-row__desc"><span class="desc-empty">（数据源未提供描述）</span></p><p class="cmd-row__meta"><span class="cmd-row__default">默认值：<code>100</code></span></p></div><div class="cmd-row__actions"><label class="value-field" title="可编辑：复制时会用这里的值"><span>值</span><input type="text" class="value-field__input" placeholder="可留空" spellcheck="false" value="100"></label><div class="cmd-row__buttons"><button type="button" class="btn btn--primary btn--sm" title="复制：ammo_45acp_max 100">复制命令+值</button><button type="button" class="btn btn--sm" title="复制：ammo_45acp_max">仅命令</button></div></div></li><li class="cmd-row" data-command="ammo_50AE_max"><label class="cmd-row__check" title="勾选后可批量复制"><input type="checkbox" aria-label="选择 ammo_50AE_max"></label><div class="cmd-row__body"><div class="cmd-row__head"><button type="button" class="cmd-name" title="点击复制命令名">ammo_50AE_max</button><span class="badge badge--section" title="首字母段落：A">A</span><span class="badge badge--flag flag-sv" title="sv — 服务端：仅在服务器端存在（server）">服务端</span><span class="badge badge--flag flag-cl" title="cl — 客户端：仅在客户端存在（client）">客户端</span><span class="badge badge--flag flag-rep" title="rep — 可复制：取值会复制（replicate）到其他机器，客户端能看到服务器的值">可复制</span><span class="badge badge--flag flag-release" title="release — 正式版：正式版中可用的命令/变量，未被开发分支隐藏">正式版</span></div><p class="cmd-row__desc"><span class="desc-empty">（数据源未提供描述）</span></p><p class="cmd-row__meta"><span class="cmd-row__default">默认值：<code>35</code></span></p></div><div class="cmd-row__actions"><label class="value-field" title="可编辑：复制时会用这里的值"><span>值</span><input type="text" class="value-field__input" placeholder="可留空" spellcheck="false" value="35"></label><div class="cmd-row__buttons"><button type="button" class="btn btn--primary btn--sm" title="复制：ammo_50AE_max 35">复制命令+值</button><button type="button" class="btn btn--sm" title="复制：ammo_50AE_max">仅命令</button></div></div></li><li class="cmd-row" data-command="ammo_556mm_box_max"><label class="cmd-row__check" title="勾选后可批量复制"><input type="checkbox" aria-label="选择 ammo_556mm_box_max"></label><div class="cmd-row__body"><div class="cmd-row__head"><button type="button" class="cmd-name" title="点击复制命令名">ammo_556mm_box_max</button><span class="badge badge--section" title="首字母段落：A">A</span><span class="badge badge--flag flag-sv" title="sv — 服务端：仅在服务器端存在（server）">服务端</span><span class="badge badge--flag flag-cl" title="cl — 客户端：仅在客户端存在（client）">客户端</span><span class="badge badge--flag flag-rep" title="rep — 可复制：取值会复制（replicate）到其他机器，客户端能看到服务器的值">可复制</span><span class="badge badge--flag flag-release" title="release — 正式版：正式版中可用的命令/变量，未被开发分支隐藏">正式版</span></div><p class="cmd-row__desc"><span class="desc-empty">（数据源未提供描述）</span></p><p class="cmd-row__meta"><span class="cmd-row__default">默认值：<code>200</code></span></p></div><div class="cmd-row__actions"><label class="value-field" title="可编辑：复制时会用这里的值"><span>值</span><input type="text" class="value-field__input" placeholder="可留空" spellcheck="false" value="200"></label><div class="cmd-row__buttons"><button type="button" class="btn btn--primary btn--sm" title="复制：ammo_556mm_box_max 200">复制命令+值</button><button type="button" class="btn btn--sm" title="复制：ammo_556mm_box_max">仅命令</button></div></div></li><li class="cmd-row" data-command="ammo_556mm_max"><label class="cmd-row__check" title="勾选后可批量复制"><input type="checkbox" aria-label="选择 ammo_556mm_max"></label><div class="cmd-row__body"><div class="cmd-row__head"><button type="button" class="cmd-name" title="点击复制命令名">ammo_556mm_max</button><span class="badge badge--section" title="首字母段落：A">A</span><span class="badge badge--flag flag-sv" title="sv — 服务端：仅在服务器端存在（server）">服务端</span><span class="badge badge--flag flag-cl" title="cl — 客户端：仅在客户端存在（client）">客户端</span><span class="badge badge--flag flag-rep" title="rep — 可复制：取值会复制（replicate）到其他机器，客户端能看到服务器的值">可复制</span><span class="badge badge--flag flag-release" title="release — 正式版：正式版中可用的命令/变量，未被开发分支隐藏">正式版</span></div><p class="cmd-row__desc"><span class="desc-empty">（数据源未提供描述）</span></p><p class="cmd-row__meta"><span class="cmd-row__default">默认值：<code>90</code></span></p></div><div class="cmd-row__actions"><label class="value-field" title="可编辑：复制时会用这里的值"><span>值</span><input type="text" class="value-field__input" placeholder="可留空" spellcheck="false" value="90"></label><div class="cmd-row__buttons"><button type="button" class="btn btn--primary btn--sm" title="复制：ammo_556mm_max 90">复制命令+值</button><button type="button" class="btn btn--sm" title="复制：ammo_556mm_max">仅命令</button></div></div></li><li class="cmd-row" data-command="ammo_556mm_small_max"><label class="cmd-row__check" title="勾选后可批量复制"><input type="checkbox" aria-label="选择 ammo_556mm_small_max"></label><div class="cmd-row__body"><div class="cmd-row__head"><button type="button" class="cmd-name" title="点击复制命令名">ammo_556mm_small_max</button><span class="badge badge--section" title="首字母段落：A">A</span><span class="badge badge--flag flag-sv" title="sv — 服务端：仅在服务器端存在（server）">服务端</span><span class="badge badge--flag flag-cl" title="cl — 客户端：仅在客户端存在（client）">客户端</span><span class="badge badge--flag flag-rep" title="rep — 可复制：取值会复制（replicate）到其他机器，客户端能看到服务器的值">可复制</span><span class="badge badge--flag flag-release" title="release — 正式版：正式版中可用的命令/变量，未被开发分支隐藏">正式版</span></div><p class="cmd-row__desc"><span class="desc-empty">（数据源未提供描述）</span></p><p class="cmd-row__meta"><span class="cmd-row__default">默认值：<code>40</code></span></p></div><div class="cmd-row__actions"><label class="value-field" title="可编辑：复制时会用这里的值"><span>值</span><input type="text" class="value-field__input" placeholder="可留空" spellcheck="false" value="40"></label><div class="cmd-row__buttons"><button type="button" class="btn btn--primary btn--sm" title="复制：ammo_556mm_small_max 40">复制命令+值</button><button type="button" class="btn btn--sm" title="复制：ammo_556mm_small_max">仅命令</button></div></div></li><li class="cmd-row" data-command="ammo_57mm_max"><label class="cmd-row__check" title="勾选后可批量复制"><input type="checkbox" aria-label="选择 ammo_57mm_max"></label><div class="cmd-row__body"><div class="cmd-row__head"><button type="button" class="cmd-name" title="点击复制命令名">ammo_57mm_max</button><span class="badge badge--section" title="首字母段落：A">A</span><span class="badge badge--flag flag-sv" title="sv — 服务端：仅在服务器端存在（server）">服务端</span><span class="badge badge--flag flag-cl" title="cl — 客户端：仅在客户端存在（client）">客户端</span><span class="badge badge--flag flag-rep" title="rep — 可复制：取值会复制（replicate）到其他机器，客户端能看到服务器的值">可复制</span><span class="badge badge--flag flag-release" title="release — 正式版：正式版中可用的命令/变量，未被开发分支隐藏">正式版</span></div><p class="cmd-row__desc"><span class="desc-empty">（数据源未提供描述）</span></p><p class="cmd-row__meta"><span class="cmd-row__default">默认值：<code>100</code></span></p></div><div class="cmd-row__actions"><label class="value-field" title="可编辑：复制时会用这里的值"><span>值</span><input type="text" class="value-field__input" placeholder="可留空" spellcheck="false" value="100"></label><div class="cmd-row__buttons"><button type="button" class="btn btn--primary btn--sm" title="复制：ammo_57mm_max 100">复制命令+值</button><button type="button" class="btn btn--sm" title="复制：ammo_57mm_max">仅命令</button></div></div></li><li class="cmd-row" data-command="ammo_762mm_max"><label class="cmd-row__check" title="勾选后可批量复制"><input type="checkbox" aria-label="选择 ammo_762mm_max"></label><div class="cmd-row__body"><div class="cmd-row__head"><button type="button" class="cmd-name" title="点击复制命令名">ammo_762mm_max</button><span class="badge badge--section" title="首字母段落：A">A</span><span class="badge badge--flag flag-sv" title="sv — 服务端：仅在服务器端存在（server）">服务端</span><span class="badge badge--flag flag-cl" title="cl — 客户端：仅在客户端存在（client）">客户端</span><span class="badge badge--flag flag-rep" title="rep — 可复制：取值会复制（replicate）到其他机器，客户端能看到服务器的值">可复制</span><span class="badge badge--flag flag-release" title="release — 正式版：正式版中可用的命令/变量，未被开发分支隐藏">正式版</span></div><p class="cmd-row__desc"><span class="desc-empty">（数据源未提供描述）</span></p><p class="cmd-row__meta"><span class="cmd-row__default">默认值：<code>90</code></span></p></div><div class="cmd-row__actions"><label class="value-field" title="可编辑：复制时会用这里的值"><span>值</span><input type="text" class="value-field__input" placeholder="可留空" spellcheck="false" value="90"></label><div class="cmd-row__buttons"><button type="button" class="btn btn--primary btn--sm" title="复制：ammo_762mm_max 90">复制命令+值</button><button type="button" class="btn btn--sm" title="复制：ammo_762mm_max">仅命令</button></div></div></li><li class="cmd-row" data-command="ammo_9mm_max"><label class="cmd-row__check" title="勾选后可批量复制"><input type="checkbox" aria-label="选择 ammo_9mm_max"></label><div class="cmd-row__body"><div class="cmd-row__head"><button type="button" class="cmd-name" title="点击复制命令名">ammo_9mm_max</button><span class="badge badge--section" title="首字母段落：A">A</span><span class="badge badge--flag flag-sv" title="sv — 服务端：仅在服务器端存在（server）">服务端</span><span class="badge badge--flag flag-cl" title="cl — 客户端：仅在客户端存在（client）">客户端</span><span class="badge badge--flag flag-rep" title="rep — 可复制：取值会复制（replicate）到其他机器，客户端能看到服务器的值">可复制</span><span class="badge badge--flag flag-release" title="release — 正式版：正式版中可用的命令/变量，未被开发分支隐藏">正式版</span></div><p class="cmd-row__desc"><span class="desc-empty">（数据源未提供描述）</span></p><p class="cmd-row__meta"><span class="cmd-row__default">默认值：<code>120</code></span></p></div><div class="cmd-row__actions"><label class="value-field" title="可编辑：复制时会用这里的值"><span>值</span><input type="text" class="value-field__input" placeholder="可留空" spellcheck="false" value="120"></label><div class="cmd-row__buttons"><button type="button" class="btn btn--primary btn--sm" title="复制：ammo_9mm_max 120">复制命令+值</button><button type="button" class="btn btn--sm" title="复制：ammo_9mm_max">仅命令</button></div></div></li><li class="cmd-row" data-command="ammo_buckshot_max"><label class="cmd-row__check" title="勾选后可批量复制"><input type="checkbox" aria-label="选择 ammo_buckshot_max"></label><div class="cmd-row__body"><div class="cmd-row__head"><button type="button" class="cmd-name" title="点击复制命令名">ammo_buckshot_max</button><span class="badge badge--section" title="首字母段落：A">A</span><span class="badge badge--flag flag-sv" title="sv — 服务端：仅在服务器端存在（server）">服务端</span><span class="badge badge--flag flag-cl" title="cl — 客户端：仅在客户端存在（client）">客户端</span><span class="badge badge--flag flag-rep" title="rep — 可复制：取值会复制（replicate）到其他机器，客户端能看到服务器的值">可复制</span><span class="badge badge--flag flag-release" title="release — 正式版：正式版中可用的命令/变量，未被开发分支隐藏">正式版</span></div><p class="cmd-row__desc"><span class="desc-empty">（数据源未提供描述）</span></p><p class="cmd-row__meta"><span class="cmd-row__default">默认值：<code>32</code></span></p></div><div class="cmd-row__actions"><label class="value-field" title="可编辑：复制时会用这里的值"><span>值</span><input type="text" class="value-field__input" placeholder="可留空" spellcheck="false" value="32"></label><div class="cmd-row__buttons"><button type="button" class="btn btn--primary btn--sm" title="复制：ammo_buckshot_max 32">复制命令+值</button><button type="button" class="btn btn--sm" title="复制：ammo_buckshot_max">仅命令</button></div></div></li><li class="cmd-row" data-command="ammo_grenade_limit_breachcharge"><label class="cmd-row__check" title="勾选后可批量复制"><input type="checkbox" aria-label="选择 ammo_grenade_limit_breachcharge"></label><div class="cmd-row__body"><div class="cmd-row__head"><button type="button" class="cmd-name" title="点击复制命令名">ammo_grenade_limit_breachcharge</button><span class="badge badge--section" title="首字母段落：A">A</span><span class="badge badge--flag flag-sv" title="sv — 服务端：仅在服务器端存在（server）">服务端</span><span class="badge badge--flag flag-cl" title="cl — 客户端：仅在客户端存在（client）">客户端</span><span class="badge badge--flag flag-rep" title="rep — 可复制：取值会复制（replicate）到其他机器，客户端能看到服务器的值">可复制</span><span class="badge badge--flag flag-release" title="release — 正式版：正式版中可用的命令/变量，未被开发分支隐藏">正式版</span></div><p class="cmd-row__desc"><span class="desc-empty">（数据源未提供描述）</span></p><p class="cmd-row__meta"><span class="cmd-row__default">默认值：<code>3</code></span></p></div><div class="cmd-row__actions"><label class="value-field" title="可编辑：复制时会用这里的值"><span>值</span><input type="text" class="value-field__input" placeholder="可留空" spellcheck="false" value="3"></label><div class="cmd-row__buttons"><button type="button" class="btn btn--primary btn--sm" title="复制：ammo_grenade_limit_breachcharge 3">复制命令+值</button><button type="button" class="btn btn--sm" title="复制：ammo_grenade_limit_breachcharge">仅命令</button></div></div></li><li class="cmd-row" data-command="ammo_grenade_limit_bumpmine"><label class="cmd-row__check" title="勾选后可批量复制"><input type="checkbox" aria-label="选择 ammo_grenade_limit_bumpmine"></label><div class="cmd-row__body"><div class="cmd-row__head"><button type="button" class="cmd-name" title="点击复制命令名">ammo_grenade_limit_bumpmine</button><span class="badge badge--section" title="首字母段落：A">A</span><span class="badge badge--flag flag-sv" title="sv — 服务端：仅在服务器端存在（server）">服务端</span><span class="badge badge--flag flag-cl" title="cl — 客户端：仅在客户端存在（client）">客户端</span><span class="badge badge--flag flag-rep" title="rep — 可复制：取值会复制（replicate）到其他机器，客户端能看到服务器的值">可复制</span><span class="badge badge--flag flag-release" title="release — 正式版：正式版中可用的命令/变量，未被开发分支隐藏">正式版</span></div><p class="cmd-row__desc"><span class="desc-empty">（数据源未提供描述）</span></p><p class="cmd-row__meta"><span class="cmd-row__default">默认值：<code>3</code></span></p></div><div class="cmd-row__actions"><label class="value-field" title="可编辑：复制时会用这里的值"><span>值</span><input type="text" class="value-field__input" placeholder="可留空" spellcheck="false" value="3"></label><div class="cmd-row__buttons"><button type="button" class="btn btn--primary btn--sm" title="复制：ammo_grenade_limit_bumpmine 3">复制命令+值</button><button type="button" class="btn btn--sm" title="复制：ammo_grenade_limit_bumpmine">仅命令</button></div></div></li><li class="cmd-row" data-command="ammo_grenade_limit_default"><label class="cmd-row__check" title="勾选后可批量复制"><input type="checkbox" aria-label="选择 ammo_grenade_limit_default"></label><div class="cmd-row__body"><div class="cmd-row__head"><button type="button" class="cmd-name" title="点击复制命令名">ammo_grenade_limit_default</button><span class="badge badge--section" title="首字母段落：A">A</span><span class="badge badge--flag flag-sv" title="sv — 服务端：仅在服务器端存在（server）">服务端</span><span class="badge badge--flag flag-cl" title="cl — 客户端：仅在客户端存在（client）">客户端</span><span class="badge badge--flag flag-rep" title="rep — 可复制：取值会复制（replicate）到其他机器，客户端能看到服务器的值">可复制</span><span class="badge badge--flag flag-release" title="release — 正式版：正式版中可用的命令/变量，未被开发分支隐藏">正式版</span></div><p class="cmd-row__desc"><span class="desc-empty">（数据源未提供描述）</span></p><p class="cmd-row__meta"><span class="cmd-row__default">默认值：<code>1</code></span></p></div><div class="cmd-row__actions"><label class="value-field" title="可编辑：复制时会用这里的值"><span>值</span><input type="text" class="value-field__input" placeholder="可留空" spellcheck="false" value="1"></label><div class="cmd-row__buttons"><button type="button" class="btn btn--primary btn--sm" title="复制：ammo_grenade_limit_default 1">复制命令+值</button><button type="button" class="btn btn--sm" title="复制：ammo_grenade_limit_default">仅命令</button></div></div></li><li class="cmd-row" data-command="ammo_grenade_limit_flashbang"><label class="cmd-row__check" title="勾选后可批量复制"><input type="checkbox" aria-label="选择 ammo_grenade_limit_flashbang"></label><div class="cmd-row__body"><div class="cmd-row__head"><button type="button" class="cmd-name" title="点击复制命令名">ammo_grenade_limit_flashbang</button><span class="badge badge--section" title="首字母段落：A">A</span><span class="badge badge--flag flag-sv" title="sv — 服务端：仅在服务器端存在（server）">服务端</span><span class="badge badge--flag flag-cl" title="cl — 客户端：仅在客户端存在（client）">客户端</span><span class="badge badge--flag flag-rep" title="rep — 可复制：取值会复制（replicate）到其他机器，客户端能看到服务器的值">可复制</span><span class="badge badge--flag flag-release" title="release — 正式版：正式版中可用的命令/变量，未被开发分支隐藏">正式版</span></div><p class="cmd-row__desc"><span class="desc-empty">（数据源未提供描述）</span></p><p class="cmd-row__meta"><span class="cmd-row__default">默认值：<code>2</code></span></p></div><div class="cmd-row__actions"><label class="value-field" title="可编辑：复制时会用这里的值"><span>值</span><input type="text" class="value-field__input" placeholder="可留空" spellcheck="false" value="2"></label><div class="cmd-row__buttons"><button type="button" class="btn btn--primary btn--sm" title="复制：ammo_grenade_limit_flashbang 2">复制命令+值</button><button type="button" class="btn btn--sm" title="复制：ammo_grenade_limit_flashbang">仅命令</button></div></div></li><li class="cmd-row" data-command="ammo_grenade_limit_snowballs"><label class="cmd-row__check" title="勾选后可批量复制"><input type="checkbox" aria-label="选择 ammo_grenade_limit_snowballs"></label><div class="cmd-row__body"><div class="cmd-row__head"><button type="button" class="cmd-name" title="点击复制命令名">ammo_grenade_limit_snowballs</button><span class="badge badge--section" title="首字母段落：A">A</span><span class="badge badge--flag flag-sv" title="sv — 服务端：仅在服务器端存在（server）">服务端</span><span class="badge badge--flag flag-cl" title="cl — 客户端：仅在客户端存在（client）">客户端</span><span class="badge badge--flag flag-rep" title="rep — 可复制：取值会复制（replicate）到其他机器，客户端能看到服务器的值">可复制</span><span class="badge badge--flag flag-release" title="release — 正式版：正式版中可用的命令/变量，未被开发分支隐藏">正式版</span></div><p class="cmd-row__desc"><span class="desc-empty">（数据源未提供描述）</span></p><p class="cmd-row__meta"><span class="cmd-row__default">默认值：<code>3</code></span></p></div><div class="cmd-row__actions"><label class="value-field" title="可编辑：复制时会用这里的值"><span>值</span><input type="text" class="value-field__input" placeholder="可留空" spellcheck="false" value="3"></label><div class="cmd-row__buttons"><button type="button" class="btn btn--primary btn--sm" title="复制：ammo_grenade_limit_snowballs 3">复制命令+值</button><button type="button" class="btn btn--sm" title="复制：ammo_grenade_limit_snowballs">仅命令</button></div></div></li><li class="cmd-row" data-command="ammo_grenade_limit_total"><label class="cmd-row__check" title="勾选后可批量复制"><input type="checkbox" aria-label="选择 ammo_grenade_limit_total"></label><div class="cmd-row__body"><div class="cmd-row__head"><button type="button" class="cmd-name" title="点击复制命令名">ammo_grenade_limit_total</button><span class="badge badge--section" title="首字母段落：A">A</span><span class="badge badge--flag flag-sv" title="sv — 服务端：仅在服务器端存在（server）">服务端</span><span class="badge badge--flag flag-cl" title="cl — 客户端：仅在客户端存在（client）">客户端</span><span class="badge badge--flag flag-rep" title="rep — 可复制：取值会复制（replicate）到其他机器，客户端能看到服务器的值">可复制</span><span class="badge badge--flag flag-release" title="release — 正式版：正式版中可用的命令/变量，未被开发分支隐藏">正式版</span></div><p class="cmd-row__desc"><span class="desc-empty">（数据源未提供描述）</span></p><p class="cmd-row__meta"><span class="cmd-row__default">默认值：<code>4</code></span></p></div><div class="cmd-row__actions"><label class="value-field" title="可编辑：复制时会用这里的值"><span>值</span><input type="text" class="value-field__input" placeholder="可留空" spellcheck="false" value="4"></label><div class="cmd-row__buttons"><button type="button" class="btn btn--primary btn--sm" title="复制：ammo_grenade_limit_total 4">复制命令+值</button><button type="button" class="btn btn--sm" title="复制：ammo_grenade_limit_total">仅命令</button></div></div></li><li class="cmd-row" data-command="ammo_grenade_limit_tripwirefire"><label class="cmd-row__check" title="勾选后可批量复制"><input type="checkbox" aria-label="选择 ammo_grenade_limit_tripwirefire"></label><div class="cmd-row__body"><div class="cmd-row__head"><button type="button" class="cmd-name" title="点击复制命令名">ammo_grenade_limit_tripwirefire</button><span class="badge badge--section" title="首字母段落：A">A</span><span class="badge badge--flag flag-sv" title="sv — 服务端：仅在服务器端存在（server）">服务端</span><span class="badge badge--flag flag-cl" title="cl — 客户端：仅在客户端存在（client）">客户端</span><span class="badge badge--flag flag-rep" title="rep — 可复制：取值会复制（replicate）到其他机器，客户端能看到服务器的值">可复制</span><span class="badge badge--flag flag-release" title="release — 正式版：正式版中可用的命令/变量，未被开发分支隐藏">正式版</span></div><p class="cmd-row__desc"><span class="desc-empty">（数据源未提供描述）</span></p><p class="cmd-row__meta"><span class="cmd-row__default">默认值：<code>1</code></span></p></div><div class="cmd-row__actions"><label class="value-field" title="可编辑：复制时会用这里的值"><span>值</span><input type="text" class="value-field__input" placeholder="可留空" spellcheck="false" value="1"></label><div class="cmd-row__buttons"><button type="button" class="btn btn--primary btn--sm" title="复制：ammo_grenade_limit_tripwirefire 1">复制命令+值</button><button type="button" class="btn btn--sm" title="复制：ammo_grenade_limit_tripwirefire">仅命令</button></div></div></li><li class="cmd-row" data-command="ammo_item_limit_adrenaline"><label class="cmd-row__check" title="勾选后可批量复制"><input type="checkbox" aria-label="选择 ammo_item_limit_adrenaline"></label><div class="cmd-row__body"><div class="cmd-row__head"><button type="button" class="cmd-name" title="点击复制命令名">ammo_item_limit_adrenaline</button><span class="badge badge--section" title="首字母段落：A">A</span><span class="badge badge--flag flag-sv" title="sv — 服务端：仅在服务器端存在（server）">服务端</span><span class="badge badge--flag flag-cl" title="cl — 客户端：仅在客户端存在（client）">客户端</span><span class="badge badge--flag flag-rep" title="rep — 可复制：取值会复制（replicate）到其他机器，客户端能看到服务器的值">可复制</span><span class="badge badge--flag flag-release" title="release — 正式版：正式版中可用的命令/变量，未被开发分支隐藏">正式版</span></div><p class="cmd-row__desc"><span class="desc-empty">（数据源未提供描述）</span></p><p class="cmd-row__meta"><span class="cmd-row__default">默认值：<code>5</code></span></p></div><div class="cmd-row__actions"><label class="value-field" title="可编辑：复制时会用这里的值"><span>值</span><input type="text" class="value-field__input" placeholder="可留空" spellcheck="false" value="5"></label><div class="cmd-row__buttons"><button type="button" class="btn btn--primary btn--sm" title="复制：ammo_item_limit_adrenaline 5">复制命令+值</button><button type="button" class="btn btn--sm" title="复制：ammo_item_limit_adrenaline">仅命令</button></div></div></li><li class="cmd-row" data-command="ammo_item_limit_healthshot"><label class="cmd-row__check" title="勾选后可批量复制"><input type="checkbox" aria-label="选择 ammo_item_limit_healthshot"></label><div class="cmd-row__body"><div class="cmd-row__head"><button type="button" class="cmd-name" title="点击复制命令名">ammo_item_limit_healthshot</button><span class="badge badge--section" title="首字母段落：A">A</span><span class="badge badge--flag flag-sv" title="sv — 服务端：仅在服务器端存在（server）">服务端</span><span class="badge badge--flag flag-cl" title="cl — 客户端：仅在客户端存在（client）">客户端</span><span class="badge badge--flag flag-rep" title="rep — 可复制：取值会复制（replicate）到其他机器，客户端能看到服务器的值">可复制</span><span class="badge badge--flag flag-release" title="release — 正式版：正式版中可用的命令/变量，未被开发分支隐藏">正式版</span></div><p class="cmd-row__desc"><span class="desc-empty">（数据源未提供描述）</span></p><p class="cmd-row__meta"><span class="cmd-row__default">默认值：<code>4</code></span></p></div><div class="cmd-row__actions"><label class="value-field" title="可编辑：复制时会用这里的值"><span>值</span><input type="text" class="value-field__input" placeholder="可留空" spellcheck="false" value="4"></label><div class="cmd-row__buttons"><button type="button" class="btn btn--primary btn--sm" title="复制：ammo_item_limit_healthshot 4">复制命令+值</button><button type="button" class="btn btn--sm" title="复制：ammo_item_limit_healthshot">仅命令</button></div></div></li><li class="cmd-row" data-command="anim_resource_validate_on_load"><label class="cmd-row__check" title="勾选后可批量复制"><input type="checkbox" aria-label="选择 anim_resource_validate_on_load"></label><div class="cmd-row__body"><div class="cmd-row__head"><button type="button" class="cmd-name" title="点击复制命令名">anim_resource_validate_on_load</button><span class="badge badge--section" title="首字母段落：A">A</span><span class="badge badge--flag flag-release" title="release — 正式版：正式版中可用的命令/变量，未被开发分支隐藏">正式版</span></div><p class="cmd-row__desc"><span class="desc-zh"><span>加载时针对每个动画校验动画组通道列表与动画是否匹配</span></span></p><p class="cmd-row__meta"><span class="cmd-row__default">默认值：<code>true</code></span></p></div><div class="cmd-row__actions"><label class="value-field" title="可编辑：复制时会用这里的值"><span>值</span><input type="text" class="value-field__input" placeholder="可留空" spellcheck="false" value="true"></label><div class="cmd-row__buttons"><button type="button" class="btn btn--primary btn--sm" title="复制：anim_resource_validate_on_load true">复制命令+值</button><button type="button" class="btn btn--sm" title="复制：anim_resource_validate_on_load">仅命令</button></div></div></li><li class="cmd-row" data-command="animated_material_attributes"><label class="cmd-row__check" title="勾选后可批量复制"><input type="checkbox" aria-label="选择 animated_material_attributes"></label><div class="cmd-row__body"><div class="cmd-row__head"><button type="button" class="cmd-name" title="点击复制命令名">animated_material_attributes</button><span class="badge badge--section" title="首字母段落：A">A</span><span class="badge badge--flag flag-cl" title="cl — 客户端：仅在客户端存在（client）">客户端</span><span class="badge badge--flag flag-cheat" title="cheat — 作弊：需要服务器开启 sv_cheats 1 才能使用；联机比赛中通常禁用">作弊</span></div><p class="cmd-row__desc"><span class="desc-empty">（数据源未提供描述）</span></p><p class="cmd-row__meta"><span class="cmd-row__default">默认值：<code>true</code></span></p></div><div class="cmd-row__actions"><label class="value-field" title="可编辑：复制时会用这里的值"><span>值</span><input type="text" class="value-field__input" placeholder="可留空" spellcheck="false" value="true"></label><div class="cmd-row__buttons"><button type="button" class="btn btn--primary btn--sm" title="复制：animated_material_attributes true">复制命令+值</button><button type="button" class="btn btn--sm" title="复制：animated_material_attributes">仅命令</button></div></div></li><li class="cmd-row" data-command="animevents_dump"><label class="cmd-row__check" title="勾选后可批量复制"><input type="checkbox" aria-label="选择 animevents_dump"></label><div class="cmd-row__body"><div class="cmd-row__head"><button type="button" class="cmd-name" title="点击复制命令名">animevents_dump</button><span class="badge badge--section" title="首字母段落：A">A</span><span class="badge badge--flag flag-sv" title="sv — 服务端：仅在服务器端存在（server）">服务端</span><span class="badge badge--flag flag-cheat" title="cheat — 作弊：需要服务器开启 sv_cheats 1 才能使用；联机比赛中通常禁用">作弊</span></div><p class="cmd-row__desc"><span class="desc-zh"><span>列出当前所有已注册的动画事件</span></span></p><p class="cmd-row__meta"><span class="cmd-row__default">默认值：<code>cmd</code><em>（该条是命令，不是变量）</em></span></p></div><div class="cmd-row__actions"><label class="value-field" title="可编辑：复制时会用这里的值"><span>值</span><input type="text" class="value-field__input" placeholder="可留空" spellcheck="false" value=""></label><div class="cmd-row__buttons"><button type="button" class="btn btn--primary btn--sm" title="复制：animevents_dump">复制命令+值</button><button type="button" class="btn btn--sm" title="复制：animevents_dump">仅命令</button></div></div></li><li class="cmd-row" data-command="animgraph_debug"><label class="cmd-row__check" title="勾选后可批量复制"><input type="checkbox" aria-label="选择 animgraph_debug"></label><div class="cmd-row__body"><div class="cmd-row__head"><button type="button" class="cmd-name" title="点击复制命令名">animgraph_debug</button><span class="badge badge--section" title="首字母段落：A">A</span><span class="badge badge--flag flag-sv" title="sv — 服务端：仅在服务器端存在（server）">服务端</span><span class="badge badge--flag flag-cl" title="cl — 客户端：仅在客户端存在（client）">客户端</span><span class="badge badge--flag flag-rep" title="rep — 可复制：取值会复制（replicate）到其他机器，客户端能看到服务器的值">可复制</span><span class="badge badge--flag flag-cheat" title="cheat — 作弊：需要服务器开启 sv_cheats 1 才能使用；联机比赛中通常禁用">作弊</span></div><p class="cmd-row__desc"><span class="desc-zh"><span>调试动画图</span></span></p><p class="cmd-row__meta"><span class="cmd-row__default">默认值：<code>false</code></span></p></div><div class="cmd-row__actions"><label class="value-field" title="可编辑：复制时会用这里的值"><span>值</span><input type="text" class="value-field__input" placeholder="可留空" spellcheck="false" value="false"></label><div class="cmd-row__buttons"><button type="button" class="btn btn--primary btn--sm" title="复制：animgraph_debug false">复制命令+值</button><button type="button" class="btn btn--sm" title="复制：animgraph_debug">仅命令</button></div></div></li><li class="cmd-row" data-command="animgraph_debug_entindex"><label class="cmd-row__check" title="勾选后可批量复制"><input type="checkbox" aria-label="选择 animgraph_debug_entindex"></label><div class="cmd-row__body"><div class="cmd-row__head"><button type="button" class="cmd-name" title="点击复制命令名">animgraph_debug_entindex</button><span class="badge badge--section" title="首字母段落：A">A</span><span class="badge badge--flag flag-sv" title="sv — 服务端：仅在服务器端存在（server）">服务端</span><span class="badge badge--flag flag-cl" title="cl — 客户端：仅在客户端存在（client）">客户端</span><span class="badge badge--flag flag-rep" title="rep — 可复制：取值会复制（replicate）到其他机器，客户端能看到服务器的值">可复制</span><span class="badge badge--flag flag-cheat" title="cheat — 作弊：需要服务器开启 sv_cheats 1 才能使用；联机比赛中通常禁用">作弊</span></div><p class="cmd-row__desc"><span class="desc-zh"><span>要专门调试的实体</span></span></p><p class="cmd-row__meta"><span class="cmd-row__default">默认值：<code>0</code></span></p></div><div class="cmd-row__actions"><label class="value-field" title="可编辑：复制时会用这里的值"><span>值</span><input type="text" class="value-field__input" placeholder="可留空" spellcheck="false" value="0"></label><div class="cmd-row__buttons"><button type="button" class="btn btn--primary btn--sm" title="复制：animgraph_debug_entindex 0">复制命令+值</button><button type="button" class="btn btn--sm" title="复制：animgraph_debug_entindex">仅命令</button></div></div></li><li class="cmd-row" data-command="animgraph_footlock_ik_enable"><label class="cmd-row__check" title="勾选后可批量复制"><input type="checkbox" aria-label="选择 animgraph_footlock_ik_enable"></label><div class="cmd-row__body"><div class="cmd-row__head"><button type="button" class="cmd-name" title="点击复制命令名">animgraph_footlock_ik_enable</button><span class="badge badge--section" title="首字母段落：A">A</span><span class="badge badge--flag flag-cheat" title="cheat — 作弊：需要服务器开启 sv_cheats 1 才能使用；联机比赛中通常禁用">作弊</span></div><p class="cmd-row__desc"><span class="desc-zh"><span>启用 IK（反向动力学）</span></span></p><p class="cmd-row__meta"><span class="cmd-row__default">默认值：<code>true</code></span></p></div><div class="cmd-row__actions"><label class="value-field" title="可编辑：复制时会用这里的值"><span>值</span><input type="text" class="value-field__input" placeholder="可留空" spellcheck="false" value="true"></label><div class="cmd-row__buttons"><button type="button" class="btn btn--primary btn--sm" title="复制：animgraph_footlock_ik_enable true">复制命令+值</button><button type="button" class="btn btn--sm" title="复制：animgraph_footlock_ik_enable">仅命令</button></div></div></li><li class="cmd-row" data-command="animgraph_record_all"><label class="cmd-row__check" title="勾选后可批量复制"><input type="checkbox" aria-label="选择 animgraph_record_all"></label><div class="cmd-row__body"><div class="cmd-row__head"><button type="button" class="cmd-name" title="点击复制命令名">animgraph_record_all</button><span class="badge badge--section" title="首字母段落：A">A</span><span class="badge badge--flag flag-sv" title="sv — 服务端：仅在服务器端存在（server）">服务端</span><span class="badge badge--flag flag-cl" title="cl — 客户端：仅在客户端存在（client）">客户端</span><span class="badge badge--flag flag-rep" title="rep — 可复制：取值会复制（replicate）到其他机器，客户端能看到服务器的值">可复制</span><span class="badge badge--flag flag-cheat" title="cheat — 作弊：需要服务器开启 sv_cheats 1 才能使用；联机比赛中通常禁用">作弊</span></div><p class="cmd-row__desc"><span class="desc-zh"><span>动画图创建时自动开始录制，销毁时保存到磁盘</span></span></p><p class="cmd-row__meta"><span class="cmd-row__default">默认值：<code>false</code></span></p></div><div class="cmd-row__actions"><label class="value-field" title="可编辑：复制时会用这里的值"><span>值</span><input type="text" class="value-field__input" placeholder="可留空" spellcheck="false" value="false"></label><div class="cmd-row__buttons"><button type="button" class="btn btn--primary btn--sm" title="复制：animgraph_record_all false">复制命令+值</button><button type="button" class="btn btn--sm" title="复制：animgraph_record_all">仅命令</button></div></div></li><li class="cmd-row" data-command="animgraph_slope_draw_raycasts"><label class="cmd-row__check" title="勾选后可批量复制"><input type="checkbox" aria-label="选择 animgraph_slope_draw_raycasts"></label><div class="cmd-row__body"><div class="cmd-row__head"><button type="button" class="cmd-name" title="点击复制命令名">animgraph_slope_draw_raycasts</button><span class="badge badge--section" title="首字母段落：A">A</span><span class="badge badge--flag flag-sv" title="sv — 服务端：仅在服务器端存在（server）">服务端</span><span class="badge badge--flag flag-cl" title="cl — 客户端：仅在客户端存在（client）">客户端</span><span class="badge badge--flag flag-rep" title="rep — 可复制：取值会复制（replicate）到其他机器，客户端能看到服务器的值">可复制</span><span class="badge badge--flag flag-cheat" title="cheat — 作弊：需要服务器开启 sv_cheats 1 才能使用；联机比赛中通常禁用">作弊</span></div><p class="cmd-row__desc"><span class="desc-empty">（数据源未提供描述）</span></p><p class="cmd-row__meta"><span class="cmd-row__default">默认值：<code>false</code></span></p></div><div class="cmd-row__actions"><label class="value-field" title="可编辑：复制时会用这里的值"><span>值</span><input type="text" class="value-field__input" placeholder="可留空" spellcheck="false" value="false"></label><div class="cmd-row__buttons"><button type="button" class="btn btn--primary btn--sm" title="复制：animgraph_slope_draw_raycasts false">复制命令+值</button><button type="button" class="btn btn--sm" title="复制：animgraph_slope_draw_raycasts">仅命令</button></div></div></li><li class="cmd-row" data-command="animgraph_slope_enable"><label class="cmd-row__check" title="勾选后可批量复制"><input type="checkbox" aria-label="选择 animgraph_slope_enable"></label><div class="cmd-row__body"><div class="cmd-row__head"><button type="button" class="cmd-name" title="点击复制命令名">animgraph_slope_enable</button><span class="badge badge--section" title="首字母段落：A">A</span><span class="badge badge--flag flag-sv" title="sv — 服务端：仅在服务器端存在（server）">服务端</span><span class="badge badge--flag flag-cl" title="cl — 客户端：仅在客户端存在（client）">客户端</span><span class="badge badge--flag flag-rep" title="rep — 可复制：取值会复制（replicate）到其他机器，客户端能看到服务器的值">可复制</span><span class="badge badge--flag flag-cheat" title="cheat — 作弊：需要服务器开启 sv_cheats 1 才能使用；联机比赛中通常禁用">作弊</span></div><p class="cmd-row__desc"><span class="desc-empty">（数据源未提供描述）</span></p><p class="cmd-row__meta"><span class="cmd-row__default">默认值：<code>true</code></span></p></div><div class="cmd-row__actions"><label class="value-field" title="可编辑：复制时会用这里的值"><span>值</span><input type="text" class="value-field__input" placeholder="可留空" spellcheck="false" value="true"></label><div class="cmd-row__buttons"><button type="button" class="btn btn--primary btn--sm" title="复制：animgraph_slope_enable true">复制命令+值</button><button type="button" class="btn btn--sm" title="复制：animgraph_slope_enable">仅命令</button></div></div></li><li class="cmd-row" data-command="animgraph_trace_static_only"><label class="cmd-row__check" title="勾选后可批量复制"><input type="checkbox" aria-label="选择 animgraph_trace_static_only"></label><div class="cmd-row__body"><div class="cmd-row__head"><button type="button" class="cmd-name" title="点击复制命令名">animgraph_trace_static_only</button><span class="badge badge--section" title="首字母段落：A">A</span><span class="badge badge--flag flag-sv" title="sv — 服务端：仅在服务器端存在（server）">服务端</span><span class="badge badge--flag flag-cl" title="cl — 客户端：仅在客户端存在（client）">客户端</span><span class="badge badge--flag flag-rep" title="rep — 可复制：取值会复制（replicate）到其他机器，客户端能看到服务器的值">可复制</span><span class="badge badge--flag flag-cheat" title="cheat — 作弊：需要服务器开启 sv_cheats 1 才能使用；联机比赛中通常禁用">作弊</span></div><p class="cmd-row__desc"><span class="desc-empty">（数据源未提供描述）</span></p><p class="cmd-row__meta"><span class="cmd-row__default">默认值：<code>false</code></span></p></div><div class="cmd-row__actions"><label class="value-field" title="可编辑：复制时会用这里的值"><span>值</span><input type="text" class="value-field__input" placeholder="可留空" spellcheck="false" value="false"></label><div class="cmd-row__buttons"><button type="button" class="btn btn--primary btn--sm" title="复制：animgraph_trace_static_only false">复制命令+值</button><button type="button" class="btn btn--sm" title="复制：animgraph_trace_static_only">仅命令</button></div></div></li><li class="cmd-row" data-command="autobuy"><label class="cmd-row__check" title="勾选后可批量复制"><input type="checkbox" aria-label="选择 autobuy"></label><div class="cmd-row__body"><div class="cmd-row__head"><button type="button" class="cmd-name" title="点击复制命令名">autobuy</button><span class="badge badge--section" title="首字母段落：A">A</span><span class="badge badge--flag flag-cl" title="cl — 客户端：仅在客户端存在（client）">客户端</span><span class="badge badge--flag flag-clientcmd_can_execute" title="clientcmd_can_execute — 客户端可执行：允许客户端执行该命令">客户端可执行</span></div><p class="cmd-row__desc"><span class="desc-zh"><span>按 cl_autobuy 中列出的顺序尝试购买物品</span></span></p><p class="cmd-row__meta"><span class="cmd-row__default">默认值：<code>cmd</code><em>（该条是命令，不是变量）</em></span></p></div><div class="cmd-row__actions"><label class="value-field" title="可编辑：复制时会用这里的值"><span>值</span><input type="text" class="value-field__input" placeholder="可留空" spellcheck="false" value=""></label><div class="cmd-row__buttons"><button type="button" class="btn btn--primary btn--sm" title="复制：autobuy">复制命令+值</button><button type="button" class="btn btn--sm" title="复制：autobuy">仅命令</button></div></div></li><li class="cmd-row" data-command="axis"><label class="cmd-row__check" title="勾选后可批量复制"><input type="checkbox" aria-label="选择 axis"></label><div class="cmd-row__body"><div class="cmd-row__head"><button type="button" class="cmd-name" title="点击复制命令名">axis</button><span class="badge badge--section" title="首字母段落：A">A</span><span class="badge badge--flag flag-sv" title="sv — 服务端：仅在服务器端存在（server）">服务端</span><span class="badge badge--flag flag-cheat" title="cheat — 作弊：需要服务器开启 sv_cheats 1 才能使用；联机比赛中通常禁用">作弊</span></div><p class="cmd-row__desc"><span class="desc-zh"><span>绘制坐标轴 参数：x y z pitch yaw roll </span><abbr class="ph" title="参数占位符 &lt;lifetime = 10.0&gt;：存活时间（秒），默认 10.0（复制时保持原样，可直接粘进 .cfg）">&lt;lifetime = 10.0&gt;<span class="ph__zh">〔存活时间（秒），默认 10.0〕</span></abbr><span> </span><abbr class="ph" title="参数占位符 &lt;r g b a&gt;：红、绿、蓝、透明度四个分量（复制时保持原样，可直接粘进 .cfg）">&lt;r g b a&gt;<span class="ph__zh">〔红、绿、蓝、透明度四个分量〕</span></abbr></span></p><p class="cmd-row__meta"><span class="cmd-row__default">默认值：<code>cmd</code><em>（该条是命令，不是变量）</em></span></p></div><div class="cmd-row__actions"><label class="value-field" title="可编辑：复制时会用这里的值"><span>值</span><input type="text" class="value-field__input" placeholder="可留空" spellcheck="false" value=""></label><div class="cmd-row__buttons"><button type="button" class="btn btn--primary btn--sm" title="复制：axis">复制命令+值</button><button type="button" class="btn btn--sm" title="复制：axis">仅命令</button></div></div></li><li class="cmd-row" data-command="battery_saver"><label class="cmd-row__check" title="勾选后可批量复制"><input type="checkbox" aria-label="选择 battery_saver"></label><div class="cmd-row__body"><div class="cmd-row__head"><button type="button" class="cmd-name" title="点击复制命令名">battery_saver</button><span class="badge badge--section" title="首字母段落：B">B</span><span class="badge badge--flag flag-a" title="a — 存档：会被存档保存（archive），换图/重连后保留">存档</span></div><p class="cmd-row__desc"><span class="desc-zh"><span>已废弃，由 mobile_fps_* 取代 - 省电模式。0 = 关闭，1 = 开启</span></span></p><p class="cmd-row__meta"><span class="cmd-row__default">默认值：<code>false</code></span></p></div><div class="cmd-row__actions"><label class="value-field" title="可编辑：复制时会用这里的值"><span>值</span><input type="text" class="value-field__input" placeholder="可留空" spellcheck="false" value="false"></label><div class="cmd-row__buttons"><button type="button" class="btn btn--primary btn--sm" title="复制：battery_saver false">复制命令+值</button><button type="button" class="btn btn--sm" title="复制：battery_saver">仅命令</button></div></div></li><li class="cmd-row" data-command="benchframe"><label class="cmd-row__check" title="勾选后可批量复制"><input type="checkbox" aria-label="选择 benchframe"></label><div class="cmd-row__body"><div class="cmd-row__head"><button type="button" class="cmd-name" title="点击复制命令名">benchframe</button><span class="badge badge--section" title="首字母段落：B">B</span><span class="badge badge--flag flag-release" title="release — 正式版：正式版中可用的命令/变量，未被开发分支隐藏">正式版</span></div><p class="cmd-row__desc"><span class="desc-zh"><span>对计时录像（time demo）中的某一帧拍摄快照</span></span></p><p class="cmd-row__meta"><span class="cmd-row__default">默认值：<code>cmd</code><em>（该条是命令，不是变量）</em></span></p></div><div class="cmd-row__actions"><label class="value-field" title="可编辑：复制时会用这里的值"><span>值</span><input type="text" class="value-field__input" placeholder="可留空" spellcheck="false" value=""></label><div class="cmd-row__buttons"><button type="button" class="btn btn--primary btn--sm" title="复制：benchframe">复制命令+值</button><button type="button" class="btn btn--sm" title="复制：benchframe">仅命令</button></div></div></li><li class="cmd-row" data-command="bind"><label class="cmd-row__check" title="勾选后可批量复制"><input type="checkbox" aria-label="选择 bind"></label><div class="cmd-row__body"><div class="cmd-row__head"><button type="button" class="cmd-name" title="点击复制命令名">bind</button><span class="badge badge--section" title="首字母段落：B">B</span><span class="badge badge--flag flag-release" title="release — 正式版：正式版中可用的命令/变量，未被开发分支隐藏">正式版</span></div><p class="cmd-row__desc"><span class="desc-zh"><span>绑定一个按键</span></span></p><p class="cmd-row__meta"><span class="cmd-row__default">默认值：<code>cmd</code><em>（该条是命令，不是变量）</em></span></p></div><div class="cmd-row__actions"><label class="value-field" title="可编辑：复制时会用这里的值"><span>值</span><input type="text" class="value-field__input" placeholder="可留空" spellcheck="false" value=""></label><div class="cmd-row__buttons"><button type="button" class="btn btn--primary btn--sm" title="复制：bind">复制命令+值</button><button type="button" class="btn btn--sm" title="复制：bind">仅命令</button></div></div></li><li class="cmd-row" data-command="binddefaults"><label class="cmd-row__check" title="勾选后可批量复制"><input type="checkbox" aria-label="选择 binddefaults"></label><div class="cmd-row__body"><div class="cmd-row__head"><button type="button" class="cmd-name" title="点击复制命令名">binddefaults</button><span class="badge badge--section" title="首字母段落：B">B</span><span class="badge badge--flag flag-release" title="release — 正式版：正式版中可用的命令/变量，未被开发分支隐藏">正式版</span></div><p class="cmd-row__desc"><span class="desc-zh"><span>把所有按键绑定重置为默认值</span></span></p><p class="cmd-row__meta"><span class="cmd-row__default">默认值：<code>cmd</code><em>（该条是命令，不是变量）</em></span></p></div><div class="cmd-row__actions"><label class="value-field" title="可编辑：复制时会用这里的值"><span>值</span><input type="text" class="value-field__input" placeholder="可留空" spellcheck="false" value=""></label><div class="cmd-row__buttons"><button type="button" class="btn btn--primary btn--sm" title="复制：binddefaults">复制命令+值</button><button type="button" class="btn btn--sm" title="复制：binddefaults">仅命令</button></div></div></li><li class="cmd-row" data-command="bindss"><label class="cmd-row__check" title="勾选后可批量复制"><input type="checkbox" aria-label="选择 bindss"></label><div class="cmd-row__body"><div class="cmd-row__head"><button type="button" class="cmd-name" title="点击复制命令名">bindss</button><span class="badge badge--section" title="首字母段落：B">B</span><span class="badge badge--flag flag-release" title="release — 正式版：正式版中可用的命令/变量，未被开发分支隐藏">正式版</span></div><p class="cmd-row__desc"><span class="desc-zh"><span>为指定的分屏玩家绑定按键</span></span></p><p class="cmd-row__meta"><span class="cmd-row__default">默认值：<code>cmd</code><em>（该条是命令，不是变量）</em></span></p></div><div class="cmd-row__actions"><label class="value-field" title="可编辑：复制时会用这里的值"><span>值</span><input type="text" class="value-field__input" placeholder="可留空" spellcheck="false" value=""></label><div class="cmd-row__buttons"><button type="button" class="btn btn--primary btn--sm" title="复制：bindss">复制命令+值</button><button type="button" class="btn btn--sm" title="复制：bindss">仅命令</button></div></div></li><li class="cmd-row" data-command="bot_add"><label class="cmd-row__check" title="勾选后可批量复制"><input type="checkbox" aria-label="选择 bot_add"></label><div class="cmd-row__body"><div class="cmd-row__head"><button type="button" class="cmd-name" title="点击复制命令名">bot_add</button><span class="badge badge--section" title="首字母段落：B">B</span><span class="badge badge--flag flag-sv" title="sv — 服务端：仅在服务器端存在（server）">服务端</span><span class="badge badge--flag flag-release" title="release — 正式版：正式版中可用的命令/变量，未被开发分支隐藏">正式版</span></div><p class="cmd-row__desc"><span class="desc-zh"><span>ct&gt; </span><abbr class="ph" title="参数占位符 &lt;type&gt;：类型（复制时保持原样，可直接粘进 .cfg）">&lt;type&gt;<span class="ph__zh">〔类型〕</span></abbr><span> </span><abbr class="ph" title="参数占位符 &lt;difficulty&gt;：难度（复制时保持原样，可直接粘进 .cfg）">&lt;difficulty&gt;<span class="ph__zh">〔难度〕</span></abbr><span> </span><abbr class="ph" title="参数占位符 &lt;name&gt;：名称（复制时保持原样，可直接粘进 .cfg）">&lt;name&gt;<span class="ph__zh">〔名称〕</span></abbr><span> - 添加符合给定条件的机器人</span></span></p><p class="cmd-row__meta"><span class="cmd-row__default">默认值：<code>cmd</code><em>（该条是命令，不是变量）</em></span></p></div><div class="cmd-row__actions"><label class="value-field" title="可编辑：复制时会用这里的值"><span>值</span><input type="text" class="value-field__input" placeholder="可留空" spellcheck="false" value=""></label><div class="cmd-row__buttons"><button type="button" class="btn btn--primary btn--sm" title="复制：bot_add">复制命令+值</button><button type="button" class="btn btn--sm" title="复制：bot_add">仅命令</button></div></div></li><li class="cmd-row" data-command="bot_add_ct"><label class="cmd-row__check" title="勾选后可批量复制"><input type="checkbox" aria-label="选择 bot_add_ct"></label><div class="cmd-row__body"><div class="cmd-row__head"><button type="button" class="cmd-name" title="点击复制命令名">bot_add_ct</button><span class="badge badge--section" title="首字母段落：B">B</span><span class="badge badge--flag flag-sv" title="sv — 服务端：仅在服务器端存在（server）">服务端</span><span class="badge badge--flag flag-release" title="release — 正式版：正式版中可用的命令/变量，未被开发分支隐藏">正式版</span></div><p class="cmd-row__desc"><span class="desc-zh"><span>bot_add_ct </span><abbr class="ph" title="参数占位符 &lt;type&gt;：类型（复制时保持原样，可直接粘进 .cfg）">&lt;type&gt;<span class="ph__zh">〔类型〕</span></abbr><span> </span><abbr class="ph" title="参数占位符 &lt;difficulty&gt;：难度（复制时保持原样，可直接粘进 .cfg）">&lt;difficulty&gt;<span class="ph__zh">〔难度〕</span></abbr><span> </span><abbr class="ph" title="参数占位符 &lt;name&gt;：名称（复制时保持原样，可直接粘进 .cfg）">&lt;name&gt;<span class="ph__zh">〔名称〕</span></abbr><span> - 添加符合给定条件的反恐精英机器人</span></span></p><p class="cmd-row__meta"><span class="cmd-row__default">默认值：<code>cmd</code><em>（该条是命令，不是变量）</em></span></p></div><div class="cmd-row__actions"><label class="value-field" title="可编辑：复制时会用这里的值"><span>值</span><input type="text" class="value-field__input" placeholder="可留空" spellcheck="false" value=""></label><div class="cmd-row__buttons"><button type="button" class="btn btn--primary btn--sm" title="复制：bot_add_ct">复制命令+值</button><button type="button" class="btn btn--sm" title="复制：bot_add_ct">仅命令</button></div></div></li><li class="cmd-row" data-command="bot_add_t"><label class="cmd-row__check" title="勾选后可批量复制"><input type="checkbox" aria-label="选择 bot_add_t"></label><div class="cmd-row__body"><div class="cmd-row__head"><button type="button" class="cmd-name" title="点击复制命令名">bot_add_t</button><span class="badge badge--section" title="首字母段落：B">B</span><span class="badge badge--flag flag-sv" title="sv — 服务端：仅在服务器端存在（server）">服务端</span><span class="badge badge--flag flag-release" title="release — 正式版：正式版中可用的命令/变量，未被开发分支隐藏">正式版</span></div><p class="cmd-row__desc"><span class="desc-zh"><span>bot_add_t </span><abbr class="ph" title="参数占位符 &lt;type&gt;：类型（复制时保持原样，可直接粘进 .cfg）">&lt;type&gt;<span class="ph__zh">〔类型〕</span></abbr><span> </span><abbr class="ph" title="参数占位符 &lt;difficulty&gt;：难度（复制时保持原样，可直接粘进 .cfg）">&lt;difficulty&gt;<span class="ph__zh">〔难度〕</span></abbr><span> </span><abbr class="ph" title="参数占位符 &lt;name&gt;：名称（复制时保持原样，可直接粘进 .cfg）">&lt;name&gt;<span class="ph__zh">〔名称〕</span></abbr><span> - 添加符合给定条件的恐怖分子机器人</span></span></p><p class="cmd-row__meta"><span class="cmd-row__default">默认值：<code>cmd</code><em>（该条是命令，不是变量）</em></span></p></div><div class="cmd-row__actions"><label class="value-field" title="可编辑：复制时会用这里的值"><span>值</span><input type="text" class="value-field__input" placeholder="可留空" spellcheck="false" value=""></label><div class="cmd-row__buttons"><button type="button" class="btn btn--primary btn--sm" title="复制：bot_add_t">复制命令+值</button><button type="button" class="btn btn--sm" title="复制：bot_add_t">仅命令</button></div></div></li><li class="cmd-row" data-command="bot_all_weapons"><label class="cmd-row__check" title="勾选后可批量复制"><input type="checkbox" aria-label="选择 bot_all_weapons"></label><div class="cmd-row__body"><div class="cmd-row__head"><button type="button" class="cmd-name" title="点击复制命令名">bot_all_weapons</button><span class="badge badge--section" title="首字母段落：B">B</span><span class="badge badge--flag flag-sv" title="sv — 服务端：仅在服务器端存在（server）">服务端</span><span class="badge badge--flag flag-release" title="release — 正式版：正式版中可用的命令/变量，未被开发分支隐藏">正式版</span></div><p class="cmd-row__desc"><span class="desc-zh"><span>允许机器人使用所有武器</span></span></p><p class="cmd-row__meta"><span class="cmd-row__default">默认值：<code>cmd</code><em>（该条是命令，不是变量）</em></span></p></div><div class="cmd-row__actions"><label class="value-field" title="可编辑：复制时会用这里的值"><span>值</span><input type="text" class="value-field__input" placeholder="可留空" spellcheck="false" value=""></label><div class="cmd-row__buttons"><button type="button" class="btn btn--primary btn--sm" title="复制：bot_all_weapons">复制命令+值</button><button type="button" class="btn btn--sm" title="复制：bot_all_weapons">仅命令</button></div></div></li><li class="cmd-row" data-command="bot_allow_grenades"><label class="cmd-row__check" title="勾选后可批量复制"><input type="checkbox" aria-label="选择 bot_allow_grenades"></label><div class="cmd-row__body"><div class="cmd-row__head"><button type="button" class="cmd-name" title="点击复制命令名">bot_allow_grenades</button><span class="badge badge--section" title="首字母段落：B">B</span><span class="badge badge--flag flag-sv" title="sv — 服务端：仅在服务器端存在（server）">服务端</span><span class="badge badge--flag flag-release" title="release — 正式版：正式版中可用的命令/变量，未被开发分支隐藏">正式版</span></div><p class="cmd-row__desc"><span class="desc-zh"><span>非零时，机器人可以使用投掷物</span></span></p><p class="cmd-row__meta"><span class="cmd-row__default">默认值：<code>true</code></span></p></div><div class="cmd-row__actions"><label class="value-field" title="可编辑：复制时会用这里的值"><span>值</span><input type="text" class="value-field__input" placeholder="可留空" spellcheck="false" value="true"></label><div class="cmd-row__buttons"><button type="button" class="btn btn--primary btn--sm" title="复制：bot_allow_grenades true">复制命令+值</button><button type="button" class="btn btn--sm" title="复制：bot_allow_grenades">仅命令</button></div></div></li><li class="cmd-row" data-command="bot_allow_machine_guns"><label class="cmd-row__check" title="勾选后可批量复制"><input type="checkbox" aria-label="选择 bot_allow_machine_guns"></label><div class="cmd-row__body"><div class="cmd-row__head"><button type="button" class="cmd-name" title="点击复制命令名">bot_allow_machine_guns</button><span class="badge badge--section" title="首字母段落：B">B</span><span class="badge badge--flag flag-sv" title="sv — 服务端：仅在服务器端存在（server）">服务端</span><span class="badge badge--flag flag-release" title="release — 正式版：正式版中可用的命令/变量，未被开发分支隐藏">正式版</span></div><p class="cmd-row__desc"><span class="desc-zh"><span>非零时，机器人可以使用机枪</span></span></p><p class="cmd-row__meta"><span class="cmd-row__default">默认值：<code>true</code></span></p></div><div class="cmd-row__actions"><label class="value-field" title="可编辑：复制时会用这里的值"><span>值</span><input type="text" class="value-field__input" placeholder="可留空" spellcheck="false" value="true"></label><div class="cmd-row__buttons"><button type="button" class="btn btn--primary btn--sm" title="复制：bot_allow_machine_guns true">复制命令+值</button><button type="button" class="btn btn--sm" title="复制：bot_allow_machine_guns">仅命令</button></div></div></li><li class="cmd-row" data-command="bot_allow_pistols"><label class="cmd-row__check" title="勾选后可批量复制"><input type="checkbox" aria-label="选择 bot_allow_pistols"></label><div class="cmd-row__body"><div class="cmd-row__head"><button type="button" class="cmd-name" title="点击复制命令名">bot_allow_pistols</button><span class="badge badge--section" title="首字母段落：B">B</span><span class="badge badge--flag flag-sv" title="sv — 服务端：仅在服务器端存在（server）">服务端</span><span class="badge badge--flag flag-release" title="release — 正式版：正式版中可用的命令/变量，未被开发分支隐藏">正式版</span></div><p class="cmd-row__desc"><span class="desc-zh"><span>非零时，机器人可以使用手枪</span></span></p><p class="cmd-row__meta"><span class="cmd-row__default">默认值：<code>true</code></span></p></div><div class="cmd-row__actions"><label class="value-field" title="可编辑：复制时会用这里的值"><span>值</span><input type="text" class="value-field__input" placeholder="可留空" spellcheck="false" value="true"></label><div class="cmd-row__buttons"><button type="button" class="btn btn--primary btn--sm" title="复制：bot_allow_pistols true">复制命令+值</button><button type="button" class="btn btn--sm" title="复制：bot_allow_pistols">仅命令</button></div></div></li><li class="cmd-row" data-command="bot_allow_rifles"><label class="cmd-row__check" title="勾选后可批量复制"><input type="checkbox" aria-label="选择 bot_allow_rifles"></label><div class="cmd-row__body"><div class="cmd-row__head"><button type="button" class="cmd-name" title="点击复制命令名">bot_allow_rifles</button><span class="badge badge--section" title="首字母段落：B">B</span><span class="badge badge--flag flag-sv" title="sv — 服务端：仅在服务器端存在（server）">服务端</span><span class="badge badge--flag flag-release" title="release — 正式版：正式版中可用的命令/变量，未被开发分支隐藏">正式版</span></div><p class="cmd-row__desc"><span class="desc-zh"><span>非零时，机器人可以使用步枪</span></span></p><p class="cmd-row__meta"><span class="cmd-row__default">默认值：<code>true</code></span></p></div><div class="cmd-row__actions"><label class="value-field" title="可编辑：复制时会用这里的值"><span>值</span><input type="text" class="value-field__input" placeholder="可留空" spellcheck="false" value="true"></label><div class="cmd-row__buttons"><button type="button" class="btn btn--primary btn--sm" title="复制：bot_allow_rifles true">复制命令+值</button><button type="button" class="btn btn--sm" title="复制：bot_allow_rifles">仅命令</button></div></div></li><li class="cmd-row" data-command="bot_allow_rogues"><label class="cmd-row__check" title="勾选后可批量复制"><input type="checkbox" aria-label="选择 bot_allow_rogues"></label><div class="cmd-row__body"><div class="cmd-row__head"><button type="button" class="cmd-name" title="点击复制命令名">bot_allow_rogues</button><span class="badge badge--section" title="首字母段落：B">B</span><span class="badge badge--flag flag-sv" title="sv — 服务端：仅在服务器端存在（server）">服务端</span><span class="badge badge--flag flag-release" title="release — 正式版：正式版中可用的命令/变量，未被开发分支隐藏">正式版</span></div><p class="cmd-row__desc"><span class="desc-zh"><span>非零时，机器人偶尔会“叛变”。叛变的机器人不服从无线电指令，也不再执行任务目标</span></span></p><p class="cmd-row__meta"><span class="cmd-row__default">默认值：<code>true</code></span></p></div><div class="cmd-row__actions"><label class="value-field" title="可编辑：复制时会用这里的值"><span>值</span><input type="text" class="value-field__input" placeholder="可留空" spellcheck="false" value="true"></label><div class="cmd-row__buttons"><button type="button" class="btn btn--primary btn--sm" title="复制：bot_allow_rogues true">复制命令+值</button><button type="button" class="btn btn--sm" title="复制：bot_allow_rogues">仅命令</button></div></div></li></ul><div class="cmd-list__more"><span class="cmd-list__progress">已渲染 80 / 2528 条</span><button type="button" class="btn">显示更多（+160 条）</button></div></div></main><footer class="app-footer"><p>数据来源：<a href="https://developer.valvesoftware.com/wiki/List_of_Counter-Strike_2_console_commands_and_variables" target="_blank" rel="noreferrer">https://developer.valvesoftware.com/wiki/List_of_Counter-Strike_2_console_commands_and_variables</a></p><p>维基页面版本：October 2, 2023 · 游戏构建：9832 (revision 8384867) · 数据生成时间：2026-10-08T14:50:00.000Z</p></footer></div></div>
+    <script type="module" src="/app/src/main.tsx"></script>
+  
+
+</body></html>

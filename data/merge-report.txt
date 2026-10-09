@@ -1,0 +1,32 @@
+merge-translations
+  dataset                : 2528 commands
+  chunks                 : 10
+  entries checked        : 1465
+  descriptionZh filled   : 1587
+  unique translations    : 1465
+  empty translations     : 0
+  commands w/o English   : 941
+  glossary terms         : 179 (added 22 by t5/A)
+  source defects logged  : 13
+
+  chunk key / value audit:
+    chunk-001: indices 150, entries 150, missing [], extra [], empty 0, no-CJK 0
+    chunk-002: indices 150, entries 150, missing [], extra [], empty 0, no-CJK 0
+    chunk-003: indices 150, entries 150, missing [], extra [], empty 0, no-CJK 0
+    chunk-004: indices 150, entries 150, missing [], extra [], empty 0, no-CJK 0
+    chunk-005: indices 150, entries 150, missing [], extra [], empty 0, no-CJK 0
+    chunk-006: indices 150, entries 150, missing [], extra [], empty 0, no-CJK 0
+    chunk-007: indices 150, entries 150, missing [], extra [], empty 0, no-CJK 0
+    chunk-008: indices 150, entries 150, missing [], extra [], empty 0, no-CJK 0
+    chunk-009: indices 150, entries 150, missing [], extra [], empty 0, no-CJK 0
+    chunk-010: indices 115, entries 115, missing [], extra [], empty 0, no-CJK 0
+
+  warnings               : 0 (token-not-found-in-translation: 0)
+  assertions             : 1579/1579 passed
+
+  outputs:
+    data/commands.json  821439 bytes  sha256=c6ce50e8b41567911926e22cff25a4f060befa058debffd4a6ebb4c0160673a1
+    app/public/data/commands.json  821439 bytes  sha256=c6ce50e8b41567911926e22cff25a4f060befa058debffd4a6ebb4c0160673a1
+    data/merge-report.json
+
+MERGE RESULT: PASS — every assertion held.

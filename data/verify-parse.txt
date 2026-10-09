@@ -1,0 +1,16 @@
+{
+  "htmlTables": 27,
+  "htmlHeaderRows": 27,
+  "htmlDataRows": 2530,
+  "htmlPlaceholderRows": 2,
+  "htmlRowsWithMoreThan4Cells": 0,
+  "htmlUniqueCommands": 2528,
+  "parsedCommands": 2530,
+  "missingFromParse": 0,
+  "extraInParse": 1,
+  "missingSample": [],
+  "extraSample": [
+    "N/A"
+  ],
+  "multiColumnSample": []
+}
