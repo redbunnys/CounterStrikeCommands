@@ -1,5 +1,6 @@
 import { defineConfig, type Plugin } from 'vite';
 import react from '@vitejs/plugin-react';
+import { createHash } from 'node:crypto';
 import { copyFileSync, existsSync, mkdirSync, readFileSync, statSync } from 'node:fs';
 import { dirname, relative, resolve } from 'node:path';
 import { fileURLToPath } from 'node:url';
@@ -42,8 +43,12 @@ function frozenDatasetPlugin(): Plugin {
   let outDir = 'dist';
 
   const serveDataset = (
-    req: { url?: string },
-    res: { setHeader(k: string, v: string): void; end(body: unknown): void; statusCode: number },
+    req: { url?: string; headers: Record<string, string | string[] | undefined> },
+    res: {
+      setHeader(k: string, v: string): void;
+      end(body?: unknown): void;
+      statusCode: number;
+    },
     next: () => void,
   ) => {
     const url = (req.url ?? '').split('?')[0];
@@ -54,10 +59,23 @@ function frozenDatasetPlugin(): Plugin {
     try {
       const datasetFile = resolveDatasetFile();
       const body = readFileSync(datasetFile);
+      // 与线上（Cloudflare Pages）一致的强 ETag：数据一变 ETag 就变。
+      // 浏览器下次带 If-None-Match 来时回 304，省掉 ~800 KB 的重复下载。
+      const etag = `"${createHash('sha256').update(body).digest('hex').slice(0, 32)}"`;
+      const inm = req.headers['if-none-match'];
+      const clientEtag = Array.isArray(inm) ? inm[0] : inm;
+
+      res.setHeader('ETag', etag);
+      res.setHeader('Cache-Control', 'no-cache');
       res.setHeader('Content-Type', 'application/json; charset=utf-8');
-      res.setHeader('Cache-Control', 'no-store');
       // 头里只能放 ASCII：路径可能含中文（工作区名），因此做 URI 编码
       res.setHeader('X-Dataset-Source', encodeURIComponent(relative(projectRoot, datasetFile)));
+
+      if (clientEtag === etag) {
+        res.statusCode = 304;
+        res.end();
+        return;
+      }
       res.end(body);
     } catch (error) {
       res.statusCode = 500;
@@ -111,6 +129,10 @@ function frozenDatasetPlugin(): Plugin {
 
 export default defineConfig({
   plugins: [react(), frozenDatasetPlugin()],
+  // 静态资源目录（含 _headers 与数据集副本）。
+  // Vite 默认读项目根的 public/，而本仓库的静态资源在 app/public/，
+  // 因此必须显式指定，否则 _headers 不会进入 dist、Cloudflare Pages 的缓存规则失效。
+  publicDir: 'app/public',
   server: {
     port: 5173,
     strictPort: false,

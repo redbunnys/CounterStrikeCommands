@@ -23,6 +23,7 @@
 - [数据来源说明](#数据来源说明)
 - [如何重新抓取与重生成数据](#如何重新抓取与重生成数据)
 - [前端如何拿到数据](#前端如何拿到数据)
+- [部署](#部署)
 - [已知限制](#已知限制)
 - [验证与证据](#验证与证据)
 - [未验证项](#未验证项)
@@ -249,6 +250,59 @@ node tools/prepare-data.mjs --help                   # 用法
 
 ---
 
+## 部署
+
+`pnpm build` 产出的是**纯静态站点**（`dist/` 仅 5 个文件、约 1 MB），可部署到任意静态托管。
+`vite.config.ts` 的 `publicDir` 指向 `app/public`，因此该目录下的文件（含 `_headers` 与数据集副本）会进入 `dist/`。
+
+### Cloudflare Pages
+
+已按其官方限制核算：单文件上限 **25 MiB**（本项目最大 0.78 MiB）、免费套餐 **20,000 个文件**（本项目 4 个）。
+Pages 把项目挂在**域名根路径**，因此 `dist/index.html` 里的 `/assets/...` 绝对路径正好正确解析 ——
+本文件[已知限制](#已知限制)里「必须部署在站点根路径」的要求在 Pages 上天然满足。
+
+| 配置项 | 值 |
+| --- | --- |
+| Production branch | `main` |
+| Build command | `pnpm build` |
+| Build output directory | `dist` |
+
+两种方式：
+
+1. **连 Git 仓库（推荐，push 后自动重建）**：Cloudflare 控制台 → **Workers & Pages** → **Create** →
+   **Pages** → **Import an existing Git repository**，按上表填写。
+2. **直接上传**：`npx wrangler pages deploy dist --project-name=<项目名>`。
+
+已实测「全新克隆后构建」可行（等价于 Pages 的构建流程）：`pnpm install --frozen-lockfile` 与
+`pnpm build` 均退出码 0，产物与本地一致。
+
+### 缓存策略（`app/public/_headers`）
+
+Cloudflare Pages 会读取 `dist/_headers` 并应用其中的响应头规则：
+
+| 路径 | 策略 | 原因 |
+| --- | --- | --- |
+| `/assets/*` | `max-age=31536000, immutable` | 文件名带内容哈希，内容一变文件名就变 |
+| `/data/*` | `no-cache`（每次带 ETag 校验） | 文件名固定，**不能**强缓存，否则数据更新后用户拿到旧数据 |
+| `/index.html` | `no-cache` | 保证发版后立刻拿到新的资源引用 |
+
+前端请求数据时**不再附加 `?t=Date.now()`**（那会让缓存完全失效）。静态托管会对
+`/data/commands.json` 返回 `ETag`，数据未变时浏览器只收到 **304**（0 字节），
+而不是重复下载整份数据；数据更新后 ETag 变化，自动拿到新内容。
+`pnpm smoke` 已把这条行为锁进断言（304 / 0 字节）。
+
+### 其他平台
+
+`dist/` 可直接用于任何静态托管（Vercel、Netlify、GitHub Pages、对象存储 + CDN）。
+注意：`_headers` 是 Cloudflare Pages 专有格式，其他平台需用各自的配置方式设置等价的缓存头
+（例如 Netlify 用 `_headers`、Vercel 用 `vercel.json`）。
+若确需部署在**子路径**，要相应调整 `vite.config.ts` 的 `base`，
+并把 `app/src/hooks/useDataset.ts` 的 `DATASET_URL` 改为按 `import.meta.env.BASE_URL` 拼接。
+
+> 主要用户在中国大陆时请留意：Cloudflare 的节点多在境外，访问速度可能不理想。
+
+---
+
 ## 已知限制
 
 1. **数据版本时效**：源站快照为 **2023-10-02 / build 9832 (revision 8384867)**，**并非当前 CS2 版本**。
@@ -287,6 +341,7 @@ node tools/prepare-data.mjs --help                   # 用法
 8. **部署路径限制**：构建产物使用**绝对路径**（`dist/index.html` 里的 `/assets/…`，以及前端请求的
    `/data/commands.json`），因此**必须部署在站点根路径**；部署到子路径（如 GitHub Pages 项目站点）会 404。
    若确需子路径，请自行设置 Vite `base` 并让取数改用 `import.meta.env.BASE_URL` 拼 URL。
+   Cloudflare Pages 把项目挂在域名根路径，**不受此限制**（见[部署](#部署)）。
 9. **字节数口径**：`data/raw/fetch-meta.json` 的 `bytes: 379036` 是抓取时的 **HTTP 响应长度**，
    而落盘文件 `data/raw/cs2_wiki.html` 为 **379154 字节**（按 UTF-8 重新编码后写入）。
    两者差异属预期；sha256 链完好（`meta.sourceSha256` = 文件实际 sha256 = `b6c2013d…731ee2`）。

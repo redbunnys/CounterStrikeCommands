@@ -72,7 +72,12 @@ export function useDataset(): { state: DatasetState; reload: () => void } {
     const load = async () => {
       let response: Response;
       try {
-        response = await fetch(`${DATASET_URL}?t=${Date.now()}`, { cache: 'no-store' });
+        // 依赖 HTTP 缓存（ETag / If-None-Match）而不是每次都重新下载整个数据集。
+        // 数据文件约 800 KB：静态托管（Cloudflare Pages 等）会对它返回 ETag，
+        // 数据未变时浏览器只收到 304，几乎不耗流量；数据更新后自动拿到新内容。
+        // 注意：不要再加 `?t=Date.now()` 之类的 cache-buster —— 那会让缓存完全失效。
+        // 缓存策略由部署侧声明，见 app/public/_headers。
+        response = await fetch(DATASET_URL);
       } catch (error) {
         if (cancelled) return;
         const reason = error instanceof Error ? `${error.name}: ${error.message}` : String(error);

@@ -1,0 +1,26 @@
+# Cloudflare Pages 响应头规则
+#
+# 放在 public/ 目录下，`pnpm build` 时会被原样复制到 dist/_headers。
+# Cloudflare Pages 读取它并应用到静态资源响应；该文件本身不会被当作资源下发。
+# 语法参考：https://developers.cloudflare.com/pages/configuration/headers/
+#
+# 说明（为什么这样设）：
+# - /assets/* 的文件名带内容哈希（index-<hash>.js/css），内容一变文件名就变，
+#   因此可以放心长期强缓存。
+# - /data/commands.json 文件名固定（前端按固定路径请求），不能强缓存，
+#   否则数据更新后用户会一直拿到旧数据；用 no-cache 让浏览器每次带
+#   ETag 去校验，数据未变时服务端返回 304，几乎不耗流量。
+# - HTML 入口不缓存，保证发版后能立刻拿到新的资源引用。
+
+/assets/*
+  Cache-Control: public, max-age=31536000, immutable
+
+/data/*
+  Cache-Control: no-cache
+
+/index.html
+  Cache-Control: no-cache
+
+/*
+  X-Content-Type-Options: nosniff
+  Referrer-Policy: strict-origin-when-cross-origin

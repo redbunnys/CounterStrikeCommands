@@ -549,15 +549,31 @@ try {
 
   let dataset = null;
   let servedDatasetBytes = null;
+  let datasetEtag = null;
   await check('GET /data/commands.json 返回 JSON', async () => {
     const response = await fetch(`${base}/data/commands.json`, { cache: 'no-store' });
     assert(response.ok, `HTTP ${response.status}`);
     const contentType = response.headers.get('content-type') ?? '';
+    datasetEtag = response.headers.get('etag');
     servedDatasetBytes = Buffer.from(await response.arrayBuffer());
     const text = servedDatasetBytes.toString('utf8');
     assert(!text.startsWith('export default'), '响应被当作 ESM 模块返回（JSON 插件污染）');
     dataset = JSON.parse(text);
     return `${response.status}, ${contentType.split(';')[0]}, ${(servedDatasetBytes.length / 1024).toFixed(1)} KB`;
+  });
+
+  // 数据文件约 800 KB。若响应缺少 ETag（或部署侧把它设成强缓存而文件名无哈希），
+  // 用户每次打开页面都要重新下载整份数据；这条断言把「可协商缓存」锁住。
+  await check('数据文件提供 ETag，且 If-None-Match 命中时返回 304（省掉重复下载）', async () => {
+    assert(datasetEtag, '响应缺少 ETag，浏览器无法做条件请求');
+    const response = await fetch(`${base}/data/commands.json`, {
+      headers: { 'If-None-Match': datasetEtag },
+      cache: 'no-store',
+    });
+    assertEqual(response.status, 304, `条件请求状态码（ETag=${datasetEtag}）`);
+    const body = Buffer.from(await response.arrayBuffer());
+    assertEqual(body.length, 0, '304 响应体字节数');
+    return `ETag=${datasetEtag}，条件请求 HTTP 304 / 0 字节（全量为 ${(servedDatasetBytes.length / 1024).toFixed(1)} KB）`;
   });
 
   await check('服务端返回的数据与本地 data/commands.json 字节一致（sha256）', async () => {

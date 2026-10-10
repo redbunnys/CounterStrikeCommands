@@ -6,11 +6,12 @@ CS2 命令查询前端 —— 自测脚本
 == 1. 服务器与静态资源 ==
   [PASS] GET / 返回 HTML 页面 — 200, 576 字节
   [PASS] 页面标题为中文标题 — CS2 控制台命令与变量查询（中文）
-  [PASS] 页面引用的脚本/样式资源可直接访问 — /assets/index-BYtbf0tz.js 173.9 KB · /assets/index-fcKai-3j.css 11.4 KB
-  [PASS] 前端代码包含复制反馈与中文回退文案 — 构建产物 /assets/index-BYtbf0tz.js，包含 7 条关键文案
+  [PASS] 页面引用的脚本/样式资源可直接访问 — /assets/index-L140KKpO.js 173.8 KB · /assets/index-fcKai-3j.css 11.4 KB
+  [PASS] 前端代码包含复制反馈与中文回退文案 — 构建产物 /assets/index-L140KKpO.js，包含 7 条关键文案
 
 == 2. 数据文件 /data/commands.json ==
   [PASS] GET /data/commands.json 返回 JSON — 200, application/json, 802.2 KB
+  [PASS] 数据文件提供 ETag，且 If-None-Match 命中时返回 304（省掉重复下载） — ETag="c6ce50e8b41567911926e22cff25a4f0"，条件请求 HTTP 304 / 0 字节（全量为 802.2 KB）
   [PASS] 服务端返回的数据与本地 data/commands.json 字节一致（sha256） — C:\Users\Administrator\Desktop\cs2 指令\data\commands.json = c6ce50e8b4156791… (821439 字节)，HTTP 响应字节完全相同
   [PASS] 条数为 2528 — 2528 条（meta.commands=2528）
   [PASS] 每条记录字段符合冻结契约 — 字段齐全，键集合 = command, defaultValue, descriptionEn, descriptionZh, flags, id, section
@@ -53,7 +54,7 @@ CS2 命令查询前端 —— 自测脚本
   [PASS] dist 产物存在且体积已知 — index.html 0.7 KB · data/commands.json 802.2 KB
   [PASS] dist 里的数据与源数据字节一致（防止交付旧的英文副本） — dist/data/commands.json sha256=c6ce50e8b4156791… 与 data/commands.json 相同（821439 字节，含中文描述 1587 条）
 
-===== 自测汇总：34/34 通过 =====
+===== 自测汇总：35/35 通过 =====
 服务器：http://127.0.0.1:4173
 
 退出码：0
