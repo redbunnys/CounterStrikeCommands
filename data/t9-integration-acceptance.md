@@ -141,7 +141,7 @@ sv_disable_immunity_alpha         default="false"    flags=[sv,cl,rep,release]  
 | 重新抓取与重生成数据（`fetch-valve-wiki → parse-commands → prepare-data → 翻译 → merge-translations → verify-dataset → pnpm build`） | §如何重新抓取与重生成数据 |
 | 数据来源与版本（2023-10-02 / build 9832）| §数据来源与版本 |
 | 数据统计（2528 / 1587 / 1465 / 941） | §数据统计 |
-| **数据免责声明**（非 Valve 官方、来源 URL、抓取时间与版本、工具链规范化含 4 行修复与 13 条登记、以游戏内 `cvarlist`/`help` 为准） | §数据免责声明 |
+| **数据来源说明**（来源为 Valve 官方开发者站点 Valve Developer Community、来源 URL、抓取时间与版本、工具链规范化含 4 行修复与 13 条登记、以游戏内 `cvarlist`/`help` 为准） | §数据来源说明 |
 | 已知限制 6+ 项 | §已知限制 |
 | 部署路径限制（R4）/ 字节数口径（R3）/ 退化描述登记（R5）/ 4 处已接受变体（R2） | §已知限制 6–9、7 |
 | 环境问题（搜索 401，不计交付缺陷） | §已知限制 10 |

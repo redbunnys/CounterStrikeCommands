@@ -89,13 +89,15 @@
 
 ## 6. 已知限制的披露核对
 
+> 说明：下表反映 **t8 复核当时的快照**。其中 R1、R2 已在后续 t9/t11 中修复并经复核，本表已就地更新为最终状态。
+
 | 限制 | 披露位置 | 结论 |
 | --- | --- | --- |
-| 源站为 2023-10-02 / build 9832 / revision 8384867，**不是当前 CS2 版本** | 仅 `data/commands.json.meta.sourceRetrieved|sourceBuild` 与前端页脚（`App.tsx:342-357` 渲染「维基页面版本 / 游戏构建」）；**两处 README 均无该差异说明** | **缺口 → R1（medium）** |
+| 源站为 2023-10-02 / build 9832 / revision 8384867，**不是当前 CS2 版本** | 原先仅 `data/commands.json.meta.sourceRetrieved|sourceBuild` 与前端页脚（`App.tsx:342-357` 渲染「维基页面版本 / 游戏构建」）；**已由 t9 补入根 `README.md`**（§数据来源与版本、§数据来源说明）与 `app/README.md` | 原先为缺口 → **R1（medium）已修复 ✓** |
 | 1465 条唯一描述按风格保留英文缩写（HUD/NPC/FPS/GOTV/HLTV/demo/tick…） | `data/translation/README.md` §6「专有名词不译清单·技术缩写」逐条列表 | 已披露 ✓ |
 | 4 个坏行的 wiki 源数据在 Command/Default 列不完整，默认值由被挤入后续单元格的文本还原，`meta.repairedRows` 有记录 | `data/translation/README.md` §9「数据溯源与已知修复」+ `meta.repairedRows`（含 `wikiCells`→`restored`→`why`） | 已披露 ✓ |
 | 941 条命令源站本就没有描述（`descriptionEn` 为空） | `app/README.md:96`「其余 941 条源站无描述」；界面横幅也会说明「另有 Z 条命令源站本身没有提供描述」 | 已披露 ✓ |
-| 参数占位符刻意保留英文（82 种 / 255 处），可读性由前端 parameter-tokens 中文提示承担 | `app/README.md` §「参数占位符（82 种 + 3 种译文变体）」；`data/translation/parameter-tokens.md` 规则 1-4；浏览器实测提示确实渲染 | 已披露 ✓（「3 种译文变体」计数偏旧 → R2） |
+| 参数占位符刻意保留英文（82 种 / 255 处），可读性由前端 parameter-tokens 中文提示承担 | `app/README.md` §「参数占位符（82 种 + 4 种译文变体）」；`data/translation/parameter-tokens.md` 规则 1-4；浏览器实测提示确实渲染 | 已披露 ✓（计数原偏旧，**R2 已由 t11 修正为 4 种**） |
 
 ---
 
@@ -114,13 +116,15 @@ The web search request used endpoint "https://api.deepseek.com/anthropic/v1/mess
 
 ## 8. Findings（结构化）
 
-| id | 严重级别 | 问题 | 所需修复 | 文件:行 |
-| --- | --- | --- | --- | --- |
-| **R1** | **medium** | 「源站为 2023-10-02 / build 9832，非当前 CS2 版本」这条限制**没有任何文字披露**：只存在于 `meta` 字段与前端页脚两个数字里，读者不会得知「数据是 2023 年的快照、可能与当前 CS2 版本不一致」。发布说明（交付说明）目前尚不存在，该项无人承接。 | 在交付说明中明确写出：`sourceRetrieved=October 2, 2023`、`sourceBuild=9832 (revision 8384867)`，并提示「命令/变量的可用性与默认值可能已随 CS2 版本变化」；建议同时在 `app/README.md` 顶部补一句同样的提示。**属文档缺口，不影响数据正确性与功能，不阻塞交付**。 | `data/commands.json`（meta）、`app/README.md`（建议新增）、交付说明（待产出） |
-| **R2** | low | 译文变体计数偏旧：文档与前端释义表都写「3 处/3 种」，实测有 **4 种英文原文（6 条命令）** 的中文写法与英文不一致 —— 漏登的是 `sv_disable_immunity_alpha` 的 `[mod authors use this]` → `［mod 作者使用］`（队长已裁定为「已接受偏差」，本轮不修数据）。 | 把该处并入「已登记并接受的偏差」清单，并把文案从「3 种/3 处」改为「4 种」；`placeholders.ts` 的 `variant` 表同步补一条（`source: 'variant'`，界面行为不变）。 | `app/README.md:100`、`app/README.md:115-117`、`app/src/lib/placeholders.ts:11`（variant 表在 :33/:56/:110） |
-| **R3** | low | 抓取元数据与落盘文件字节数不一致：`fetch-meta.json.bytes=379036`，而 `data/raw/cs2_wiki.html` 实际 **379154** 字节。（sha256 链完好：`meta.sourceSha256` = 文件 sha256 = `b6c2013d…731ee2`，说明只是「HTTP 响应字节数」与「UTF-8 重编码后落盘字节数」两个口径混用。） | 在 `fetch-meta.json` 里注明 `bytes` 为 HTTP 响应字节数、落盘为 UTF-8 重编码后的 379154 字节（或补一个 `bytesOnDisk` 字段）。 | `data/raw/fetch-meta.json` |
-| **R4** | low | 部署路径限制未披露：`dist/index.html` 的资源引用是绝对路径（`/assets/index-*.js`），且数据请求写死 `'/data/commands.json'` —— 部署到**子路径**（如 GitHub Pages 项目站点）会 404。当前 `vite.config.ts` 未设 `base`。 | 交付说明注明「需部署在站点根路径，或用 `vite preview`/静态服务器挂在根上」；若确需子路径，设置 `vite base` 并让 `useDataset` 用 `import.meta.env.BASE_URL` 拼 URL（属增强，非本次必需）。 | `app/src/hooks/useDataset.ts:5`、`vite.config.ts:112-129`、`dist/index.html` |
-| **R5** | low（建议） | 「退化/截断描述」这一类源站现象（7 例，见 §5）不在 `meta.sourceDefects` 的 6 类台账内，两处 README 也未提及，只有翻译任务交接记录与我的 t7 清单里写到。它们**不是缺陷**，但缺一份登记会让后续读者把 `off >.`、`all> \| <not_bomber>…` 这类片段误当成解析错误。 | 在 `data/translation/README.md` 的「已知修复/已知现象」或交付说明里，补一小节列出这类退化描述及其处理方式（标识符原样 + 中文释义）。 | `data/translation/README.md` §9/§10（建议新增条目） |
+> 说明：「状态」列为后续补记（append-only），反映各项的最终收口情况；findings 原文保持不变。
+
+| id | 严重级别 | 问题 | 所需修复 | 文件:行 | 状态 |
+| --- | --- | --- | --- | --- | --- |
+| **R1** | **medium** | 「源站为 2023-10-02 / build 9832，非当前 CS2 版本」这条限制**没有任何文字披露**：只存在于 `meta` 字段与前端页脚两个数字里，读者不会得知「数据是 2023 年的快照、可能与当前 CS2 版本不一致」。发布说明（交付说明）目前尚不存在，该项无人承接。 | 在交付说明中明确写出：`sourceRetrieved=October 2, 2023`、`sourceBuild=9832 (revision 8384867)`，并提示「命令/变量的可用性与默认值可能已随 CS2 版本变化」；建议同时在 `app/README.md` 顶部补一句同样的提示。**属文档缺口，不影响数据正确性与功能，不阻塞交付**。 | `data/commands.json`（meta）、`app/README.md`（建议新增）、交付说明（待产出） | **已修复**（t9：根 `README.md` §数据来源与版本 / §数据来源说明，`app/README.md` 亦已补） |
+| **R2** | low | 译文变体计数偏旧：文档与前端释义表都写「3 处/3 种」，实测有 **4 种英文原文（6 条命令）** 的中文写法与英文不一致 —— 漏登的是 `sv_disable_immunity_alpha` 的 `[mod authors use this]` → `［mod 作者使用］`（队长已裁定为「已接受偏差」，本轮不修数据）。 | 把该处并入「已登记并接受的偏差」清单，并把文案从「3 种/3 处」改为「4 种」；`placeholders.ts` 的 `variant` 表同步补一条（`source: 'variant'`，界面行为不变）。 | `app/README.md:100`、`app/README.md:115-117`、`app/src/lib/placeholders.ts:11`（variant 表在 :33/:56/:110） | **已修复**（t11：计数统一为 4 种 / 6 条命令；生成脚本注释模板同步，`--check` exit 0） |
+| **R3** | low | 抓取元数据与落盘文件字节数不一致：`fetch-meta.json.bytes=379036`，而 `data/raw/cs2_wiki.html` 实际 **379154** 字节。（sha256 链完好：`meta.sourceSha256` = 文件 sha256 = `b6c2013d…731ee2`，说明只是「HTTP 响应字节数」与「UTF-8 重编码后落盘字节数」两个口径混用。） | 在 `fetch-meta.json` 里注明 `bytes` 为 HTTP 响应字节数、落盘为 UTF-8 重编码后的 379154 字节（或补一个 `bytesOnDisk` 字段）。 | `data/raw/fetch-meta.json` | **已披露**（t9：交付说明 §数据来源说明 注明两个口径） |
+| **R4** | low | 部署路径限制未披露：`dist/index.html` 的资源引用是绝对路径（`/assets/index-*.js`），且数据请求写死 `'/data/commands.json'` —— 部署到**子路径**（如 GitHub Pages 项目站点）会 404。当前 `vite.config.ts` 未设 `base`。 | 交付说明注明「需部署在站点根路径，或用 `vite preview`/静态服务器挂在根上」；若确需子路径，设置 `vite base` 并让 `useDataset` 用 `import.meta.env.BASE_URL` 拼 URL（属增强，非本次必需）。 | `app/src/hooks/useDataset.ts:5`、`vite.config.ts:112-129`、`dist/index.html` | **已披露**（t9 交付说明；t11 在 `app/README.md` 增 `## ⚠️ 部署（必须部署在站点根路径）` 章节） |
+| **R5** | low（建议） | 「退化/截断描述」这一类源站现象（7 例，见 §5）不在 `meta.sourceDefects` 的 6 类台账内，两处 README 也未提及，只有翻译任务交接记录与我的 t7 清单里写到。它们**不是缺陷**，但缺一份登记会让后续读者把 `off >.`、`all> \| <not_bomber>…` 这类片段误当成解析错误。 | 在 `data/translation/README.md` 的「已知修复/已知现象」或交付说明里，补一小节列出这类退化描述及其处理方式（标识符原样 + 中文释义）。 | `data/translation/README.md` §9/§10（建议新增条目） | **已披露**（t9 交付说明登记 7 例：索引 20/67/241/517/672/1085/1265） |
 
 **非缺陷记录（明确不得计为问题）**：`meta.sourceDefects` 的 13 条索引（源站原文残缺，translator 逐字保留正确）；F1/F2 的 4 种方括号译文变体（队长已裁定为可接受偏差；复制串只由命令名+取值拼成，实测不进剪贴板）；F3 检测盲区与 F5 全量比对护栏（已指派 t10，且 t10 不改动交付数据，不影响本次判定）；`weapon_accuracy_nospread` 措辞；`!!` 强调写法；941 条无描述；56 个保留英文缩写。
 
